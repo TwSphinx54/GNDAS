@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Include the CesiumJS JavaScript and CSS files -->
+    <script src="third_party/Cesium.js"></script>
+    <script src="third_party/jquery.js"></script>
+    <link href="styles/CesiumWidgets.css" rel="stylesheet">
+    <link href="basic.css" rel="stylesheet">
+    <title>全球自然灾害评估系统</title>
+</head>
+<body>
+<div id="index">
+    <div id="cesiumContainer"></div>
+    <div id="bigTitle">
+        全球自然灾害<br>评估系统
+    </div>
+    <div id="bigSubtitle">
+        Global Natural Disaster Assessment System
+    </div>
+    <div id="main_go">
+        即刻进入
+    </div>
+    <div id="main_enter">
+        <svg class="icon icon-tabler icon-tabler-chevrons-right" width="24"
+             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+             stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <polyline points="7 7 12 12 7 17"/>
+            <polyline points="13 7 18 12 13 17"/>
+        </svg>
+    </div>
+</div>
+<script>
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        geocoder: false,
+        homeButton: false,
+        sceneModePicker: false,
+        baseLayerPicker: false,
+        navigationHelpButton: false,
+        animation: false,
+        timeline: false,
+        fullscreenButton: false,
+        infoBox: false,
+        orderIndependentTranslucency: false,
+        skyAtmosphere: false,
+        contextOptions: {
+            webgl: {
+                alpha: true,
+            }
+        },
+    });
+
+    viewer.resolutionScale = window.devicePixelRatio;
+    viewer.cesiumWidget.creditContainer.style.display = "none";
+    viewer.scene.skyBox.show = false;
+    viewer.scene.backgroundColor = new Cesium.Color(0.0, 0.0, 0.0, 0.0);
+    viewer.scene.sun.show = false;
+    viewer.scene.moon.show = false;
+    viewer.scene.postProcessStages.fxaa.enabled = true;
+
+    viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(114.3052, 30.5928, 10000000),
+        duration: 1.0
+    })
+
+    let i = Date.now();
+
+    function rotate() {
+        let a = .1;
+        let t = Date.now();
+        let n = (t - i) / 1e3;
+        i = t;
+        viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -a * n);
+    }
+
+    viewer.clock.onTick.addEventListener(rotate);
+    // setTimeout(function () {
+    //     viewer.clock.onTick.removeEventListener(rotate);
+    // }, 5000);
+
+    const main_go = document.getElementById('main_go');
+    const main_enter = document.getElementById('main_enter');
+
+    main_go.onmouseover = function () {
+        main_go.classList.add('hover');
+        main_enter.classList.add('hover');
+    }
+    main_go.onmouseleave = function () {
+        main_go.classList.remove('hover');
+        main_enter.classList.remove('hover');
+    }
+
+    // $(function () {
+    //     let x, y;
+    //     $("#index").mousemove(function (e) {
+    //         $("#text").text(e.pageX + " " + e.pageY);
+    //         x = -e.pageX / 20;
+    //         y = -e.pageY / 20;
+    //         let c = x + "px " + y + "px";
+    //         $("#image").css('background-position', c);
+    //     })
+    // })
+
+</script>
+</body>
+</html>
