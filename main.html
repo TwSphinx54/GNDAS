@@ -2,18 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <!-- Include the CesiumJS JavaScript and CSS files -->
-    <script src="third_party/Cesium.js"></script>
-    <script src="third_party/jquery.js"></script>
-    <link href="styles/CesiumWidgets.css" rel="stylesheet">
     <link href="basic.css" rel="stylesheet">
+
+    <!-- Include the CesiumJS JavaScript and CSS files -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.93/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.93/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
     <title>全球自然灾害评估系统</title>
 </head>
 <body>
 <div id="index">
     <div id="cesiumContainer"></div>
     <div id="bigTitle">
-        全球自然灾害<br>评估系统
+        全球自然灾害
+    </div>
+    <div id="bigTitle2">
+        评估系统
     </div>
     <div id="bigSubtitle">
         Global Natural Disaster Assessment System
@@ -22,15 +26,33 @@
         即刻进入
     </div>
     <div id="main_enter">
-        <svg class="icon icon-tabler icon-tabler-chevrons-right" width="24"
-             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-             stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+             stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
             <polyline points="7 7 12 12 7 17"/>
             <polyline points="13 7 18 12 13 17"/>
         </svg>
     </div>
+
+    <form id="form_s">
+
+        <div class="segment">
+            <h1>登&nbsp;&nbsp;&nbsp;&nbsp;录</h1>
+        </div>
+
+        <label class="label_s">
+            <input class="input_s" type="text" placeholder="邮&nbsp;&nbsp;箱"/>
+            <div class="color_stripe"></div>
+        </label>
+        <label class="label_s">
+            <input class="input_s" type="password" placeholder="密&nbsp;&nbsp;码"/>
+            <div class="color_stripe"></div>
+        </label>
+        <button id="button_s" type="button">登&nbsp;&nbsp;录</button>
+        <button id="button_reg" type="button">注&nbsp;&nbsp;册</button>
+    </form>
 </div>
+
 <script>
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
 
@@ -83,14 +105,69 @@
 
     const main_go = document.getElementById('main_go');
     const main_enter = document.getElementById('main_enter');
+    const big_title = document.getElementById('bigTitle');
+    const big_title2 = document.getElementById('bigTitle2');
+    const big_subtitle = document.getElementById('bigSubtitle');
+    const cesiumContainer = document.getElementById('cesiumContainer');
+    const index = document.getElementById('index');
+    const form_s = document.getElementById('form_s')
+    const input_s = document.getElementsByClassName('input_s');
+    const color_stripe = document.getElementsByClassName('color_stripe');
+    const button_s = document.getElementById('button_s');
+    const button_reg = document.getElementById('button_reg');
+
+    let not_clicked = true;
 
     main_go.onmouseover = function () {
-        main_go.classList.add('hover');
-        main_enter.classList.add('hover');
+        if (not_clicked === true) {
+            main_go.classList.add('hover');
+            main_enter.classList.add('hover');
+        }
     }
     main_go.onmouseleave = function () {
-        main_go.classList.remove('hover');
-        main_enter.classList.remove('hover');
+        if (not_clicked === true) {
+            main_go.classList.remove('hover');
+            main_enter.classList.remove('hover');
+        }
+    }
+
+    main_go.onclick = function () {
+        not_clicked = false;
+        big_title.classList.add('fade');
+        big_title2.classList.add('fade');
+        big_subtitle.classList.add('fade');
+        main_enter.innerHTML = '';
+        main_go.classList.add('clicked');
+        cesiumContainer.classList.add('log');
+        index.classList.add('clicked');
+        form_s.classList.add('show');
+    }
+
+    input_s[0].onfocus = function () {
+        color_stripe[0].classList.add('show');
+    }
+    input_s[0].onblur = function () {
+        color_stripe[0].classList.remove('show');
+    }
+
+    input_s[1].onfocus = function () {
+        color_stripe[1].classList.add('show');
+    }
+    input_s[1].onblur = function () {
+        color_stripe[1].classList.remove('show');
+    }
+
+    button_s.onmouseover = function () {
+        button_reg.classList.add('show');
+    }
+    button_s.onmouseleave = function () {
+        button_reg.classList.remove('show');
+    }
+    button_reg.onmouseover = function () {
+        button_reg.classList.add('show');
+    }
+    button_reg.onmouseleave = function () {
+        button_reg.classList.remove('show');
     }
 </script>
 </body>

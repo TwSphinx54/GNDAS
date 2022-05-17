@@ -1,0 +1,40 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.mapboxgl-ctrl-logo {
+    display: none !important;
+}
+
+#control {
+    height: 100%;
+    width: 22%;
+    left: 0;
+
+    background-color: rgba(0, 0, 0, 0.7);
+    /*background-image: linear-gradient(25deg, #151776, #2f20a1, #482acf, #6233ff);*/
+    box-shadow: 0 0 15px 15px rgba(0, 0, 0, 0.7);
+    position: fixed;
+    z-index: 1;
+}
+
+#view_title {
+    height: 100px;
+    width: 400px;
+    top: 2%;
+    left: 2%;
+    position: fixed;
+    z-index: 2;
+}
