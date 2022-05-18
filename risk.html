@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="styles/view.css" rel="stylesheet">
+    <link href="styles/risk.css" rel="stylesheet">
+
+    <title>全球自然灾害评估系统 - 风险评估</title>
+</head>
+<body>
+<div id="view_title">
+    <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">风险评估</span>
+    <div id="shining_bar"></div>
+    <div style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
+</div>
+<div class="flex">
+    <ul>
+        <li>灾害分布</li>
+        <li>风险分析</li>
+        <li>用户论坛</li>
+        <li>数据管理</li>
+        <div class="bar"></div>
+    </ul>
+</div>
+
+<script>
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
+
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show2');
+
+    const li = document.getElementsByTagName('li');
+    li[0].onclick = function () {
+        window.location.href = "view.html";
+    }
+    li[2].onclick = function () {
+        window.location.href = "discussion.html";
+    }
+    li[3].onclick = function () {
+        window.location.href = "data.html";
+    }
+</script>
+
+</body>
+</html>

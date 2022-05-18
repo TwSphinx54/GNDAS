@@ -264,7 +264,7 @@ html {
 }
 
 #form_s.show {
-    transition-delay: 1s;
+    transition: opacity 1s ease 1s;
     opacity: 100%;
     z-index: 2;
 }
@@ -390,6 +390,6 @@ html {
     font-size: 16px;
 }
 
-#button_reg:active{
+#button_reg:active {
     box-shadow: inset 1px 1px 2px rgb(21, 21, 24), inset -1px -1px 2px rgb(36, 37, 41);
 }

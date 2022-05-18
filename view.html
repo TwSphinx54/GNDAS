@@ -9,18 +9,57 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
 
-    <title>全球自然灾害评估系统</title>
+    <title>全球自然灾害评估系统 - 灾害分布</title>
 </head>
 <body>
 <div id="map"></div>
 <div id="view_title">
     <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
-    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;">灾害分布</span>
-    <span style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px"><br>Global Natural Disaster Assessment System</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">灾害分布</span>
+    <div id="shining_bar"></div>
+    <div style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
 </div>
 <div id="control">
-
+    <div style="display: block; height: 100px;"></div>
+    <div class="func">灾害种类</div>
+    <div class="content">
+        <div class="type">火&nbsp;&nbsp;山</div>
+        <div class="type">地&nbsp;&nbsp;震</div>
+        <div class="type">海&nbsp;&nbsp;啸</div>
+    </div>
+    <div class="func">自定义模块</div>
+    <div class="content">
+    </div>
+    <div class="func">数据统计</div>
+    <div class="content">
+    </div>
 </div>
+<div class="flex">
+    <ul>
+        <li>灾害分布</li>
+        <li>风险分析</li>
+        <li>用户论坛</li>
+        <li>数据管理</li>
+        <div class="bar"></div>
+    </ul>
+</div>
+<div id="panel_bg1"></div>
+<div id="panel_bg2"></div>
+<div id="info2">
+    <div class="user_date">用户MQX</div>
+    <div class="info_item">系统权限</div>
+    <div id="item_c1">普通用户</div>
+</div>
+<div id="info1">
+    <div class="user_date">当前时间</div>
+    <div class="info_item">当前收录</div>
+    <div id="item_c2">28,653</div>
+    <div class="info_item">最近灾害</div>
+    <div id="item_c3">汤加 [112, 23] 火山</div>
+</div>
+
 
 <!-- Mapbox -->
 <script>
@@ -32,13 +71,67 @@
         zoom: 1.2, // starting zoom
     });
 
-    map.addControl(new mapboxgl.NavigationControl());
-    map.addControl(new mapboxgl.GeolocateControl({
-        positionOptions: {
-            enableHighAccuracy: true
-        },
-        trackUserLocation: true
-    }));
+    const func = document.getElementsByClassName('func');
+    const type = document.getElementsByClassName('type');
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
+    const info_item = document.getElementsByClassName('info_item');
+    const item_c1 = document.getElementById('item_c1');
+    const item_c2 = document.getElementById('item_c2');
+    const item_c3 = document.getElementById('item_c3');
+    const user = document.getElementsByClassName('user_date')[0];
+    const time = document.getElementsByClassName("user_date")[1];
+
+    for (let i = 0; i < func.length; i++) {
+        func[i].classList.add('show');
+    }
+
+    let types = [false, false, false]
+    for (let i = 0; i < type.length; i++) {
+        type[i].classList.add('show');
+        type[i].onclick = function () {
+            if (types[i] === false) {
+                type[i].classList.add('clicked');
+                types[i] = true;
+            } else {
+                type[i].classList.remove('clicked');
+                types[i] = false;
+            }
+        }
+    }
+
+    for (let i = 0; i < info_item.length; i++) {
+        info_item[i].classList.add('show');
+    }
+
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show1');
+    user.classList.add('show1');
+    item_c1.classList.add('show');
+    item_c2.classList.add('show');
+    item_c3.classList.add('show');
+    time.classList.add('show2');
+
+    function getDate() {
+        let date = new Date();
+        time.innerHTML = date.toLocaleString();
+    }
+
+    getDate()
+    setInterval("getDate()", 1000);
+
+    const li = document.getElementsByTagName('li');
+    li[1].onclick = function () {
+        window.location.href = "risk.html";
+    }
+    li[2].onclick = function () {
+        window.location.href = "discussion.html";
+    }
+    li[3].onclick = function () {
+        window.location.href = "data.html";
+    }
 </script>
 </body>
 </html>
