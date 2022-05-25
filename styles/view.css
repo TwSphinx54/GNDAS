@@ -141,6 +141,48 @@ body {
     text-indent: 0;
 }
 
+.style {
+    color: white;
+    float: left;
+    border-top: 2px solid #1da1f2;
+    box-sizing: border-box;
+    box-shadow: 0 -3px 3px rgba(29, 161, 242, 0.3);
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+
+    width: 0;
+    margin-right: 24.75%;
+    height: 0;
+    text-indent: -150px;
+    line-height: 25px;
+    border-bottom: 0 solid #1da1f2;
+
+    cursor: default;
+    animation: ease-out;
+    transition: width 0.5s ease-out 0.8s, margin-right 0.5s ease-out 0.8s, height 0.5s ease-out 1.3s, text-indent 0.5s ease-out 1.6s;
+}
+
+.style:hover {
+    transition: 0.5s ease;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.style.clicked {
+    transition: background 0.5s ease-out, border-bottom 0.1s, width 0.5s ease-out 0.8s, margin-right 0.5s ease-out 0.8s, height 0.5s ease-out 1.3s, text-indent 0.5s ease-out 1.6s;
+    border-bottom: 2px solid #1da1f2;
+    background: rgba(29, 161, 242, 0.3);
+}
+
+.style.show {
+    width: 23.75%;
+    margin-right: 1%;
+    height: 27px;
+    text-indent: 0;
+}
+
 .content {
     margin-top: 5%;
     margin-left: 2%;

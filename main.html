@@ -55,9 +55,10 @@
 			</form>
 		</div>
 
-		<script>
-			Cesium.Ion.defaultAccessToken =
-				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
+<script>
+    import * as Cesium from "cesium";
+
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
 
 			var viewer = new Cesium.Viewer('cesiumContainer', {
 				geocoder: false,
