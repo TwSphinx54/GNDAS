@@ -15,7 +15,7 @@ html {
     left: 0;
     top: 0;
     overflow: hidden;
-    background: url("img/galaxy.jpg") no-repeat;
+    background: url("../img/galaxy.jpg") no-repeat;
     background-size: 110%;
     position: fixed;
 
