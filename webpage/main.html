@@ -183,7 +183,11 @@
         xhr.send(formData)
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                window.location.href = xhr.responseURL
+                if (xhr.response === 'error') {
+                    window.alert('邮箱或密码错误！')
+                } else {
+                    window.location.href = xhr.responseURL
+                }
             }
         }
     }

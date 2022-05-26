@@ -40,8 +40,10 @@
         <div class="style">明&nbsp;亮</div>
         <div class="style">暗&nbsp;黑</div>
     </div>
-    <div class="func">数据统计</div>
+    <div class="func">实时位置</div>
     <div class="content">
+        <div class="position"></div>
+        <div class="position"></div>
     </div>
 </div>
 <div class="flex">
@@ -69,155 +71,264 @@
 </div>
 
 
-<!-- Mapbox -->
 <script>
+    let vol_o = {{ vol | tojson }}
+    let eqk_o = {{ eqk | tojson }}
+    let tnm_o = {{ tnm | tojson }}
+
     mapboxgl.accessToken = 'pk.eyJ1Ijoic3Nzc3BoaW54IiwiYSI6ImNrbnZnbDR1NzAzNzMyb3Bwbng3amtnMzQifQ.E1nAH_fti0KvB2heCd-cEg';
-    const map = new mapboxgl.Map({
+    let map = new mapboxgl.Map({
         container: 'map', // container ID
         style: 'mapbox://styles/mapbox/satellite-streets-v11', // style URL
         center: [105, 45], // starting position [lng, lat]
         zoom: 1.2, // starting zoom
     });
 
-    // var vol, eqk, tnm
-    // window.onload = function () {
-    //     let url = 'http://127.0.0.1:8080/result'
-    //     let xhr1 = new XMLHttpRequest();
-    //     xhr1.open('POST', url, true);
-    //     let formData1 = new FormData();
-    //     formData1.append('status', 'disaster')
-    //     formData1.append('type', 'volcano')
-    //     xhr1.send(formData1)
-    //     xhr1.onreadystatechange = function () {
-    //         if (xhr1.readyState === XMLHttpRequest.DONE && xhr1.status === 200) {
-    //             vol = xhr1.response
-    //         }
-    //     }
-    //     let xhr2 = new XMLHttpRequest();
-    //     xhr2.open('POST', url, true);
-    //     let formData2 = new FormData();
-    //     formData2.append('status', 'disaster')
-    //     formData2.append('type', 'earthquake')
-    //     xhr2.send(formData2)
-    //     xhr2.onreadystatechange = function () {
-    //         if (xhr2.readyState === XMLHttpRequest.DONE && xhr2.status === 200) {
-    //             eqk = xhr2.response
-    //         }
-    //     }
-    //     let xhr3 = new XMLHttpRequest();
-    //     xhr3.open('POST', url, true);
-    //     let formData3 = new FormData();
-    //     formData3.append('status', 'disaster')
-    //     formData3.append('type', 'tsunami')
-    //     xhr3.send(formData3)
-    //     xhr3.onreadystatechange = function () {
-    //         if (xhr3.readyState === XMLHttpRequest.DONE && xhr3.status === 200) {
-    //             tnm = xhr3.response
-    //         }
-    //     }
-    // }
-    // console.log(vol)
-    // console.log(typeof(vol))
+    function add_layers(map_source, vol_source, eqk_source, tnm_source) {
+        map_source.addSource('volcano', {
+            'type': 'geojson',
+            'data': vol_source
+        });
 
-    console.log('{{ vol }}')
-    console.log(JSON.parse('{{ vol }}'))
-    console.log(typeof ('{{ vol }}'))
-    console.log(typeof (JSON.parse('{{ vol }}')))
+        // Add a layer showing the places.
+        map_source.addLayer({
+            'id': 'volcano',
+            'type': 'circle',
+            'source': 'volcano',
+            'paint': {
+                'circle-color': '#9D4E54',
+                'circle-radius': 3,
+                'circle-stroke-width': 0.5,
+                'circle-stroke-color': '#ffffff'
+            }
+        });
 
-    // map.on('load', () => {
-    //     map.addSource('volcano', {
-    //         'type': 'geojson',
-    //         'data': vol
-    //     });
-    //
-    //     // Add a layer showing the places.
-    //     map.addLayer({
-    //         'id': 'volcano',
-    //         'type': 'circle',
-    //         'source': 'volcano',
-    //         'paint': {
-    //             'circle-color': '#9D4E54',
-    //             'circle-radius': 5,
-    //             'circle-stroke-width': 1,
-    //             'circle-stroke-color': '#ffffff'
-    //         }
-    //     });
-    //
-    //     // map.on('click', 'heritages', (e) => {
-    //     //     // Copy coordinates array.
-    //     //     const coordinates = e.features[0].geometry.coordinates.slice();
-    //     //     dest = coordinates;
-    //     //     const name = e.features[0].properties.Name;
-    //     //     const e_class = e.features[0].properties.Class;
-    //     //     const code = e.features[0].properties.Code;
-    //     //     const protect = e.features[0].properties.Protect;
-    //     //     const content = e.features[0].properties.Content;
-    //     //     const time = e.features[0].properties.Time;
-    //     //     const people = e.features[0].properties.People;
-    //     //     const No = e.features[0].properties.No;
-    //     //
-    //     //
-    //     //     while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-    //     //         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    //     //     }
-    //     //
-    //     //     new mapboxgl.Popup({
-    //     //         closeButton: false
-    //     //     })
-    //     //         .setLngLat(coordinates)
-    //     //         .setHTML('<p><b>' + name + '</b></p><hr>' + '编号： <span lang="en">' +
-    //     //             code + '</span><br>类别： ' + e_class + '<br>保护单位： ' + protect)
-    //     //         .addTo(map);
-    //     //
-    //     //     map.flyTo({
-    //     //         center: e.features[0].geometry.coordinates,
-    //     //         zoom: 12
-    //     //     });
-    //     // });
-    //     //
-    //     // const popup = new mapboxgl.Popup({
-    //     //     closeButton: false,
-    //     //     closeOnClick: false
-    //     // });
-    //     // // Change the cursor to a pointer when the mouse is over the places layer.
-    //     // map.on('mouseenter', 'heritages', (e) => {
-    //     //     map.getCanvas().style.cursor = 'pointer';
-    //     //
-    //     //     // Copy coordinates array.
-    //     //     const coordinates = e.features[0].geometry.coordinates.slice();
-    //     //     const name = e.features[0].properties.Name;
-    //     //     const e_class = e.features[0].properties.Class;
-    //     //     const code = e.features[0].properties.Code;
-    //     //     const protect = e.features[0].properties.Protect;
-    //     //
-    //     //     while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-    //     //         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    //     //     }
-    //     //
-    //     //     popup.setLngLat(coordinates)
-    //     //         .setHTML('<p><b>' + name + '</b></p><hr>' + '编号： <span lang="en">' +
-    //     //             code + '</span><br>类别： ' + e_class + '<br>保护单位： ' + protect)
-    //     //         .addTo(map);
-    //     // });
-    //     //
-    //     // // Change it back to a pointer when it leaves.
-    //     // map.on('mouseleave', 'heritages', () => {
-    //     //     map.getCanvas().style.cursor = '';
-    //     //
-    //     //     popup.remove();
-    //     // });
-    //     //
-    //     // map.on('mousemove', (e) => {
-    //     //     // `e.lngLat` is the longitude, latitude geographical position of the event.
-    //     //     document.getElementById('info').innerHTML = '<table><tr><td style="width: 50px;">' +
-    //     //         '经度:' + '</td><td style="width: 150px;" lang="en">' + e.lngLat.lng.toFixed(13) + '</td><td style="width: 50px;">' +
-    //     //         '纬度:' + '</td><td style="width: 150px;" lang="en">' + e.lngLat.lat.toFixed(13) + '</td></tr></table>'
-    //     // });
-    // });
+        map_source.addSource('earthquake', {
+            'type': 'geojson',
+            'data': eqk_source
+        });
+
+        // Add a layer showing the places.
+        map_source.addLayer({
+            'id': 'earthquake',
+            'type': 'circle',
+            'source': 'earthquake',
+            'paint': {
+                'circle-color': '#5f9d4e',
+                'circle-radius': 3,
+                'circle-stroke-width': 0.5,
+                'circle-stroke-color': '#ffffff'
+            }
+        });
+
+        map_source.addSource('tsunami', {
+            'type': 'geojson',
+            'data': tnm_source
+        });
+
+        // Add a layer showing the places.
+        map_source.addLayer({
+            'id': 'tsunami',
+            'type': 'circle',
+            'source': 'tsunami',
+            'paint': {
+                'circle-color': '#4e5e9d',
+                'circle-radius': 3,
+                'circle-stroke-width': 0.5,
+                'circle-stroke-color': '#ffffff'
+            }
+        });
+
+        for (let i = 0; i < 3; i++) {
+            if (!types[i]) {
+                map.setLayoutProperty(toggleableLayerIds[i], 'visibility', 'none');
+            }
+        }
+    }
+
+    map.on('style.load', () => {
+        add_layers(map, vol_o, eqk_o, tnm_o)
+        console.log(vol_o)
+        console.log(eqk_o)
+        console.log(tnm_o)
+
+        map.on('click', 'volcano', (e) => {
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let country = property.Country;
+            let elevation = property.Elevation;
+            let volcano = property.Volcano;
+            let volcanotype = property.Volcanotype;
+            let volcanoes = property.Volcanoes;
+            let lastKnownEruption = property.Last_known_eruption;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            map.flyTo({
+                center: coordinates,
+                zoom: 12
+            });
+
+            new mapboxgl.Popup({
+                closeButton: false
+            })
+                .setLngLat(coordinates)
+                .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' + volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' + lastKnownEruption)
+                .addTo(map);
+        });
+
+        map.on('click', 'earthquake', (e) => {
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let date = property.Date;
+            let depth = property.Depth;
+            let magnitude = property.Magnitude;
+            let locationA = property.location_a;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            map.flyTo({
+                center: coordinates,
+                zoom: 12
+            });
+
+            new mapboxgl.Popup({
+                closeButton: false
+            })
+                .setLngLat(coordinates)
+                .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude + '<br>震源深度： ' + depth)
+                .addTo(map);
+        });
+
+        map.on('click', 'tsunami', (e) => {
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let cause = property.Cause;
+            let country = property.Country;
+            let region = property.Region;
+            let tsIntensity = property.TS_Intensity;
+            let year = property.Year;
+            let locationName = property.Location_Name;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            map.flyTo({
+                center: coordinates,
+                zoom: 12
+            });
+
+            new mapboxgl.Popup({
+                closeButton: false
+            })
+                .setLngLat(coordinates)
+                .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' + region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+                .addTo(map);
+        });
+
+        const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'volcano', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let country = property.Country;
+            let elevation = property.Elevation;
+            let volcano = property.Volcano;
+            let volcanotype = property.Volcanotype;
+            let volcanoes = property.Volcanoes;
+            let lastKnownEruption = property.Last_known_eruption;
+
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            popup.setLngLat(coordinates)
+                .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' + volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' + lastKnownEruption)
+                .addTo(map);
+        });
+
+        map.on('mouseenter', 'earthquake', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let date = property.Date;
+            let depth = property.Depth;
+            let magnitude = property.Magnitude;
+            let locationA = property.location_a;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            popup.setLngLat(coordinates)
+                .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude + '<br>震源深度： ' + depth)
+                .addTo(map);
+        });
+
+        map.on('mouseenter', 'tsunami', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let cause = property.Cause;
+            let country = property.Country;
+            let region = property.Region;
+            let tsIntensity = property.TS_Intensity;
+            let year = property.Year;
+            let locationName = property.Location_Name;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            popup.setLngLat(coordinates)
+                .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' + region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+                .addTo(map);
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'volcano', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        map.on('mouseleave', 'earthquake', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        map.on('mouseleave', 'tsunami', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        map.on('mousemove', (e) => {
+            // `e.lngLat` is the longitude, latitude geographical position of the event.
+            position[0].innerHTML = e.lngLat.lng.toFixed(10);
+            position[1].innerHTML = e.lngLat.lat.toFixed(10);
+        });
+    });
 
     const func = document.getElementsByClassName('func');
     const type = document.getElementsByClassName('type');
     const style = document.getElementsByClassName('style');
+    const position = document.getElementsByClassName('position');
     const shining_bar = document.getElementById('shining_bar');
     const flex = document.getElementsByClassName('flex')[0];
     const bar = document.getElementsByClassName('bar')[0];
@@ -232,30 +343,25 @@
         func[i].classList.add('show');
     }
 
-    let types = [false, false, false]
+    for (let i = 0; i < position.length; i++) {
+        position[i].classList.add('show');
+    }
+
+    let types = [true, false, false]
+    const toggleableLayerIds = ['volcano', 'earthquake', 'tsunami'];
+    type[0].classList.add('clicked');
     for (let i = 0; i < type.length; i++) {
         type[i].classList.add('show');
         type[i].onclick = function () {
             if (types[i] === false) {
                 type[i].classList.add('clicked');
                 types[i] = true;
+                map.setLayoutProperty(toggleableLayerIds[i], 'visibility', 'visible');
             } else {
                 type[i].classList.remove('clicked');
                 types[i] = false;
+                map.setLayoutProperty(toggleableLayerIds[i], 'visibility', 'none');
             }
-
-            // let url = 'http://127.0.0.1:8080/result'
-            // let xhr = new XMLHttpRequest();
-            // xhr.open('POST', url, true);
-            // let formData = new FormData();
-            // formData.append('status', 'type')
-            // formData.append('dis', i.toString())
-            // xhr.send(formData)
-            // xhr.onreadystatechange = function () {
-            //     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            //
-            //     }
-            // }
         }
     }
 
@@ -271,7 +377,7 @@
                 styles_c[c_id] = false;
                 style[i].classList.add('clicked');
                 styles_c[i] = true;
-                map.setStyle('mapbox://styles/mapbox/' + styles[i])
+                map.setStyle('mapbox://styles/mapbox/' + styles[i]);
             }
         }
     }
