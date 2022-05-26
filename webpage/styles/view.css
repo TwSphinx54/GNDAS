@@ -502,3 +502,205 @@ body {
     width: 130px;
     margin-left: 5px;
 }
+
+#zoom {
+    position: fixed;
+    z-index: 5;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    backdrop-filter: blur(3px);
+    overflow: hidden;
+
+    top: 0;
+    margin-top: 1%;
+    width: 10%;
+    text-indent: 0;
+    line-height: 30px;
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+
+    height: 2px;
+    right: -11%;
+    color: white;
+    padding-left: 30px;
+    border-left: 50px solid #1da1f2;
+    background-color: rgba(255, 255, 255, 0.3);
+
+    cursor: default;
+    animation: ease-out;
+    transition: right 0.5s ease-out, color 0.5s ease, border-left 0.5s ease, background-color 0.5s ease, height 0.5s ease 0.5s;
+}
+
+#zoom.show {
+    height: 30px;
+    right: -6%;
+    color: white;
+    padding-left: 30px;
+    border-left: 50px solid #1da1f2;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#zoom.show:hover {
+    right: 0;
+    color: #1da1f2;
+    padding-left: 10px;
+    border-left: 3px solid #1da1f2;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#detail {
+    position: fixed;
+    z-index: 5;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    backdrop-filter: blur(3px);
+    overflow: hidden;
+
+    top: 5%;
+    margin-top: 1%;
+    width: 10%;
+    text-indent: 0;
+    line-height: 30px;
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+
+    height: 2px;
+    right: -11%;
+    color: white;
+    padding-left: 30px;
+    border-left: 50px solid #1da1f2;
+    background-color: rgba(255, 255, 255, 0.3);
+
+    cursor: default;
+    animation: ease-out;
+    transition: right 0.5s ease-out, color 0.5s ease, border-left 0.5s ease, background-color 0.5s ease, height 0.5s ease 0.5s;
+}
+
+#detail.show {
+    height: 30px;
+    right: -5%;
+    color: white;
+    padding-left: 30px;
+    border-left: 50px solid #1da1f2;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#detail.show:hover {
+    right: 0;
+    color: #1da1f2;
+    padding-left: 10px;
+    border-left: 3px solid #1da1f2;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#modal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 8;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: none;
+}
+
+#modal.show {
+    display: block;
+}
+
+#detail_map {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    border-left: 1px solid #1da1f2;
+    border-right: 3px solid #1da1f2;
+    overflow: hidden;
+
+    width: 0;
+    height: 0;
+    z-index: -2;
+    margin-left: 190px;
+    margin-top: 0;
+
+    cursor: default;
+    animation: ease-out;
+    transition: height 0.5s ease, width 0.5s ease 0.5s, margin-left 0.5s ease 0.5s, margin-top 0.5s ease;
+}
+
+#detail_map.show {
+    width: 700px;
+    height: 600px;
+    z-index: 10;
+    margin-left: -510px;
+    margin-top: -300px;
+}
+
+#detail_info {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    border-top: 3px solid #1da1f2;
+    border-bottom: 1px solid #1da1f2;
+    overflow: hidden;
+    color: white;
+
+    width: 0;
+    height: 0;
+    z-index: -2;
+    margin-left: 360px;
+    margin-top: 0;
+
+    cursor: default;
+    animation: ease-out;
+    transition: width 0.5s ease, height 0.5s ease 0.5s, margin-left 0.5s ease, margin-top 0.5s ease 0.5s;
+}
+
+#detail_info.show {
+    width: 300px;
+    height: 600px;
+    z-index: 10;
+    margin-left: 210px;
+    margin-top: -300px;
+}
+
+#close {
+    height: 0;
+    left: 50%;
+    top: 50%;
+    border-bottom: 30px solid rgba(229, 63, 63, 0.7);
+    margin-top: -330px;
+    position: fixed;
+
+    z-index: -2;
+    width: 0;
+    border-left: 0 solid transparent;
+    margin-left: 510px;
+
+    cursor: pointer;
+    animation: ease-out;
+    transition: all 0.5s ease 1s, z-index 0s, border-bottom-color 0.3s;
+}
+
+#close.show {
+    z-index: 9;
+    width: 100px;
+    border-left: 30px solid transparent;
+    margin-left: 380px;
+}
+
+#close:hover {
+    border-bottom-color: #1da1f2;
+}
+
+#d_map {
+    width: 697px;
+    height: 600px;
+}

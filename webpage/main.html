@@ -95,7 +95,7 @@
     function rotate() {
         let a = .1;
         let t = Date.now();
-        let n = (t - i) / 1e3;
+        let n = (t - i) / 1e4;
         i = t;
         viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -a * n);
     }
