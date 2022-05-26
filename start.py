@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template, jsonify
-from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched
+from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched,registered
 import json
 
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
@@ -16,15 +16,19 @@ def login():
     elif request.method == 'POST':
         email = request.values['email']
         password = request.form['password']
-        status = request.form['status']
+        status = request.form['status'] # 代表本次请求是登录(true)or注册(false)
         global usr, pms
         usr = email.split('@')[0]
         pms = '管理员' if status[1] else '普通用户'
-        if status:
+        if status: # 此时正在进行登录操作
             log_status = login_in(conn, cursor, email, password)
-            if log_status[0]:
-                return redirect(url_for('main_process'))
-            # else:
+            if log_status[0]: # 系统中有该用户
+                return redirect(url_for('main_process')) # redirect以get方法访问
+            else:
+                return 'error' # redirect以get方法访问
+        else: # 此时正在进行注册操作
+            registered(conn, cursor, email, password) #注册用户
+            return redirect(url_for('main_process'))
 
 
 @app.route('/result', methods=['GET', 'POST'])
@@ -33,7 +37,7 @@ def main_process():
         vol = volcano_eruption_all_matched(conn, cursor)
         eqk = earthquake_all_matched(conn, cursor)
         tnm = tsunami_all_matched(conn, cursor)
-        print(json.dumps(vol))
+        # print(json.dumps(vol))
         return render_template('view.html', pms=pms, usr=usr, vol=json.dumps(vol), eqk=json.dumps(eqk),
                                tnm=json.dumps(tnm))
     elif request.method == 'POST':
@@ -52,4 +56,5 @@ def main_process():
 
 
 if __name__ == '__main__':
-    app.run(port=8080)
+    app.run(port=8080,debug=True)
+
