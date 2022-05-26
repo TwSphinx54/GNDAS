@@ -55,7 +55,7 @@ def full_geojson(rows):
     n_rows = [k[0] for k in rows]
     full_geojson = {
         'type': 'FeatureCollection',
-        'Feature': n_rows
+        'features': n_rows
 
     }
     return full_geojson
@@ -64,9 +64,9 @@ def full_geojson(rows):
 def earthquake_all_matched(conn, cursor):
     sql = """SELECT json_build_object(
         'type',       'Feature',
-        'id',         gid,
         'geometry',   ST_AsGeoJSON(geom)::json,
         'properties', json_build_object(
+            'id', gid,
             'Date', earthquake.Date,
             'Year', earthquake.Year,
             'Magnitude', earthquake.Magnitude,
@@ -86,9 +86,9 @@ def earthquake_all_matched(conn, cursor):
 def tsunami_all_matched(conn, cursor):
     sql = """SELECT json_build_object(
     'type',       'Feature',
-    'id',         gid,
     'geometry',   ST_AsGeoJSON(geom)::json,
     'properties', json_build_object(
+        'id', gid,
 		'Year', tsunami.year,
 		'Location_Name', tsunami.location_n,
 		'Country',tsunami.country,
@@ -117,9 +117,9 @@ def tsunami_all_matched(conn, cursor):
 def volcano_eruption_all_matched(conn, cursor):
     sql = """SELECT json_build_object(
     'type',       'Feature',
-    'id',         gid,
     'geometry',   ST_AsGeoJSON(geom)::json,
     'properties', json_build_object(
+        'id', gid,
 		'Year', volcano_eruption.year,
 		'Volcano', volcano_eruption.volcano,
 		'Volcano_id',volcano_eruption.volcano_id,

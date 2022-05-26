@@ -37,9 +37,7 @@ def main_process():
         vol = volcano_eruption_all_matched(conn, cursor)
         eqk = earthquake_all_matched(conn, cursor)
         tnm = tsunami_all_matched(conn, cursor)
-        # print(json.dumps(vol))
-        return render_template('view.html', pms=pms, usr=usr, vol=json.dumps(vol), eqk=json.dumps(eqk),
-                               tnm=json.dumps(tnm))
+        return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm)
     elif request.method == 'POST':
         status = request.form['status']
         if status == 'disaster':
@@ -56,5 +54,5 @@ def main_process():
 
 
 if __name__ == '__main__':
-    app.run(port=8080,debug=True)
+    app.run(port=8080, debug=True)
 
