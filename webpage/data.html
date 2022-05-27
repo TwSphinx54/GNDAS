@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<link href="styles/view.css" rel="stylesheet">
+		<link href="styles/data.css" rel="stylesheet">
+
+		<title>全球自然灾害评估系统 - 数据管理</title>
+	</head>
+	<body>
+		<div id="view_title">
+			<span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+			<span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">数据管理</span>
+			<div id="shining_bar"></div>
+			<div
+				style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+				GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+			</div>
+		</div>
+		<div class="flex">
+			<ul>
+				<li class="list">灾害分布</li>
+				<li class="list">风险评估</li>
+				<li class="list">用户论坛</li>
+				<li class="list">数据管理</li>
+				<div class="bar"></div>
+			</ul>
+		</div>
+
+		<script>
+			const shining_bar = document.getElementById('shining_bar');
+			const flex = document.getElementsByClassName('flex')[0];
+			const bar = document.getElementsByClassName('bar')[0];
+
+			shining_bar.classList.add('show');
+			flex.classList.add('show');
+			bar.classList.add('show4');
+
+			const li = document.getElementsByClassName('list');
+			li[0].onclick = function() {
+				let url = 'http://127.0.0.1:8080/result'
+				let xhr = new XMLHttpRequest();
+				xhr.open('GET', url, true);
+				xhr.send()
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+						window.location.href = xhr.responseURL
+					}
+				}
+			}
+			li[1].onclick = function() {
+				let url = 'http://127.0.0.1:8080/risk'
+				let xhr = new XMLHttpRequest();
+				xhr.open('GET', url, true);
+				xhr.send()
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+						window.location.href = xhr.responseURL
+					}
+				}
+			}
+			li[2].onclick = function() {
+				let url = 'http://127.0.0.1:8080/discussion'
+				let xhr = new XMLHttpRequest();
+				xhr.open('GET', url, true);
+				xhr.send()
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+						window.location.href = xhr.responseURL
+					}
+				}
+			}
+			li[3].onclick = function() {
+				let url = 'http://127.0.0.1:8080/data'
+				let xhr = new XMLHttpRequest();
+				xhr.open('GET', url, true);
+				xhr.send()
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+						window.location.href = xhr.responseURL
+					}
+				}
+			}
+		</script>
+
+	</body>
+</html>

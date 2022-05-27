@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="styles/view.css" rel="stylesheet">
+    <link href="styles/risk.css" rel="stylesheet">
+    <title>全球自然灾害评估系统 - 风险评估</title>
+
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/echarts/5.3.2/echarts.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+
+    <script type="text/javascript" src="risk/Risk_Func.js"></script>
+    <script type="text/javascript" src="risk/Risk_Earthquake.js"></script>
+    <script type="text/javascript" src="risk/Risk_Volcano.js"></script>
+    <script type="text/javascript" src="risk/Risk_Tsunami.js"></script>
+
+
+</head>
+<body>
+<div id="view_title">
+    <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">风险评估</span>
+    <div id="shining_bar"></div>
+    <div style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
+</div>
+<div class="flex">
+    <ul>
+        <li>灾害分布</li>
+        <li>风险分析</li>
+        <li>用户论坛</li>
+        <li>数据管理</li>
+        <div class="bar"></div>
+    </ul>
+</div>
+
+
+<div id='heatmap'></div>
+
+<div id="MyCharts1"></div>
+<div id="MyCharts2"></div>
+<div id="MyCharts3"></div>
+<div id="MyCharts4"></div>
+
+
+<div class="titles">
+    <div class="func">灾害种类</div>
+    <div class="type">
+        <div id="type1">火&nbsp;&nbsp;山</div>
+        <div id="type2">地&nbsp;&nbsp;震</div>
+        <div id="type3">海&nbsp;&nbsp;啸</div>
+    </div>
+</div>
+
+
+<script>
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
+
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show2');
+
+    const li = document.getElementsByTagName('li');
+    li[0].onclick = function () {
+        window.location.href = "view.html";
+    }
+    li[2].onclick = function () {
+        window.location.href = "discussion.html";
+    }
+    li[3].onclick = function () {
+        window.location.href = "data.html";
+    }
+
+
+    const Earthquake = document.getElementById('type2')
+    Earthquake.onclick = function () {
+        Earthquake_Charts();
+    }                               // Earthquake.onclick=Earthquake_Charts;   另外一种写法
+
+    const Volcano = document.getElementById('type1')
+    Volcano.onclick = function () {
+        Volcano_Charts();
+    }
+
+    const Tsunami = document.getElementById('type3')
+    Tsunami.onclick = function () {
+        Tsunami_Charts();
+    }
+</script>
+
+
+</body>
+</html>
