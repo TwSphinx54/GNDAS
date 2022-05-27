@@ -25,9 +25,10 @@ def login():
         email = request.values['email']
         password = request.form['password']
         status = request.form['status']  # 代表本次请求是登录(true)or注册(false)
+        print(status)
         global usr, pms
         usr = email.split('@')[0]
-        if status: # 此时正在进行登录操作
+        if status==True: # 此时正在进行登录操作
             log_status = login_in(conn, cursor, email, password)
             pms = '管理员' if log_status[1] else '普通用户'
             if log_status[0]: # 系统中有该用户
