@@ -1,87 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<link href="styles/view.css" rel="stylesheet">
-		<link href="styles/data.css" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <link href="styles/view.css" rel="stylesheet">
+    <link href="styles/data.css" rel="stylesheet">
 
-		<title>全球自然灾害评估系统 - 数据管理</title>
-	</head>
-	<body>
-		<div id="view_title">
-			<span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
-			<span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">数据管理</span>
-			<div id="shining_bar"></div>
-			<div
-				style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
-				GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
-			</div>
-		</div>
-		<div class="flex">
-			<ul>
-				<li class="list">灾害分布</li>
-				<li class="list">风险评估</li>
-				<li class="list">用户论坛</li>
-				<li class="list">数据管理</li>
-				<div class="bar"></div>
-			</ul>
-		</div>
+    <title>全球自然灾害评估系统 - 数据管理</title>
+</head>
+<body>
+<div id="view_title">
+    <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">数据管理</span>
+    <div id="shining_bar"></div>
+    <div
+            style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
+</div>
+<div class="flex">
+    <ul>
+        <li class="list">灾害分布</li>
+        <li class="list">风险评估</li>
+        <li class="list">用户论坛</li>
+        <li class="list">数据管理</li>
+        <div class="bar"></div>
+    </ul>
+</div>
+<div class="button_block">
+    <div class="data_t">火&nbsp;&nbsp;山</div>
+    <div class="data_t">地&nbsp;&nbsp;震</div>
+    <div class="data_t">海&nbsp;&nbsp;啸</div>
+</div>
+<div id="form_block">
+    <div class="texts">
+        <div class="input_content">
+            <input class="inbox" value="火山名">
+            <input class="inbox" value="火山编号">
+            <input class="inbox" value="火山种类">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="开始喷发时间">
+            <input class="inbox" value="结束喷发时间">
+            <input class="inbox" value="喷发次数">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="国家">
+            <input class="inbox" value="群系">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="经度">
+            <input class="inbox" value="纬度">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="高峰">
+            <input class="inbox" value="海拔">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="年份">
+            <input class="inbox" value="最近喷发">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="详情链接">
+        </div>
+    </div>
 
-		<script>
-			const shining_bar = document.getElementById('shining_bar');
-			const flex = document.getElementsByClassName('flex')[0];
-			const bar = document.getElementsByClassName('bar')[0];
+    <div class="texts">
+        <div class="input_content">
+            <input class="inbox" value="时间">
+            <input class="inbox" value="地点">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="震级">
+            <input class="inbox" value="震源深度">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="经度">
+            <input class="inbox" value="纬度">
+            <input class="inbox" value="年份">
+        </div>
+    </div>
 
-			shining_bar.classList.add('show');
-			flex.classList.add('show');
-			bar.classList.add('show4');
+    <div class="texts">
+        <div class="input_content">
+            <input class="inbox" value="位置">
+            <input class="inbox" value="国家">
+            <input class="inbox" value="地区">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="成因">
+            <input class="inbox" value="烈度">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="经度">
+            <input class="inbox" value="纬度">
+            <input class="inbox" value="年份">
+        </div>
+        <div class="input_content">
+            <input class="inbox" value="确信度">
+            <input class="inbox" value="评价">
+            <input class="inbox" value="详情链接">
+        </div>
+    </div>
+</div>
+<div id="button_sd_box">
+    <div class="button_sd">下载数据</div>
+    <div class="button_sd">提交数据</div>
+</div>
 
-			const li = document.getElementsByClassName('list');
-			li[0].onclick = function() {
-				let url = 'http://127.0.0.1:8080/result'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-			li[1].onclick = function() {
-				let url = 'http://127.0.0.1:8080/risk'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-			li[2].onclick = function() {
-				let url = 'http://127.0.0.1:8080/discussion'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-			li[3].onclick = function() {
-				let url = 'http://127.0.0.1:8080/data'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-		</script>
+<!--year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2,-->
+<!--                             volcanoes, volcanotyp, lastknowne, latitude, longitude, summit, elevation, url,-->
+<!--                             field17='[null]'-->
+<!--date, year, magnitude, latitude, longitude, depth, location_n-->
+<!--year, latitude, longitude, location_n, country, region, cause, event_vali, ts_intensi,-->
+<!--                    url, comments,-->
+<script>
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
 
-	</body>
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show4');
+
+    const data_t = document.getElementsByClassName('data_t');
+    const button_block = document.getElementsByClassName('button_block')[0];
+    const form_block = document.getElementById('form_block');
+    const inbox = document.getElementsByClassName('inbox');
+    const texts = document.getElementsByClassName('texts');
+    const button_sd = document.getElementsByClassName('button_sd');
+
+    let clicked = false;
+    let data_flag = [false, false, false]
+    for (let i = 0; i < data_t.length; i++) {
+        data_t[i].classList.add('show')
+        data_t[i].onclick = function () {
+            if (!clicked) {
+                button_block.classList.add('move');
+                form_block.classList.add('show');
+                for (let i = 0; i < inbox.length; i++) {
+                    inbox[i].classList.add('show');
+                    let temp = inbox[i].value
+                    inbox[i].onfocus = function () {
+                        if (inbox[i].value === temp) {
+                            inbox[i].value = ""
+                        }
+                        inbox[i].classList.add("active")
+                    }
+
+                    inbox[i].onblur = function () {
+                        if (inbox[i].value === "") {
+                            inbox[i].value = temp
+                            inbox[i].classList.remove("active")
+                        }
+                    }
+                }
+
+                for (let i = 0; i < button_sd.length; i++) {
+                    button_sd[i].classList.add('show');
+                }
+            }
+            clicked = true
+            if (data_flag[i] === false) {
+                let c_id = data_flag.indexOf(true);
+                if (c_id > -1) {
+                    texts[c_id].classList.remove('clicked');
+                    data_t[c_id].classList.remove('clicked');
+                }
+                data_flag[c_id] = false;
+                data_t[i].classList.add('clicked');
+                texts[i].classList.add('clicked');
+                data_flag[i] = true;
+            }
+        }
+    }
+
+    button_sd[1].onclick = function () {
+        let c_id = data_flag.indexOf(true)
+        if (c_id > -1) {
+            let data = [];
+
+            for (let i = 0; i < inbox.length; i++) {
+                data.push(inbox[i].value)
+            }
+
+            let url = 'http://127.0.0.1:8080/data'
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            let formData = new FormData();
+            formData.append('status', 'send_data')
+            formData.append('type', c_id)
+            formData.append('data', data)
+            xhr.send(formData)
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    if (xhr.response === 'done!'){
+                        window.alert('提交完毕！')
+                    }
+                }
+            }
+        }
+    }
+
+    button_sd[0].onclick = function () {
+        window.alert('开发中……')
+    }
+
+    const li = document.getElementsByClassName('list');
+    li[0].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/result'
+    }
+    li[1].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/risk'
+    }
+    li[2].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/discussion'
+    }
+</script>
+
+</body>
 </html>

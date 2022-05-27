@@ -504,7 +504,7 @@ body {
 	margin-left: 5px;
 }
 
-.in_text {
+.search {
 	color: white;
 	float: left;
 	border-top: 2px solid #1da1f2;
@@ -529,10 +529,15 @@ body {
 	transition: width 0.5s ease-out 0.8s, margin-right 0.5s ease-out 0.8s, height 0.5s ease-out 1.3s, text-indent 0.5s ease-out 1.6s;
 }
 
-.in_text.show {
+.search.show {
 	width: 98%;
 	height: 27px;
 	text-indent: 0;
+}
+
+.search.active {
+	background: rgba(255, 255, 255, 0.3);
+	outline: none;
 }
 
 #zoom {

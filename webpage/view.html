@@ -1,643 +1,649 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<link href="styles/view.css" rel="stylesheet">
-
-		<!-- Mapbox API -->
-		<script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
-		<link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
-
-		<!--    &lt;!&ndash; Openlayers API &ndash;&gt;-->
-		<!--    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>-->
-		<!--    <link rel="stylesheet"-->
-		<!--          href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css">-->
-
-		<div id="zoom">恢复视角</div>
-		<div id="detail">详细信息</div>
-		<div id="modal"></div>
-		<div id="detail_map">
-			<div id="d_map"></div>
-		</div>
-		<div id="detail_info"></div>
-		<div id="close"></div>
-		<title>全球自然灾害评估系统 - 灾害分布</title>
-	</head>
-	<body>
-		<div id="map"></div>
-		<div id="view_title">
-			<span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
-			<span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">灾害分布</span>
-			<div id="shining_bar"></div>
-			<div
-				style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
-				GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
-			</div>
-		</div>
-		<div id="control">
-			<div style="display: block; height: 100px;"></div>
-			<div class="func">灾害种类</div>
-			<div class="content">
-				<div class="type">火&nbsp;&nbsp;山</div>
-				<div class="type">地&nbsp;&nbsp;震</div>
-				<div class="type">海&nbsp;&nbsp;啸</div>
-			</div>
-			<div class="func">更改底图</div>
-			<div class="content">
-				<div class="style">卫&nbsp;星</div>
-				<div class="style">街&nbsp;景</div>
-				<div class="style">明&nbsp;亮</div>
-				<div class="style">暗&nbsp;黑</div>
-			</div>
-			<div class="func">实时位置</div>
-			<div class="content">
-				<div class="position"></div>
-				<div class="position"></div>
-			</div>
-			<div class="func">自然灾害检索</div>
-			<div class="content">
-				<input class="in_text" value="键入以搜索">
-			</div>
-		</div>
-		<div class="flex">
-			<ul>
-				<li class="list">灾害分布</li>
-				<li class="list">风险评估</li>
-				<li class="list">用户论坛</li>
-				<li class="list">数据管理</li>
-				<div class="bar"></div>
-			</ul>
-		</div>
-		<div id="panel_bg1"></div>
-		<div id="panel_bg2"></div>
-		<div id="info2">
-			<div class="user_date">{{ usr }}</div>
-			<div class="info_item">系统权限</div>
-			<div id="item_c1">{{ pms }}</div>
-		</div>
-		<div id="info1">
-			<div class="user_date">当前时间</div>
-			<div class="info_item">当前收录</div>
-			<div id="item_c2">28,653</div>
-			<div class="info_item">最近灾害</div>
-			<div id="item_c3">汤加 [112, 23] 火山</div>
-		</div>
-
-
-		<script>
-			let vol_o = {{ vol | tojson }}
-			let eqk_o = {{ eqk | tojson }}
-			let tnm_o = {{ tnm | tojson }}
-			// let vol_o = {{ vol | tojson }}
-			// let eqk_o = {{ eqk | tojson }}
-			// let tnm_o = {{ tnm | tojson }}
-
-			mapboxgl.accessToken =
-				'pk.eyJ1Ijoic3Nzc3BoaW54IiwiYSI6ImNrbnZnbDR1NzAzNzMyb3Bwbng3amtnMzQifQ.E1nAH_fti0KvB2heCd-cEg';
-			let map = new mapboxgl.Map({
-				container: 'map', // container ID
-				style: 'mapbox://styles/mapbox/satellite-streets-v11', // style URL
-				center: [105, 45], // starting position [lng, lat]
-				zoom: 1.2, // starting zoom
-			});
-
-			let d_map = new mapboxgl.Map({
-				container: 'd_map',
-				zoom: 11.53,
-				center: [138.7189, 35.1691],
-				pitch: 76,
-				bearing: -177.2,
-				style: 'mapbox://styles/mapbox/satellite-v9',
-				interactive: false
-			});
-
-			d_map.on('load', () => {
-				d_map.addSource('mapbox-dem', {
-					'type': 'raster-dem',
-					'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-					'tileSize': 512,
-					'maxzoom': 14
-				});
-				d_map.setTerrain({
-					'source': 'mapbox-dem',
-					'exaggeration': 1.5
-				});
-
-				d_map.addLayer({
-					'id': 'sky',
-					'type': 'sky',
-					'paint': {
-						'sky-type': 'atmosphere',
-						'sky-atmosphere-sun': [0.0, 90.0],
-						'sky-atmosphere-sun-intensity': 15
-					}
-				});
-			});
-
-			function add_layers(map_source, vol_source, eqk_source, tnm_source) {
-				map_source.loadImage(
-					'./img/icon-volcano.png',
-					(error, image) => {
-						if (error) throw error;
-
-						map_source.addImage('vol', image);
-
-						map_source.addSource('volcano', {
-							'type': 'geojson',
-							'data': vol_source
-						});
-
-						// Add a layer showing the places.
-						map_source.addLayer({
-							'id': 'volcano',
-							'type': 'symbol',
-							'source': 'volcano',
-							'layout': {
-								'icon-image': 'vol', // reference the image
-								'icon-size': 0.3,
-								'icon-allow-overlap': true
-							}
-						});
-
-						if (!types[0]) {
-							map_source.setLayoutProperty(toggleableLayerIds[0], 'visibility', 'none');
-						}
-					}
-				);
-
-				map_source.loadImage(
-					'./img/icon-earthquake.png',
-					(error, image) => {
-						if (error) throw error;
-
-						map_source.addImage('eqk', image);
-
-						map_source.addSource('earthquake', {
-							'type': 'geojson',
-							'data': eqk_source
-						});
-
-						// Add a layer showing the places.
-						map_source.addLayer({
-							'id': 'earthquake',
-							'type': 'symbol',
-							'source': 'earthquake',
-							'layout': {
-								'icon-image': 'eqk', // reference the image
-								'icon-size': 0.3,
-								'icon-allow-overlap': true
-							}
-						});
-
-						if (!types[1]) {
-							map_source.setLayoutProperty(toggleableLayerIds[1], 'visibility', 'none');
-						}
-					}
-				);
-
-				map_source.loadImage(
-					'./img/icon-tsunami.png',
-					(error, image) => {
-						if (error) throw error;
-
-						map_source.addImage('tnm', image);
-
-						map_source.addSource('tsunami', {
-							'type': 'geojson',
-							'data': tnm_source
-						});
-
-						// Add a layer showing the places.
-						map_source.addLayer({
-							'id': 'tsunami',
-							'type': 'symbol',
-							'source': 'tsunami',
-							'layout': {
-								'icon-image': 'tnm', // reference the image
-								'icon-size': 0.06,
-								'icon-allow-overlap': true,
-							}
-						});
-
-						if (!types[2]) {
-							map_source.setLayoutProperty(toggleableLayerIds[2], 'visibility', 'none');
-						}
-					}
-				);
-			}
-
-			map.on('style.load', () => {
-				add_layers(map, vol_o, eqk_o, tnm_o)
-
-				map.on('click', 'volcano', (e) => {
-					let feature = e.features[0];
-					let property = feature.properties;
-					let coordinates = feature.geometry.coordinates.slice();
-					let country = property.Country;
-					let elevation = property.Elevation;
-					let volcano = property.Volcano;
-					let volcanotype = property.Volcanotype;
-					let volcanoes = property.Volcanoes;
-					let lastKnownEruption = property.Last_known_eruption;
-					let erupt_start = property.Eruptions;
-					let erupt_end = property.Eruption_1;
-					let erupt_times = property.Eruption_2;
-					let summit = property.Summit;
-					let year = property.Year;
-					let i_url = property.URL;
-
-					while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-						coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-					}
-
-					map.flyTo({
-						center: coordinates,
-						zoom: 15
-					});
-
-					d_map.flyTo({
-						center: coordinates,
-						zoom: 11
-					});
-
-					new mapboxgl.Popup({
-							closeButton: false
-						})
-						.setLngLat(coordinates)
-						.setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
-							volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
-							lastKnownEruption)
-						.addTo(map);
-
-					detail_info.innerHTML = '<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country +
-						'<br>类型： ' + volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes +
-						'<br>最近喷发： ' + lastKnownEruption + '<br>开始爆发时间： ' + erupt_start + '<br>结束爆发时间： ' +
-						erupt_end +
-						'<br>期间爆发次数： ' + erupt_times + '<br>高峰： ' + summit + '<br>年份： ' + year +
-						'<br>详情页面<iframe src=' + i_url + ' width=100% height=30% frameborder=none></iframe>'
-
-					zoom.classList.add('show');
-					detail.classList.add('show');
-				});
-
-				map.on('click', 'earthquake', (e) => {
-					let feature = e.features[0];
-					let property = feature.properties;
-					let coordinates = feature.geometry.coordinates.slice();
-					let date = property.Date;
-					let depth = property.Depth;
-					let magnitude = property.Magnitude;
-					let locationA = property.location_a;
-
-					while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-						coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-					}
-
-					map.flyTo({
-						center: coordinates,
-						zoom: 15
-					});
-
-					d_map.flyTo({
-						center: coordinates,
-						zoom: 11
-					});
-
-					new mapboxgl.Popup({
-							closeButton: false
-						})
-						.setLngLat(coordinates)
-						.setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
-							'<br>震源深度： ' + depth)
-						.addTo(map);
-
-					detail_info.innerHTML = '<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' +
-						magnitude +
-						'<br>震源深度： ' + depth + '<br>'
-
-
-					zoom.classList.add('show');
-					detail.classList.add('show');
-				});
-
-				map.on('click', 'tsunami', (e) => {
-					let feature = e.features[0];
-					let property = feature.properties;
-					let coordinates = feature.geometry.coordinates.slice();
-					let cause = property.Cause;
-					let country = property.Country;
-					let region = property.Region;
-					let tsIntensity = property.TS_Intensity;
-					let year = property.Year;
-					let locationName = property.Location_Name;
-					let comments = property.Comments;
-					let deathsTotalDescription = property.DEATHS_total_description;
-					let damageTotalDescription = property.Damage_total_description;
-					let eventValidity = property.Event_Validity;
-					let i_url = property.URL;
-
-					while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-						coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-					}
-
-					map.flyTo({
-						center: coordinates,
-						zoom: 15
-					});
-
-					d_map.flyTo({
-						center: coordinates,
-						zoom: 11
-					});
-
-					new mapboxgl.Popup({
-							closeButton: false
-						})
-						.setLngLat(coordinates)
-						.setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
-							region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
-						.addTo(map);
-
-					detail_info.innerHTML = '<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country +
-						'<br>地区： ' + region +
-						'<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '<br>造成伤亡： ' +
-						deathsTotalDescription +
-						'<br>造成损失： ' + damageTotalDescription + '<br>确信度： ' + eventValidity + '<br>评价： ' +
-						comments +
-						'<br>详情页面<iframe src=' + i_url + ' width=100% height=30% frameborder=none></iframe>'
-
-
-					zoom.classList.add('show');
-					detail.classList.add('show');
-				});
-
-				const popup = new mapboxgl.Popup({
-					closeButton: false,
-					closeOnClick: false
-				});
-
-				// Change the cursor to a pointer when the mouse is over the places layer.
-				map.on('mouseenter', 'volcano', (e) => {
-					map.getCanvas().style.cursor = 'pointer';
-					let feature = e.features[0];
-					let property = feature.properties;
-					let coordinates = feature.geometry.coordinates.slice();
-					let country = property.Country;
-					let elevation = property.Elevation;
-					let volcano = property.Volcano;
-					let volcanotype = property.Volcanotype;
-					let volcanoes = property.Volcanoes;
-					let lastKnownEruption = property.Last_known_eruption;
-
-
-					while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-						coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-					}
-
-					popup.setLngLat(coordinates)
-						.setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
-							volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
-							lastKnownEruption)
-						.addTo(map);
-				});
-
-				map.on('mouseenter', 'earthquake', (e) => {
-					map.getCanvas().style.cursor = 'pointer';
-					let feature = e.features[0];
-					let property = feature.properties;
-					let coordinates = feature.geometry.coordinates.slice();
-					let date = property.Date;
-					let depth = property.Depth;
-					let magnitude = property.Magnitude;
-					let locationA = property.location_a;
-
-					while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-						coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-					}
-
-					popup.setLngLat(coordinates)
-						.setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
-							'<br>震源深度： ' + depth)
-						.addTo(map);
-				});
-
-				map.on('mouseenter', 'tsunami', (e) => {
-					map.getCanvas().style.cursor = 'pointer';
-					let feature = e.features[0];
-					let property = feature.properties;
-					let coordinates = feature.geometry.coordinates.slice();
-					let cause = property.Cause;
-					let country = property.Country;
-					let region = property.Region;
-					let tsIntensity = property.TS_Intensity;
-					let year = property.Year;
-					let locationName = property.Location_Name;
-
-					while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-						coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-					}
-
-					popup.setLngLat(coordinates)
-						.setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
-							region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
-						.addTo(map);
-				});
-
-				// Change it back to a pointer when it leaves.
-				map.on('mouseleave', 'volcano', () => {
-					map.getCanvas().style.cursor = '';
-					popup.remove();
-				});
-
-				map.on('mouseleave', 'earthquake', () => {
-					map.getCanvas().style.cursor = '';
-					popup.remove();
-				});
-
-				map.on('mouseleave', 'tsunami', () => {
-					map.getCanvas().style.cursor = '';
-					popup.remove();
-				});
-
-				map.on('mousemove', (e) => {
-					// `e.lngLat` is the longitude, latitude geographical position of the event.
-					position[0].innerHTML = e.lngLat.lng.toFixed(10);
-					position[1].innerHTML = e.lngLat.lat.toFixed(10);
-				});
-			});
-			const func = document.getElementsByClassName('func');
-			const type = document.getElementsByClassName('type');
-			const style = document.getElementsByClassName('style');
-			const position = document.getElementsByClassName('position');
-			const shining_bar = document.getElementById('shining_bar');
-			const flex = document.getElementsByClassName('flex')[0];
-			const bar = document.getElementsByClassName('bar')[0];
-			const info_item = document.getElementsByClassName('info_item');
-			const item_c1 = document.getElementById('item_c1');
-			const item_c2 = document.getElementById('item_c2');
-			const item_c3 = document.getElementById('item_c3');
-			const user = document.getElementsByClassName('user_date')[0];
-			const time = document.getElementsByClassName('user_date')[1];
-			const zoom = document.getElementById('zoom');
-			const detail = document.getElementById('detail');
-			const detail_map = document.getElementById('detail_map');
-			const detail_info = document.getElementById('detail_info');
-			const modal = document.getElementById('modal');
-			const close = document.getElementById('close');
-			const search = document.getElementsByClassName('in_text')[0];
-
-			for (let i = 0; i < func.length; i++) {
-				func[i].classList.add('show');
-			}
-			search.classList.add('show')
-			for (let i = 0; i < position.length; i++) {
-				position[i].classList.add('show');
-			}
-
-			let types = [true, false, false]
-			const toggleableLayerIds = ['volcano', 'earthquake', 'tsunami'];
-			type[0].classList.add('clicked');
-			for (let i = 0; i < type.length; i++) {
-				type[i].classList.add('show');
-				type[i].onclick = function() {
-					if (types[i] === false) {
-						type[i].classList.add('clicked');
-						types[i] = true;
-						map.setLayoutProperty(toggleableLayerIds[i], 'visibility', 'visible');
-					} else {
-						type[i].classList.remove('clicked');
-						types[i] = false;
-						map.setLayoutProperty(toggleableLayerIds[i], 'visibility', 'none');
-					}
-				}
-			}
-
-			let styles = ['satellite-streets-v11', 'streets-v11', 'light-v10', 'dark-v10']
-			let styles_c = [true, false, false, false]
-			style[0].classList.add('clicked');
-			for (let i = 0; i < style.length; i++) {
-				style[i].classList.add('show');
-				style[i].onclick = function() {
-					if (styles_c[i] === false) {
-						let c_id = styles_c.indexOf(true);
-						style[c_id].classList.remove('clicked');
-						styles_c[c_id] = false;
-						style[i].classList.add('clicked');
-						styles_c[i] = true;
-						map.setStyle('mapbox://styles/mapbox/' + styles[i]);
-					}
-				}
-			}
-
-			for (let i = 0; i < info_item.length; i++) {
-				info_item[i].classList.add('show');
-			}
-
-			shining_bar.classList.add('show');
-			flex.classList.add('show');
-			bar.classList.add('show1');
-			user.classList.add('show1');
-			item_c1.classList.add('show');
-			item_c2.classList.add('show');
-			item_c3.classList.add('show');
-			time.classList.add('show2');
-
-			function getDate() {
-				let date = new Date();
-				time.innerHTML = date.toLocaleString();
-			}
-
-			getDate()
-			setInterval("getDate()", 1000);
-
-			const li = document.getElementsByClassName('list');
-			li[0].onclick = function() {
-				let url = 'http://127.0.0.1:8080/result'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-			li[1].onclick = function() {
-				let url = 'http://127.0.0.1:8080/risk'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-			li[2].onclick = function() {
-				let url = 'http://127.0.0.1:8080/discussion'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-			li[3].onclick = function() {
-				let url = 'http://127.0.0.1:8080/data'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
-			}
-
-			search.onfocus = function() {
-				search.value = ""
-			}
-			search.onblur = function() {
-				search.value = "键入以搜索"
-			}
-			search.onkeydown = function(event) {
-				if (event.keyCode == 13) {}
-			}
-			zoom.onclick = function() {
-				map.flyTo({
-					center: [105, 45],
-					zoom: 1.2,
-				})
-				zoom.classList.remove('show');
-				detail.classList.remove('show');
-			}
-
-			detail.onclick = function() {
-				modal.classList.add('show');
-				detail_map.classList.add('show');
-				detail_info.classList.add('show');
-				close.classList.add('show');
-				rotateCamera(0);
-			}
-
-			close.onclick = function() {
-				modal.classList.remove('show');
-				detail_map.classList.remove('show');
-				detail_info.classList.remove('show');
-				close.classList.remove('show');
-			}
-
-			function rotateCamera(timestamp) {
-				// clamp the rotation between 0 -360 degrees
-				// Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-				d_map.rotateTo((timestamp / 200) % 360, {
-					duration: 0
-				});
-				// Request the next frame of the animation.
-				requestAnimationFrame(rotateCamera);
-			}
-		</script>
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <link href="styles/view.css" rel="stylesheet">
+
+    <!-- Mapbox API -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+
+    <!--    &lt;!&ndash; Openlayers API &ndash;&gt;-->
+    <!--    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>-->
+    <!--    <link rel="stylesheet"-->
+    <!--          href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css">-->
+
+    <div id="zoom">恢复视角</div>
+    <div id="detail">详细信息</div>
+    <div id="modal"></div>
+    <div id="detail_map">
+        <div id="d_map"></div>
+    </div>
+    <div id="detail_info"></div>
+    <div id="close"></div>
+    <title>全球自然灾害评估系统 - 灾害分布</title>
+</head>
+<body>
+<div id="map"></div>
+<div id="view_title">
+    <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">灾害分布</span>
+    <div id="shining_bar"></div>
+    <div
+            style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
+</div>
+<div id="control">
+    <div style="display: block; height: 100px;"></div>
+    <div class="func">灾害种类</div>
+    <div class="content">
+        <div class="type">火&nbsp;&nbsp;山</div>
+        <div class="type">地&nbsp;&nbsp;震</div>
+        <div class="type">海&nbsp;&nbsp;啸</div>
+    </div>
+    <div class="func">更改底图</div>
+    <div class="content">
+        <div class="style">卫&nbsp;星</div>
+        <div class="style">街&nbsp;景</div>
+        <div class="style">明&nbsp;亮</div>
+        <div class="style">暗&nbsp;黑</div>
+    </div>
+    <div class="func">实时位置</div>
+    <div class="content">
+        <div class="position"></div>
+        <div class="position"></div>
+    </div>
+    <div class="func">自然灾害检索</div>
+    <div class="content">
+        <input class="search" value="键入以搜索">
+    </div>
+</div>
+<div class="flex">
+    <ul>
+        <li class="list">灾害分布</li>
+        <li class="list">风险评估</li>
+        <li class="list">用户论坛</li>
+        <li class="list">数据管理</li>
+        <div class="bar"></div>
+    </ul>
+</div>
+<div id="panel_bg1"></div>
+<div id="panel_bg2"></div>
+<div id="info2">
+    <div class="user_date">{{ usr }}</div>
+    <div class="info_item">系统权限</div>
+    <div id="item_c1">{{ pms }}</div>
+</div>
+<div id="info1">
+    <div class="user_date">当前时间</div>
+    <div class="info_item">当前收录</div>
+    <div id="item_c2">28,653</div>
+    <div class="info_item">最近灾害</div>
+    <div id="item_c3">汤加 [112, 23] 火山</div>
+</div>
+
+
+<script>
+    let vol_o = {{ vol | tojson }}
+    let eqk_o = {{ eqk | tojson }}
+    let tnm_o = {{ tnm | tojson }}
+    // let vol_o = {{ vol | tojson }}
+    // let eqk_o = {{ eqk | tojson }}
+    // let tnm_o = {{ tnm | tojson }}
+
+    mapboxgl.accessToken =
+        'pk.eyJ1Ijoic3Nzc3BoaW54IiwiYSI6ImNrbnZnbDR1NzAzNzMyb3Bwbng3amtnMzQifQ.E1nAH_fti0KvB2heCd-cEg';
+    let map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/satellite-streets-v11', // style URL
+        center: [105, 45], // starting position [lng, lat]
+        zoom: 1.2, // starting zoom
+    });
+
+    let d_map = new mapboxgl.Map({
+        container: 'd_map',
+        zoom: 11.53,
+        center: [138.7189, 35.1691],
+        pitch: 76,
+        bearing: -177.2,
+        style: 'mapbox://styles/mapbox/satellite-v9',
+        // interactive: false
+    });
+
+    d_map.on('load', () => {
+        d_map.addSource('mapbox-dem', {
+            'type': 'raster-dem',
+            'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+            'tileSize': 512,
+            'maxzoom': 14
+        });
+        d_map.setTerrain({
+            'source': 'mapbox-dem',
+            'exaggeration': 1.5
+        });
+
+        d_map.addLayer({
+            'id': 'sky',
+            'type': 'sky',
+            'paint': {
+                'sky-type': 'atmosphere',
+                'sky-atmosphere-sun': [0.0, 90.0],
+                'sky-atmosphere-sun-intensity': 15
+            }
+        });
+    });
+
+    function add_layers(map_source, vol_source, eqk_source, tnm_source) {
+        map_source.loadImage(
+            './img/icon-volcano.png',
+            (error, image) => {
+                if (error) throw error;
+
+                map_source.addImage('vol', image);
+
+                map_source.addSource('volcano', {
+                    'type': 'geojson',
+                    'data': vol_source
+                });
+
+                // Add a layer showing the places.
+                map_source.addLayer({
+                    'id': 'volcano',
+                    'type': 'symbol',
+                    'source': 'volcano',
+                    'layout': {
+                        'icon-image': 'vol', // reference the image
+                        'icon-size': 0.3,
+                        'icon-allow-overlap': true
+                    }
+                });
+
+                if (!types[0]) {
+                    map_source.setLayoutProperty(toggleableLayerIds[0], 'visibility', 'none');
+                }
+            }
+        );
+
+        map_source.loadImage(
+            './img/icon-earthquake.png',
+            (error, image) => {
+                if (error) throw error;
+
+                map_source.addImage('eqk', image);
+
+                map_source.addSource('earthquake', {
+                    'type': 'geojson',
+                    'data': eqk_source
+                });
+
+                // Add a layer showing the places.
+                map_source.addLayer({
+                    'id': 'earthquake',
+                    'type': 'symbol',
+                    'source': 'earthquake',
+                    'layout': {
+                        'icon-image': 'eqk', // reference the image
+                        'icon-size': 0.3,
+                        'icon-allow-overlap': true
+                    }
+                });
+
+                if (!types[1]) {
+                    map_source.setLayoutProperty(toggleableLayerIds[1], 'visibility', 'none');
+                }
+            }
+        );
+
+        map_source.loadImage(
+            './img/icon-tsunami.png',
+            (error, image) => {
+                if (error) throw error;
+
+                map_source.addImage('tnm', image);
+
+                map_source.addSource('tsunami', {
+                    'type': 'geojson',
+                    'data': tnm_source
+                });
+
+                // Add a layer showing the places.
+                map_source.addLayer({
+                    'id': 'tsunami',
+                    'type': 'symbol',
+                    'source': 'tsunami',
+                    'layout': {
+                        'icon-image': 'tnm', // reference the image
+                        'icon-size': 0.06,
+                        'icon-allow-overlap': true,
+                    }
+                });
+
+                if (!types[2]) {
+                    map_source.setLayoutProperty(toggleableLayerIds[2], 'visibility', 'none');
+                }
+            }
+        );
+    }
+
+    map.on('style.load', () => {
+        add_layers(map, vol_o, eqk_o, tnm_o)
+
+        map.on('click', 'volcano', (e) => {
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let country = property.Country;
+            let elevation = property.Elevation;
+            let volcano = property.Volcano;
+            let volcanotype = property.Volcanotype;
+            let volcanoes = property.Volcanoes;
+            let lastKnownEruption = property.Last_known_eruption;
+            let erupt_start = property.Eruptions;
+            let erupt_end = property.Eruption_1;
+            let erupt_times = property.Eruption_2;
+            let summit = property.Summit;
+            let year = property.Year;
+            let i_url = property.URL;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            map.flyTo({
+                center: coordinates,
+                zoom: 12
+            });
+
+            d_map.flyTo({
+                center: coordinates,
+                zoom: 15
+            });
+
+            new mapboxgl.Popup({
+                closeButton: false
+            })
+                .setLngLat(coordinates)
+                .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
+                    volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
+                    lastKnownEruption)
+                .addTo(map);
+
+            detail_info.innerHTML = '<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country +
+                '<br>类型： ' + volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes +
+                '<br>最近喷发： ' + lastKnownEruption + '<br>开始爆发时间： ' + erupt_start + '<br>结束爆发时间： ' +
+                erupt_end +
+                '<br>期间爆发次数： ' + erupt_times + '<br>高峰： ' + summit + '<br>年份： ' + year +
+                '<br><a href=' + i_url + '>详情页面</a>'
+
+            zoom.classList.add('show');
+            detail.classList.add('show');
+        });
+
+        map.on('click', 'earthquake', (e) => {
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let date = property.Date;
+            let depth = property.Depth;
+            let magnitude = property.Magnitude;
+            let locationA = property.location_a;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            map.flyTo({
+                center: coordinates,
+                zoom: 12
+            });
+
+            d_map.flyTo({
+                center: coordinates,
+                zoom: 15
+            });
+
+            new mapboxgl.Popup({
+                closeButton: false
+            })
+                .setLngLat(coordinates)
+                .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
+                    '<br>震源深度： ' + depth)
+                .addTo(map);
+
+            detail_info.innerHTML = '<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' +
+                magnitude +
+                '<br>震源深度： ' + depth + '<br>'
+
+
+            zoom.classList.add('show');
+            detail.classList.add('show');
+        });
+
+        map.on('click', 'tsunami', (e) => {
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let cause = property.Cause;
+            let country = property.Country;
+            let region = property.Region;
+            let tsIntensity = property.TS_Intensity;
+            let year = property.Year;
+            let locationName = property.Location_Name;
+            let comments = property.Comments;
+            let deathsTotalDescription = property.DEATHS_total_description;
+            let damageTotalDescription = property.Damage_total_description;
+            let eventValidity = property.Event_Validity;
+            let i_url = property.URL;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            map.flyTo({
+                center: coordinates,
+                zoom: 12
+            });
+
+            d_map.flyTo({
+                center: coordinates,
+                zoom: 15
+            });
+
+            new mapboxgl.Popup({
+                closeButton: false
+            })
+                .setLngLat(coordinates)
+                .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
+                    region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+                .addTo(map);
+
+            detail_info.innerHTML = '<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country +
+                '<br>地区： ' + region +
+                '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '<br>造成伤亡： ' +
+                deathsTotalDescription +
+                '<br>造成损失： ' + damageTotalDescription + '<br>确信度： ' + eventValidity + '<br>评价： ' +
+                comments +
+                '<br><a href=' + i_url + '>详情页面</a>'
+
+
+            zoom.classList.add('show');
+            detail.classList.add('show');
+        });
+
+        const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'volcano', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let country = property.Country;
+            let elevation = property.Elevation;
+            let volcano = property.Volcano;
+            let volcanotype = property.Volcanotype;
+            let volcanoes = property.Volcanoes;
+            let lastKnownEruption = property.Last_known_eruption;
+
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            popup.setLngLat(coordinates)
+                .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
+                    volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
+                    lastKnownEruption)
+                .addTo(map);
+        });
+
+        map.on('mouseenter', 'earthquake', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let date = property.Date;
+            let depth = property.Depth;
+            let magnitude = property.Magnitude;
+            let locationA = property.location_a;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            popup.setLngLat(coordinates)
+                .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
+                    '<br>震源深度： ' + depth)
+                .addTo(map);
+        });
+
+        map.on('mouseenter', 'tsunami', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            let feature = e.features[0];
+            let property = feature.properties;
+            let coordinates = feature.geometry.coordinates.slice();
+            let cause = property.Cause;
+            let country = property.Country;
+            let region = property.Region;
+            let tsIntensity = property.TS_Intensity;
+            let year = property.Year;
+            let locationName = property.Location_Name;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            popup.setLngLat(coordinates)
+                .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
+                    region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+                .addTo(map);
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'volcano', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        map.on('mouseleave', 'earthquake', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        map.on('mouseleave', 'tsunami', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        map.on('mousemove', (e) => {
+            // `e.lngLat` is the longitude, latitude geographical position of the event.
+            position[0].innerHTML = e.lngLat.lng.toFixed(10);
+            position[1].innerHTML = e.lngLat.lat.toFixed(10);
+        });
+    });
+    const func = document.getElementsByClassName('func');
+    const type = document.getElementsByClassName('type');
+    const style = document.getElementsByClassName('style');
+    const position = document.getElementsByClassName('position');
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
+    const info_item = document.getElementsByClassName('info_item');
+    const item_c1 = document.getElementById('item_c1');
+    const item_c2 = document.getElementById('item_c2');
+    const item_c3 = document.getElementById('item_c3');
+    const user = document.getElementsByClassName('user_date')[0];
+    const time = document.getElementsByClassName('user_date')[1];
+    const zoom = document.getElementById('zoom');
+    const detail = document.getElementById('detail');
+    const detail_map = document.getElementById('detail_map');
+    const detail_info = document.getElementById('detail_info');
+    const modal = document.getElementById('modal');
+    const close = document.getElementById('close');
+    const search = document.getElementsByClassName('search')[0];
+
+    for (let i = 0; i < func.length; i++) {
+        func[i].classList.add('show');
+    }
+    search.classList.add('show')
+    for (let i = 0; i < position.length; i++) {
+        position[i].classList.add('show');
+    }
+
+    let types = [true, false, false]
+    const toggleableLayerIds = ['volcano', 'earthquake', 'tsunami'];
+    type[0].classList.add('clicked');
+    for (let i = 0; i < type.length; i++) {
+        type[i].classList.add('show');
+        type[i].onclick = function () {
+            if (types[i] === false) {
+                type[i].classList.add('clicked');
+                types[i] = true;
+                map.setLayoutProperty(toggleableLayerIds[i], 'visibility', 'visible');
+            } else {
+                type[i].classList.remove('clicked');
+                types[i] = false;
+                map.setLayoutProperty(toggleableLayerIds[i], 'visibility', 'none');
+            }
+        }
+    }
+
+    let styles = ['satellite-streets-v11', 'streets-v11', 'light-v10', 'dark-v10']
+    let styles_c = [true, false, false, false]
+    style[0].classList.add('clicked');
+    for (let i = 0; i < style.length; i++) {
+        style[i].classList.add('show');
+        style[i].onclick = function () {
+            if (styles_c[i] === false) {
+                let c_id = styles_c.indexOf(true);
+                style[c_id].classList.remove('clicked');
+                styles_c[c_id] = false;
+                style[i].classList.add('clicked');
+                styles_c[i] = true;
+                map.setStyle('mapbox://styles/mapbox/' + styles[i]);
+            }
+        }
+    }
+
+    for (let i = 0; i < info_item.length; i++) {
+        info_item[i].classList.add('show');
+    }
+
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show1');
+    user.classList.add('show1');
+    item_c1.classList.add('show');
+    item_c2.classList.add('show');
+    item_c3.classList.add('show');
+    time.classList.add('show2');
+
+    function getDate() {
+        let date = new Date();
+        time.innerHTML = date.toLocaleString();
+    }
+
+    getDate()
+    setInterval("getDate()", 1000);
+
+    const li = document.getElementsByClassName('list');
+    li[0].onclick = function () {
+        let url = 'http://127.0.0.1:8080/result'
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send()
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                window.location.href = xhr.responseURL
+            }
+        }
+    }
+    li[1].onclick = function () {
+        let url = 'http://127.0.0.1:8080/risk'
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send()
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                window.location.href = xhr.responseURL
+            }
+        }
+    }
+    li[2].onclick = function () {
+        let url = 'http://127.0.0.1:8080/discussion'
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send()
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                window.location.href = xhr.responseURL
+            }
+        }
+    }
+    li[3].onclick = function () {
+        let url = 'http://127.0.0.1:8080/data'
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send()
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                window.location.href = xhr.responseURL
+            }
+        }
+    }
+
+    search.onfocus = function () {
+        search.value = ""
+        search.classList.add("active")
+    }
+
+    search.onblur = function () {
+        search.value = "键入以搜索"
+        search.classList.remove("active")
+    }
+
+    search.onkeydown = function (event) {
+        if (event.keyCode == 13) {
+        }
+    }
+
+    zoom.onclick = function () {
+        map.flyTo({
+            center: [105, 45],
+            zoom: 1.2,
+        })
+        zoom.classList.remove('show');
+        detail.classList.remove('show');
+    }
+
+    detail.onclick = function () {
+        modal.classList.add('show');
+        detail_map.classList.add('show');
+        detail_info.classList.add('show');
+        close.classList.add('show');
+        // rotateCamera(0);
+    }
+
+    close.onclick = function () {
+        modal.classList.remove('show');
+        detail_map.classList.remove('show');
+        detail_info.classList.remove('show');
+        close.classList.remove('show');
+    }
+
+    // function rotateCamera(timestamp) {
+    //     // clamp the rotation between 0 -360 degrees
+    //     // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+    //     d_map.rotateTo((timestamp / 200) % 360, {
+    //         duration: 0
+    //     });
+    //     // Request the next frame of the animation.
+    //     requestAnimationFrame(rotateCamera);
+    // }
+</script>
+</body>
 </html>
