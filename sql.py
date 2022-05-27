@@ -146,30 +146,37 @@ def volcano_eruption_all_matched(conn, cursor):
 
 def vague_match(conn, cursor, chars):
     chars_ = '%' + chars + '%'
-    sql_ts = """SELECT id FROM tsunami WHERE tsunami.location_n ILIKE '%s';""" % chars_
+    sql_ts = """SELECT gid,location_n,year FROM tsunami WHERE tsunami.location_n ILIKE '%s';""" % chars_
     # 执行语句
     cursor.execute(sql_ts)
     # 抓取
     rows_ts = cursor.fetchall()
-    vague = []
-    for row in rows_ts:
-        vague.append([row[0], 'tsunami'])
 
-    sql_eq = """SELECT id FROM earthquake WHERE earthquake.location_n ILIKE '%s';""" % chars_
-    # 执行语句
+    vague = {}
+    n=0
+    for row in rows_ts:
+        vague[n]={'gid':row[0],'location':row[1],'year':row[2], 'type':1}
+        n+=1
+
+
+    sql_eq = """SELECT gid,location_n,year FROM earthquake WHERE earthquake.location_n ILIKE '%s';""" % chars_
+    # 执行语句。
     cursor.execute(sql_eq)
     # 抓取
     rows_eq = cursor.fetchall()
     for row in rows_eq:
-        vague.append([row[0], 'earthquake'])
+        vague[n]={'gid':row[0],'location':row[1],'year':row[2],'type':2}
+        n+=1
 
-    sql_vo = """SELECT id FROM volcano_eruption WHERE volcano_eruption.country ILIKE '%s';""" % chars_
+    sql_vo = """SELECT gid,volcano,year FROM volcano_eruption WHERE volcano_eruption.volcano ILIKE '%s';""" % chars_
     # 执行语句
     cursor.execute(sql_vo)
     # 抓取
     rows_vo = cursor.fetchall()
     for row in rows_vo:
-        vague.append([row[0], 'volcano_eruption'])
+        vague[n]={'gid':row[0],'location':row[1],'year':row[2],'type':3}
+        n+=1
     # 事物提交
     conn.commit()
+
     return vague

@@ -55,9 +55,10 @@
 				<div class="position"></div>
 			</div>
 			<div class="func">自然灾害检索</div>
-			<div class="content">
-				<input class="in_text" value="键入以搜索">
+			<div class="content2">
+				<input class="search" value="键入以搜索">
 			</div>
+			<div class="content1" id="search_result"></div>
 		</div>
 		<div class="flex">
 			<ul>
@@ -85,13 +86,14 @@
 
 
 		<script>
+
 			let vol_o = {{ vol | tojson }}
 			let eqk_o = {{ eqk | tojson }}
 			let tnm_o = {{ tnm | tojson }}
+
 			// let vol_o = {{ vol | tojson }}
 			// let eqk_o = {{ eqk | tojson }}
 			// let tnm_o = {{ tnm | tojson }}
-
 			mapboxgl.accessToken =
 				'pk.eyJ1Ijoic3Nzc3BoaW54IiwiYSI6ImNrbnZnbDR1NzAzNzMyb3Bwbng3amtnMzQifQ.E1nAH_fti0KvB2heCd-cEg';
 			let map = new mapboxgl.Map({
@@ -484,7 +486,8 @@
 			const detail_info = document.getElementById('detail_info');
 			const modal = document.getElementById('modal');
 			const close = document.getElementById('close');
-			const search = document.getElementsByClassName('in_text')[0];
+			const search = document.getElementsByClassName('search')[0];
+			const search_result = document.getElementById('search_result');
 
 			for (let i = 0; i < func.length; i++) {
 				func[i].classList.add('show');
@@ -551,60 +554,204 @@
 			setInterval("getDate()", 1000);
 
 			const li = document.getElementsByClassName('list');
-			li[0].onclick = function() {
-				let url = 'http://127.0.0.1:8080/result'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
+			window.onload = function() {
+				li[0].onclick = function() {
+					window.location.href = 'http://127.0.0.1:8080/result'
+				}
+				li[1].onclick = function() {
+					window.location.href = 'http://127.0.0.1:8080/risk'
+				}
+				li[2].onclick = function() {
+					window.location.href = 'http://127.0.0.1:8080/discussion'
+				}
+				li[3].onclick = function() {
+					let url = 'http://127.0.0.1:8080/data?pms=' + '{{ pms }}' //GET请求发送书
+					let xhr = new XMLHttpRequest();
+					xhr.open('GET', url, true);
+					xhr.send()
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+							if (xhr.response === 'error') {
+								window.alert("您不具备访问该模块的权限！")
+							} else {
+								window.location.href = xhr.responseURL
+							}
+						}
+					}
+				}
+				Location = function (ObjIndex) {
+					var type = ObjIndex % 10; //1海啸 2地震 3火山
+					var gid = (ObjIndex - type) / 10;
+					if(type===1){
+						let feature = tnm_o.features[gid-1];
+						let property = feature.properties;
+						let coordinates = feature.geometry.coordinates.slice();
+						let cause = property.Cause;
+						let country = property.Country;
+						let region = property.Region;
+						let tsIntensity = property.TS_Intensity;
+						let year = property.Year;
+						let locationName = property.Location_Name;
+						let comments = property.Comments;
+						let deathsTotalDescription = property.DEATHS_total_description;
+						let damageTotalDescription = property.Damage_total_description;
+						let eventValidity = property.Event_Validity;
+						let i_url = property.URL;
+						
+						map.flyTo({
+							center: coordinates,
+							zoom: 15
+						});
+						
+						d_map.flyTo({
+							center: coordinates,
+							zoom: 11
+						});
+						
+						new mapboxgl.Popup({
+								closeButton: false
+							})
+							.setLngLat(coordinates)
+							.setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
+								region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+							.addTo(map);
+						
+						detail_info.innerHTML = '<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country +
+							'<br>地区： ' + region +
+							'<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '<br>造成伤亡： ' +
+							deathsTotalDescription +
+							'<br>造成损失： ' + damageTotalDescription + '<br>确信度： ' + eventValidity + '<br>评价： ' +
+							comments +
+							'<br>详情页面<iframe src=' + i_url + ' width=100% height=30% frameborder=none></iframe>'
+						
+						
+						zoom.classList.add('show');
+						detail.classList.add('show');
+					}
+					if(type===2){
+						let feature = eqk_o.features[gid-1];
+						let property = feature.properties;
+						let coordinates = feature.geometry.coordinates.slice();
+						let date = property.Date;
+						let depth = property.Depth;
+						let magnitude = property.Magnitude;
+						let locationA = property.location_a;
+						
+						map.flyTo({
+							center: coordinates,
+							zoom: 15
+						});
+						
+						d_map.flyTo({
+							center: coordinates,
+							zoom: 11
+						});
+						
+						new mapboxgl.Popup({
+								closeButton: false
+							})
+							.setLngLat(coordinates)
+							.setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
+								'<br>震源深度： ' + depth)
+							.addTo(map);
+						
+						detail_info.innerHTML = '<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' +
+							magnitude +
+							'<br>震源深度： ' + depth + '<br>'
+						
+						
+						zoom.classList.add('show');
+						detail.classList.add('show');
+					}
+					if(type===3){
+						let feature = vol_o.features[gid-1];
+						let property = feature.properties;
+						let coordinates = feature.geometry.coordinates.slice();
+						let country = property.Country;
+						let elevation = property.Elevation;
+						let volcano = property.Volcano;
+						let volcanotype = property.Volcanotype;
+						let volcanoes = property.Volcanoes;
+						let lastKnownEruption = property.Last_known_eruption;
+						let erupt_start = property.Eruptions;
+						let erupt_end = property.Eruption_1;
+						let erupt_times = property.Eruption_2;
+						let summit = property.Summit;
+						let year = property.Year;
+						let i_url = property.URL;
+						
+						
+						map.flyTo({
+							center: coordinates,
+							zoom: 15
+						});
+						
+						d_map.flyTo({
+							center: coordinates,
+							zoom: 11
+						});
+						
+						new mapboxgl.Popup({
+								closeButton: false
+							})
+							.setLngLat(coordinates)
+							.setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
+								volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
+								lastKnownEruption)
+							.addTo(map);
+						
+						detail_info.innerHTML = '<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country +
+							'<br>类型： ' + volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes +
+							'<br>最近喷发： ' + lastKnownEruption + '<br>开始爆发时间： ' + erupt_start + '<br>结束爆发时间： ' +
+							erupt_end +
+							'<br>期间爆发次数： ' + erupt_times + '<br>高峰： ' + summit + '<br>年份： ' + year +
+							'<br>详情页面<iframe src=' + i_url + ' width=100% height=30% frameborder=none></iframe>'
+						
+						zoom.classList.add('show');
+						detail.classList.add('show');
 					}
 				}
 			}
-			li[1].onclick = function() {
-				let url = 'http://127.0.0.1:8080/risk'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
+			search.onfocus = function() {
+				search.value = ""
+				search.classList.add("active")
 			}
-			li[2].onclick = function() {
-				let url = 'http://127.0.0.1:8080/discussion'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
+			search.onblur = function() {
+				search.value = "键入以搜索"
+				search.classList.remove("active")
 			}
-			li[3].onclick = function() {
-				let url = 'http://127.0.0.1:8080/data'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
+			search.onkeydown = function(event) {
+				if (event.keyCode == 13) {
+					let url = 'http://127.0.0.1:8080/result'
+					let xhr = new XMLHttpRequest();
+					xhr.open('POST', url, true);
+					var formData = new FormData();
+					formData.append('value', search.value);
+					xhr.send(formData)
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+							var result = xhr.response //字符串
+							var resultjson = JSON.parse(result);
+							var list = "<ul class='search_ul'>"
+							for (var key in resultjson) {
+								var gid = resultjson[key].gid
+								var info1 = resultjson[key].location
+								var info2 = resultjson[key].year
+								var type = resultjson[key].type
+								var str = gid.toString() + type.toString();
+								var index = parseInt(str);
+								list +=
+									'<li onclick="Location('+ index+')">' +
+									'<a class="aVoid">' + info1+"   "+info2 + '</a>' + '</li>'
+							}
+							list += '</ul>';
+							search_result.innerHTML = list;
+						}
 					}
 				}
 			}
 
-			search.onfocus = function() {
-				search.value = ""
-			}
-			search.onblur = function() {
-				search.value = "键入以搜索"
-			}
-			search.onkeydown = function(event) {
-				if (event.keyCode == 13) {}
-			}
+
 			zoom.onclick = function() {
 				map.flyTo({
 					center: [105, 45],

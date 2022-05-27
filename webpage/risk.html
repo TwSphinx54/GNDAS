@@ -38,46 +38,26 @@
 
 			const li = document.getElementsByClassName('list');
 			li[0].onclick = function() {
-				let url = 'http://127.0.0.1:8080/result'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
+				window.location.href = 'http://127.0.0.1:8080/result'
 			}
 			li[1].onclick = function() {
-				let url = 'http://127.0.0.1:8080/risk'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
+				window.location.href = 'http://127.0.0.1:8080/risk'
 			}
 			li[2].onclick = function() {
-				let url = 'http://127.0.0.1:8080/discussion'
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
-					}
-				}
+				window.location.href  = 'http://127.0.0.1:8080/discussion'
 			}
 			li[3].onclick = function() {
-				let url = 'http://127.0.0.1:8080/data'
+				let url = 'http://127.0.0.1:8080/data?pms=' + '{{ pms }}' //GET请求发送书
 				let xhr = new XMLHttpRequest();
 				xhr.open('GET', url, true);
 				xhr.send()
 				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						window.location.href = xhr.responseURL
+					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200 ) {
+						if (xhr.response === 'error') {
+							window.alert("您不具备访问该模块的权限！")
+						} else {
+							window.location.href = xhr.responseURL
+						}
 					}
 				}
 			}
