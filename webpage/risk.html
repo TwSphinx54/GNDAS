@@ -48,14 +48,69 @@
 <div id="MyCharts4"></div>
 
 
-<div class="titles">
-    <div class="func">灾害种类</div>
-    <div class="type">
-        <div id="type1">火&nbsp;&nbsp;山</div>
-        <div id="type2">地&nbsp;&nbsp;震</div>
-        <div id="type3">海&nbsp;&nbsp;啸</div>
-    </div>
+<div class="button_switch">
+    <div class="heat_type">火&nbsp;&nbsp;山</div>
+    <div class="heat_type">地&nbsp;&nbsp;震</div>
+    <div class="heat_type">海&nbsp;&nbsp;啸</div>
 </div>
+
+<script>
+    let vol_o = {{ vol | tojson }}
+    let eqk_o = {{ eqk | tojson }}
+    let tnm_o = {{ tnm | tojson }}
+    let vol_co = {{ vol_c | tojson }}
+    let eqk_co = {{ eqk_c | tojson }}
+    let tnm_co = {{ tnm_c | tojson }}
+
+    console.log(tnm_o)
+    console.log(tnm_co)
+
+    function Volcano_Charts() {
+        $(function () {
+            Risk_Func(vol_o, "Eruption_2")    // 热力图
+            Data_Volcano = vol_co  // 获取数据
+
+            // 绘图
+            VolcanoType(Data_Volcano, "MyCharts1")
+            VolcanoYear(Data_Volcano, "MyCharts2")
+            Summit_Elevation(Data_Volcano, "MyCharts3")
+            SunGraph_V(Data_Volcano, "MyCharts4")
+        })
+    }
+
+    function Earthquake_Charts() {
+        $(function () {
+            Risk_Func(eqk_o, "Magnitude")    // 热力图
+            Data_Earthquake = eqk_co  // 获取数据
+            // 绘图
+            CountsYear(Data_Earthquake, "MyCharts1")
+            CountsMag(Data_Earthquake, "MyCharts2")
+            CountsDepth(Data_Earthquake, "MyCharts3")
+            MagDepth(Data_Earthquake, "MyCharts4")
+        })
+    }
+
+    function Tsunami_Charts() {
+        $(function () {
+            Risk_Func(tnm_o, "Eruptions Total")    // 热力图
+            Data_Temp = tnm_co  // 获取数据
+
+            // 筛选年份
+            Data_Tsunami = []
+            for (let i = 0; i < Data_Temp.length; i++) {
+                if (Data_Temp[i]["Year"] > 1990) {
+                    Data_Tsunami.push(Data_Temp[i])
+                }
+            }
+
+            // 绘图
+            TotalDescription(Data_Tsunami, "MyCharts3")
+            TsunamiYear(Data_Tsunami, "MyCharts2")
+            CountsIntensity(Data_Tsunami, "MyCharts1")
+            SunGraph(Data_Tsunami, "MyCharts4")
+        })
+    }
+</script>
 
 
 <script>
@@ -78,23 +133,34 @@
         window.location.href = 'http://127.0.0.1:8080/data';
     }
 
+    const heat_type = document.getElementsByClassName('heat_type');
 
-    const Earthquake = document.getElementById('type2')
-    Earthquake.onclick = function () {
-        Earthquake_Charts();
-    }                               // Earthquake.onclick=Earthquake_Charts;   另外一种写法
-
-    const Volcano = document.getElementById('type1')
-    Volcano.onclick = function () {
-        Volcano_Charts();
-    }
-
-    const Tsunami = document.getElementById('type3')
-    Tsunami.onclick = function () {
-        Tsunami_Charts();
+    let flag = [true, false, false, false]
+    heat_type[0].classList.add('clicked');
+    Volcano_Charts();
+    for (let i = 0; i < heat_type.length; i++) {
+        // heat_type[i].classList.add('show');
+        heat_type[i].onclick = function () {
+            switch (i) {
+                case 0:
+                    Volcano_Charts();
+                    break;
+                case 1:
+                    Earthquake_Charts();
+                    break;
+                case 2:
+                    Tsunami_Charts();
+                    break;
+            }
+            if (flag[i] === false) {
+                let c_id = flag.indexOf(true);
+                heat_type[c_id].classList.remove('clicked');
+                flag[c_id] = false;
+                heat_type[i].classList.add('clicked');
+                flag[i] = true;
+            }
+        }
     }
 </script>
-
-
 </body>
 </html>

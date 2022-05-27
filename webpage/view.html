@@ -246,10 +246,6 @@
             let year = property.Year;
             let i_url = property.URL;
 
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
-
             map.flyTo({
                 center: coordinates,
                 zoom: 12
@@ -288,10 +284,6 @@
             let depth = property.Depth;
             let magnitude = property.Magnitude;
             let locationA = property.location_a;
-
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
 
             map.flyTo({
                 center: coordinates,
@@ -335,10 +327,6 @@
             let damageTotalDescription = property.Damage_total_description;
             let eventValidity = property.Event_Validity;
             let i_url = property.URL;
-
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
 
             map.flyTo({
                 center: coordinates,
@@ -389,11 +377,6 @@
             let volcanoes = property.Volcanoes;
             let lastKnownEruption = property.Last_known_eruption;
 
-
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
-
             popup.setLngLat(coordinates)
                 .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
                     volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
@@ -410,10 +393,6 @@
             let depth = property.Depth;
             let magnitude = property.Magnitude;
             let locationA = property.location_a;
-
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
 
             popup.setLngLat(coordinates)
                 .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
@@ -432,10 +411,6 @@
             let tsIntensity = property.TS_Intensity;
             let year = property.Year;
             let locationName = property.Location_Name;
-
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
 
             popup.setLngLat(coordinates)
                 .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +

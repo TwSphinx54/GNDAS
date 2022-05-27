@@ -5,6 +5,12 @@ import json
 
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
 conn, cursor = connect_database()
+vol = volcano_eruption_all_matched(conn, cursor)
+eqk = earthquake_all_matched(conn, cursor)
+tnm = tsunami_all_matched(conn, cursor)
+vol_c = [k['properties'] for k in vol['features']]
+eqk_c = [k['properties'] for k in eqk['features']]
+tnm_c = [k['properties'] for k in tnm['features']]
 usr = ''
 pms = ''
 
@@ -35,9 +41,6 @@ def login():
 @app.route('/result', methods=['GET', 'POST'])
 def main_process():
     if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
-        vol = volcano_eruption_all_matched(conn, cursor)
-        eqk = earthquake_all_matched(conn, cursor)
-        tnm = tsunami_all_matched(conn, cursor)
         return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm)
     elif request.method == 'POST':
         return 1
@@ -46,7 +49,8 @@ def main_process():
 @app.route('/risk', methods=['GET', 'POST'])
 def risk():
     if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
-        return render_template('risk.html')  # 相当于将risk.html和/risk路由相互绑定
+        return render_template('risk.html', vol_c=vol_c, eqk_c=eqk_c, tnm_c=tnm_c, vol=vol, eqk=eqk,
+                               tnm=tnm)  # 相当于将risk.html和/risk路由相互绑定
 
 
 @app.route('/discussion', methods=['GET', 'POST'])

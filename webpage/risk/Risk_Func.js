@@ -17,7 +17,7 @@ function GetGeodata(filename) {
 
 
 // 绘制热力图
-function Risk_Func(filename, Pro){
+function Risk_Func(geo_data, Pro) {
 // TO MAKE THE MAP APPEAR YOU MUST
 // ADD YOUR ACCESS TOKEN FROM
 // https://account.mapbox.com
@@ -34,7 +34,7 @@ function Risk_Func(filename, Pro){
         // Heatmap layers also work with a vector tile source.
         map.addSource('earthquakes', {
             'type': 'geojson',
-            'data': filename
+            'data': geo_data
         });
 
         map.addLayer(
@@ -177,7 +177,7 @@ function CountsNum(Data, Prop)     // 要统计的数据和属性项
     }
     let Counts = new Array(Props.length).fill(0)
     for (let i = 0; i < Data.length; i++) {
-        let tempProp = data[i][Prop]
+        let tempProp = Data[i][Prop]
         tempIndex = Props.indexOf(tempProp)
         Counts[tempIndex]++               // 各个火山喷发的次数
     }
