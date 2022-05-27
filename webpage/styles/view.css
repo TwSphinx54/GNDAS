@@ -598,6 +598,11 @@ body {
 	outline: none;
 }
 
+.search.active {
+	background: rgba(255, 255, 255, 0.3);
+	outline: none;
+}
+
 #zoom {
     position: fixed;
     z-index: 5;

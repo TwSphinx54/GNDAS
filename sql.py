@@ -4,7 +4,7 @@ import psycopg2
 # 获得连接
 def connect_database():
     try:
-        conn = psycopg2.connect(dbname="postgis_1_sample", user="postgres", password="20010930", host="localhost", port="5432")
+        conn = psycopg2.connect(dbname="postgres", user="postgres", password="15532", host="localhost", port="5432")
     except psycopg2.Error as e:
         print('Unable to connect!\n{0}'.format(e))
     else:
@@ -180,3 +180,89 @@ def vague_match(conn, cursor, chars):
     conn.commit()
 
     return vague
+
+
+def vague_match(conn, cursor, chars):
+    chars_ = '%' + chars + '%'
+    sql_ts = """SELECT id FROM tsunami WHERE tsunami.location_n ILIKE '%s';""" % chars_
+    # 执行语句
+    cursor.execute(sql_ts)
+    # 抓取
+    rows_ts = cursor.fetchall()
+    vague = []
+    for row in rows_ts:
+        vague.append([row[0], 'tsunami'])
+
+    sql_eq = """SELECT id FROM earthquake WHERE earthquake.location_n ILIKE '%s';""" % chars_
+    # 执行语句。产品不太清晰
+    cursor.execute(sql_eq)
+    # 抓取
+    rows_eq = cursor.fetchall()
+    for row in rows_eq:
+        vague.append([row[0], 'earthquake'])
+
+    sql_vo = """SELECT id FROM volcano_eruption WHERE volcano_eruption.country ILIKE '%s';""" % chars_
+    # 执行语句
+    cursor.execute(sql_vo)
+    # 抓取
+    rows_vo = cursor.fetchall()
+    for row in rows_vo:
+        vague.append([row[0], 'volcano_eruption'])
+    # 事物提交
+    conn.commit()
+    return vague
+
+
+def earthquake_storage(conn, cursor, date, year, magnitude, latitude, longitude, depth, location_n):
+    params = (1,)
+    geom = "SELECT (ST_GeomFromText('POINT({} {})'))".format(longitude, latitude)
+    cursor.execute(geom, params)
+    rows = cursor.fetchall()
+    sql = """insert into earthquake (date,year,magnitude,latitude,longitude,depth,location_n,geom) 
+values('%s','%s','%s','%s','%s','%s','%s','%s')
+    ;""" % (date, year, magnitude, latitude, longitude, depth, location_n, rows[0][0])
+
+    # 执行语句
+    cursor.execute(sql, params)
+    # 事物提交
+    conn.commit()
+
+
+def tsunami_storage(conn, cursor, year, latitude, longitude, location_n, country, region, cause, event_vali, ts_intensi,
+                    url, comments, damage_tot='UnKnown', houses_tot='UnKnown', deaths_tot='UnKnown',
+                    eq_magnitu='UnKnown', eq_depth='UnKnown', month='UnKnown', day='UnKnown', hour='UnKnown',
+                    minute='UnKnown'):
+    params = (1,)
+    geom = "SELECT (ST_GeomFromText('POINT({} {})'))".format(longitude, latitude)
+    cursor.execute(geom, params)
+    rows = cursor.fetchall()
+    sql = """insert into tsunami (year,month,day,hour,minute,latitude,longitude,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments,geom) 
+values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') 
+    ;""" % (
+        year, month, day, hour, minute, latitude, longitude, location_n, country, region, cause, event_vali, eq_magnitu,
+        eq_depth, ts_intensi, damage_tot, houses_tot, deaths_tot, url, comments, rows[0][0])
+    # 21
+    # 执行语句
+    cursor.execute(sql, params)
+    # 事物提交
+    conn.commit()
+
+
+def volcano_eruption_storage(conn, cursor, year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2,
+                             volcanoes, volcanotyp, lastknowne, latitude, longitude, summit, elevation, url,
+                             field17='[null]'):
+    params = (1,)
+    geom = "SELECT (ST_GeomFromText('POINT({} {})'))".format(longitude, latitude)
+    cursor.execute(geom, params)
+    rows = cursor.fetchall()
+    sql = """insert into tsunami (year,volcano,volcano_id,country,eruptions,eruption_1,eruption_2,volcanoes,volcanotyp,lastknowne,latitude,longitude,summit,elevation,url,field17,geom)
+values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') 
+    ;""" % (
+        year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2, volcanoes, volcanotyp, lastknowne,
+        latitude,
+        longitude, summit, elevation, url, field17, geom)
+    # 17
+    # 执行语句
+    cursor.execute(sql, params)
+    # 事物提交
+    conn.commit()

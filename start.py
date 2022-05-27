@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, url_for, render_template, jsonify
-from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched,registered,vague_match
+from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched, \
+    registered, volcano_eruption_storage, earthquake_storage, tsunami_storage
 import json
 
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
@@ -23,7 +24,7 @@ def login():
     elif request.method == 'POST':
         email = request.values['email']
         password = request.form['password']
-        status = request.form['status'] # 代表本次请求是登录(true)or注册(false)
+        status = request.form['status']  # 代表本次请求是登录(true)or注册(false)
         global usr, pms
         usr = email.split('@')[0]
         if status: # 此时正在进行登录操作
@@ -48,15 +49,19 @@ def main_process():
         result = vague_match(conn, cursor, value)
         return result
 
+
 @app.route('/risk', methods=['GET', 'POST'])
 def risk():
     if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
-        return render_template('risk.html', pms=pms, usr=usr) # 相当于将risk.html和/risk路由相互绑定
+        return render_template('risk.html', vol_c=vol_c, eqk_c=eqk_c, tnm_c=tnm_c, vol=vol, eqk=eqk,
+                               tnm=tnm)  # 相当于将risk.html和/risk路由相互绑定
+
 
 @app.route('/discussion', methods=['GET', 'POST'])
 def discussion():
     if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
         return render_template('discussion.html', pms=pms, usr=usr)
+
 
 @app.route('/data', methods=['GET', 'POST'])
 def data():
@@ -66,7 +71,26 @@ def data():
             return render_template('data.html', pms=pms, usr=usr)
         else:
             return 'error'
+    elif request.method == 'POST':
+        status = request.form['status']
+        if status == 'send_data':
+            dis_type = request.form['type']
+            data_c = request.form.getlist('data')
+            if dis_type == 0:
+                vol_data = data_c[:15]
+                volcano_eruption_storage(conn, cursor, vol_data[12], vol_data[0], vol_data[1], vol_data[6], vol_data[3],
+                                         vol_data[4], vol_data[5], vol_data[7], vol_data[2], vol_data[13], vol_data[9],
+                                         vol_data[8], vol_data[10], vol_data[11], vol_data[14])
+            elif dis_type == 1:
+                eqk_data = data_c[15:22]
+                earthquake_storage(conn, cursor, eqk_data[0], eqk_data[6], eqk_data[2], eqk_data[5], eqk_data[4],
+                                   eqk_data[3], eqk_data[1])
+            elif dis_type == 2:
+                tnm_data = data_c[22:]
+                tsunami_storage(conn, cursor, tnm_data[7], tnm_data[6], tnm_data[5], tnm_data[0], tnm_data[1],
+                                tnm_data[2], tnm_data[3], tnm_data[8], tnm_data[4], tnm_data[10], tnm_data[9])
+            return 'done!'
+
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True) # DEBUG模式下刷新网页即可更新
-
+    app.run(port=8080, debug=True)  # DEBUG模式下刷新网页即可更新

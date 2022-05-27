@@ -2,3 +2,83 @@ html,
 body {
     background-image: linear-gradient(125deg, #005584, #197385, #1a9386, #00b485)
 }
+
+#contents {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    height: 40%;
+    width: 60%;
+}
+
+h2 {
+    position: absolute;
+    left: 20%;
+    top: 57%;
+    height: 5%;
+    width: 75%;
+
+    color: white;
+    font-size: 20px;
+}
+
+#user_img {
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    top: 67%;
+    left: 19%;
+    background-image: url("https://t7.baidu.com/it/u=1951548898,3927145&fm=193&f=GIF");
+
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+#emoji {
+    position: absolute;
+    left: -70%;
+
+    width: 20px;
+    height: 20px;
+    background-image: url("https://b.bdstatic.com/searchbox/icms/searchbox/img/xib-emoj-btn2.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+
+}
+
+#story {
+    position: absolute;
+    left: 28%;
+    top: 62%;
+    border: 0;
+    border-radius: 5px;
+    background-color: rgb(229, 241, 221);
+    width: 50%;
+    height: 25%;
+    padding: 10px;
+    resize: none;
+}
+
+
+#button_discussion {
+    position: absolute;
+    width: 30%;
+    height: 10%;
+    right: 20%;
+    bottom: -1%;
+
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#clear {
+    position: absolute;
+    right: 50%;
+}
+
+#submit {
+    position: absolute;
+    right: 15%;
+}
