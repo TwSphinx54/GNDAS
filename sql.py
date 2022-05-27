@@ -4,7 +4,7 @@ import psycopg2
 # 获得连接
 def connect_database():
     try:
-        conn = psycopg2.connect(dbname="postgres", user="postgres", password="15532", host="localhost", port="5432")
+        conn = psycopg2.connect(dbname="postgis_1_sample", user="postgres", password="20010930", host="localhost", port="5432")
     except psycopg2.Error as e:
         print('Unable to connect!\n{0}'.format(e))
     else:
@@ -142,3 +142,34 @@ def volcano_eruption_all_matched(conn, cursor):
     # 事物提交
     conn.commit()
     return full_geo
+
+
+def vague_match(conn, cursor, chars):
+    chars_ = '%' + chars + '%'
+    sql_ts = """SELECT id FROM tsunami WHERE tsunami.location_n ILIKE '%s';""" % chars_
+    # 执行语句
+    cursor.execute(sql_ts)
+    # 抓取
+    rows_ts = cursor.fetchall()
+    vague = []
+    for row in rows_ts:
+        vague.append([row[0], 'tsunami'])
+
+    sql_eq = """SELECT id FROM earthquake WHERE earthquake.location_n ILIKE '%s';""" % chars_
+    # 执行语句
+    cursor.execute(sql_eq)
+    # 抓取
+    rows_eq = cursor.fetchall()
+    for row in rows_eq:
+        vague.append([row[0], 'earthquake'])
+
+    sql_vo = """SELECT id FROM volcano_eruption WHERE volcano_eruption.country ILIKE '%s';""" % chars_
+    # 执行语句
+    cursor.execute(sql_vo)
+    # 抓取
+    rows_vo = cursor.fetchall()
+    for row in rows_vo:
+        vague.append([row[0], 'volcano_eruption'])
+    # 事物提交
+    conn.commit()
+    return vague

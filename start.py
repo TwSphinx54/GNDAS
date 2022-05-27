@@ -8,10 +8,10 @@ usr = ''
 pms = ''
 
 
-# Flask中的route()装饰器用于将URL绑定到函数
+# Flask中的route()装饰器用于将URL绑定到函数 即将网页html文件发布到对应路由上
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    if request.method == 'GET':  # 默认情况下，Flask路由响应GET请求
+    if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
         return render_template('main.html')
     elif request.method == 'POST':
         email = request.values['email']
@@ -33,26 +33,29 @@ def login():
 
 @app.route('/result', methods=['GET', 'POST'])
 def main_process():
-    if request.method == 'GET':  # 默认情况下，Flask路由响应GET请求
+    if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
         vol = volcano_eruption_all_matched(conn, cursor)
         eqk = earthquake_all_matched(conn, cursor)
         tnm = tsunami_all_matched(conn, cursor)
         return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm)
     elif request.method == 'POST':
-        status = request.form['status']
-        if status == 'disaster':
-            dis_type = request.form['type']
-            if dis_type == 'volcano':
-                vol = volcano_eruption_all_matched(conn, cursor)
-                return jsonify(vol)
-            elif dis_type == 'earthquake':
-                eqk = earthquake_all_matched(conn, cursor)
-                return jsonify(eqk)
-            elif dis_type == 'tsunami':
-                tnm = tsunami_all_matched(conn, cursor)
-                return jsonify(tnm)
+        return 1
 
+@app.route('/risk', methods=['GET', 'POST'])
+def risk():
+    if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
+        return render_template('risk.html') # 相当于将risk.html和/risk路由相互绑定
+
+@app.route('/discussion', methods=['GET', 'POST'])
+def discussion():
+    if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
+        return render_template('discussion.html')
+
+@app.route('/data', methods=['GET', 'POST'])
+def data():
+    if request.method == 'GET':  # 默认情况下，Flask路由响应GET请求
+        return render_template('data.html')
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True)
+    app.run(port=8080, debug=True) # DEBUG模式下刷新网页即可更新
 
