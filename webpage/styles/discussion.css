@@ -2,3 +2,49 @@ html,
 body {
     background-image: linear-gradient(125deg, #005584, #197385, #1a9386, #00b485)
 }
+
+#contents{
+    position: absolute;
+    top:20%;
+    left: 20%;
+    height: 40%;
+    width: 60%;
+}
+#mytexts{
+    position: absolute;
+    left: 20%;
+    top:65%;
+    height: 30%;
+    width: 75%;
+}
+#story{
+    border: 0;
+    border-radius: 5px;
+    background-color: rgb(229, 241, 221);
+    width: 75%;
+    height: 50%;
+    padding:10px;
+    resize: none;
+}
+
+
+#button_discussion
+{
+    position: absolute;
+    width: 30%;
+    height: 10%;
+    right: 20%;
+
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+#clear{
+    position: absolute;
+    right: 50%;
+}
+#submit{
+    position: absolute;
+    right: 15%;
+}
