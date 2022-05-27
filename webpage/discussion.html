@@ -1,85 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<link href="styles/view.css" rel="stylesheet">
-		<link href="styles/discussion.css" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <link href="styles/view.css" rel="stylesheet">
+    <link href="styles/discussion.css" rel="stylesheet">
 
-		<title>全球自然灾害评估系统 - 用户论坛</title>
-	</head>
-	<body>
-		<div id="view_title">
-			<span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
-			<span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">用户论坛</span>
-			<div id="shining_bar"></div>
-			<div
-				style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
-				GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
-			</div>
-		</div>
-		<div class="flex">
-			<ul>
-				<li class="list">灾害分布</li>
-				<li class="list">风险评估</li>
-				<li class="list">用户论坛</li>
-				<li class="list">数据管理</li>
-				<div class="bar"></div>
-			</ul>
-		</div>
-
-
-		<div id="contents">已发表内容</div>
-
-		<h2>发表观点</h2>
-		<div class="left">
-			<div id="user_img" style="background-color:#eeeeee"></div>
-		</div>
+    <title>全球自然灾害评估系统 - 用户论坛</title>
+</head>
+<body>
+<div id="view_title">
+    <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">用户论坛</span>
+    <div id="shining_bar"></div>
+    <div
+            style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
+</div>
+<div class="flex">
+    <ul>
+        <li class="list">灾害分布</li>
+        <li class="list">风险评估</li>
+        <li class="list">用户论坛</li>
+        <li class="list">数据管理</li>
+        <div class="bar"></div>
+    </ul>
+</div>
 
 
-		<textarea id="story" name="story" placeholder="友好发言~" ;></textarea>
-		<div id="button_discussion">
-			<span id="emoji"></span>
-			<div id="clear">清空</div>
-			<div id="submit">发表</div>
-		</div>
+<div id="contents">已发表内容</div>
+
+<textarea id="story" name="story" placeholder="发，都可以发"></textarea>
+<div id="button_discussion">
+    <span id="emoji"></span>
+    <div class="text_button">清&nbsp;&nbsp;空</div>
+    <div class="text_button">发&nbsp;&nbsp;表</div>
+</div>
 
 
+<script>
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
 
-		<script>
-			const shining_bar = document.getElementById('shining_bar');
-			const flex = document.getElementsByClassName('flex')[0];
-			const bar = document.getElementsByClassName('bar')[0];
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show3');
 
-			shining_bar.classList.add('show');
-			flex.classList.add('show');
-			bar.classList.add('show3');
+    const li = document.getElementsByClassName('list');
+    li[0].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/result'
+    }
+    li[1].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/risk'
+    }
+    li[2].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/discussion'
+    }
+    li[3].onclick = function () {
+        let url = 'http://127.0.0.1:8080/data?pms=' + '{{ pms }}' //GET请求发送方法
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send()
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                if (xhr.response === 'error') {
+                    window.alert("您不具备访问该模块的权限！")
+                } else {
+                    window.location.href = xhr.responseURL
+                }
+            }
+        }
+    }
 
-			const li = document.getElementsByClassName('list');
-			li[0].onclick = function() {
-				window.location.href = 'http://127.0.0.1:8080/result'
-			}
-			li[1].onclick = function() {
-				window.location.href = 'http://127.0.0.1:8080/risk'
-			}
-			li[2].onclick = function() {
-				window.location.href = 'http://127.0.0.1:8080/discussion'
-			}
-			li[3].onclick = function() {
-				let url = 'http://127.0.0.1:8080/data?pms=' + '{{ pms }}' //GET请求发送方法
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send()
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						if (xhr.response === 'error') {
-							window.alert("您不具备访问该模块的权限！")
-						} else {
-							window.location.href = xhr.responseURL
-						}
-					}
-				}
-			}
-		</script>
+    let usr = '{{ usr }}'
+    const text_button = document.getElementsByClassName('text_button');
+    const story = document.getElementById('story');
+    const contents = document.getElementById('contents');
 
-	</body>
+    for (let i = 0; i < text_button.length; i++) {
+        text_button[i].classList.add('show');
+    }
+    text_button[0].onclick = function () {
+        story.value = "";
+    }
+    text_button[1].onclick = function () {
+        let text = story.value;
+        let url = 'http://127.0.0.1:8080/discussion'
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        let formData = new FormData();
+        formData.append('status', 'send');
+        formData.append('usr_name', usr);
+        formData.append('statement', text);
+        xhr.send(formData)
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                story.value = "";
+                get_log()
+            }
+        }
+    }
+
+    function get_log() {
+        let url = 'http://127.0.0.1:8080/discussion'
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        let formData = new FormData();
+        formData.append('status', 'get');
+        xhr.send(formData)
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                let text = JSON.parse(xhr.response)
+                let list = "<ul class='list_ul'>"
+                for (let key in text) {
+                    let usr = text[key].usr;
+                    let date = text[key].date;
+                    let statement = text[key].statement;
+                    list +=
+                        '<li><a class="list_a"><span style="font-size: 18px; color: #9e9eff;">' + usr + '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 15px; color: gray;">' + date + "</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + statement + '</a></li>'
+                }
+                list += '</ul>';
+                contents.innerHTML = list;
+            }
+        }
+    }
+
+    get_log()
+</script>
+
+</body>
 </html>

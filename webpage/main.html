@@ -190,7 +190,7 @@
 						let formData = new FormData();
 						formData.append('email', input_s[0].value)
 						formData.append('password', input_s[1].value)
-						formData.append('status', true)
+						formData.append('status', 1)
 						xhr.send(formData)
 						xhr.onreadystatechange = function() {
 							if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -229,7 +229,7 @@
 						let formData = new FormData();
 						formData.append('email', input_s[0].value)
 						formData.append('password', input_s[1].value)
-						formData.append('status', false)
+						formData.append('status', 2)
 						xhr.send(formData)
 						xhr.onreadystatechange = function() {
 							if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {

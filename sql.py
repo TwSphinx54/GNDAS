@@ -1,4 +1,5 @@
 import psycopg2
+import datetime
 
 
 # 获得连接
@@ -153,11 +154,10 @@ def vague_match(conn, cursor, chars):
     rows_ts = cursor.fetchall()
 
     vague = {}
-    n=0
+    n = 0
     for row in rows_ts:
-        vague[n]={'gid':row[0],'location':row[1],'year':row[2], 'type':1}
-        n+=1
-
+        vague[n] = {'gid': row[0], 'location': row[1], 'year': row[2], 'type': 1}
+        n += 1
 
     sql_eq = """SELECT gid,location_n,year FROM earthquake WHERE earthquake.location_n ILIKE '%s';""" % chars_
     # 执行语句。
@@ -165,8 +165,8 @@ def vague_match(conn, cursor, chars):
     # 抓取
     rows_eq = cursor.fetchall()
     for row in rows_eq:
-        vague[n]={'gid':row[0],'location':row[1],'year':row[2],'type':2}
-        n+=1
+        vague[n] = {'gid': row[0], 'location': row[1], 'year': row[2], 'type': 2}
+        n += 1
 
     sql_vo = """SELECT gid,volcano,year FROM volcano_eruption WHERE volcano_eruption.volcano ILIKE '%s';""" % chars_
     # 执行语句
@@ -174,8 +174,8 @@ def vague_match(conn, cursor, chars):
     # 抓取
     rows_vo = cursor.fetchall()
     for row in rows_vo:
-        vague[n]={'gid':row[0],'location':row[1],'year':row[2],'type':3}
-        n+=1
+        vague[n] = {'gid': row[0], 'location': row[1], 'year': row[2], 'type': 3}
+        n += 1
     # 事物提交
     conn.commit()
 
@@ -235,3 +235,37 @@ values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s
     cursor.execute(sql, params)
     # 事物提交
     conn.commit()
+
+
+def record_statement(conn, cursor, usr, statement):
+    params = (1,)
+    geom = "" "SELECT id FROM public.usr_discuss ORDER BY id ASC """
+    cursor.execute(geom, params)
+    rows = cursor.fetchall()
+    num_id = rows[-1][0] + 1
+    curr_time = datetime.datetime.now()
+    data = curr_time.date()
+    sql = """insert into usr_discuss (id,usr,date,statement)
+    values('%s','%s','%s','%s' )
+    ;""" % (num_id, usr, curr_time, statement)
+    params = (1,)
+    # 执行语句
+    cursor.execute(sql, params)
+    # 事物提交
+    conn.commit()
+
+
+def match_all_statement(conn, cursor):
+    sql = """SELECT usr,date,statement FROM public.usr_discuss ORDER BY usr_discuss.date ASC;"""
+    params = (1,)
+    # 执行语句
+    cursor.execute(sql, params)
+    state_rows = cursor.fetchall()
+    statement = {}
+    n = 0
+    for row in state_rows[::-1]:
+        statement[n] = {'usr': row[0], 'date': row[1], 'statement': row[2]}
+        n = n + 1
+    # 事物提交
+    conn.commit()
+    return statement

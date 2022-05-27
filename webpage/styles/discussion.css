@@ -4,34 +4,25 @@ body {
 }
 
 #contents {
-    position: absolute;
-    top: 20%;
-    left: 20%;
-    height: 40%;
-    width: 60%;
-}
-
-h2 {
-    position: absolute;
-    left: 20%;
-    top: 57%;
-    height: 5%;
-    width: 75%;
-
     color: white;
+    position: fixed;
+    width: 50%;
+    height: 60%;
+    left: 50%;
+    margin-left: -25%;
+    top: 5%;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    overflow: auto;
     font-size: 20px;
 }
 
-#user_img {
-    position: absolute;
-    height: 100px;
-    width: 100px;
-    top: 67%;
-    left: 19%;
-    background-image: url("https://t7.baidu.com/it/u=1951548898,3927145&fm=193&f=GIF");
+#contents::-webkit-scrollbar {
+    width: 10px;
+}
 
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+#contents::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 #emoji {
@@ -43,42 +34,75 @@ h2 {
     background-image: url("https://b.bdstatic.com/searchbox/icms/searchbox/img/xib-emoj-btn2.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
-
 }
 
 #story {
-    position: absolute;
-    left: 28%;
-    top: 62%;
+    color: white;
+    position: fixed;
+    z-index: 2;
     border: 0;
-    border-radius: 5px;
-    background-color: rgb(229, 241, 221);
     width: 50%;
-    height: 25%;
-    padding: 10px;
+    height: 15%;
+    left: 50%;
+    margin-left: -25%;
+    top: 70%;
+    padding: 15px;
     resize: none;
+    outline: none;
+    font-size: 25px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
 }
 
 
 #button_discussion {
-    position: absolute;
-    width: 30%;
-    height: 10%;
-    right: 20%;
-    bottom: -1%;
+    position: fixed;
+    z-index: 1;
+    width: 50%;
+    height: 5%;
+    left: 50%;
+    margin-left: -25%;
+    top: 88.5%;
+}
 
+.text_button {
     color: white;
+    float: left;
+    box-sizing: border-box;
     font-size: 15px;
     font-weight: bold;
     text-align: center;
+    background: rgba(29, 161, 242, 0.7);
+    overflow: hidden;
+    width: 20%;
+    margin-right: 2%;
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+
+    height: 0;
+    line-height: 35px;
+
+    cursor: default;
+    animation: ease-out;
+    transition: background 0.5s ease-out, height 0.5s ease-out;
 }
 
-#clear {
-    position: absolute;
-    right: 50%;
+.text_button:hover {
+    transition: 0.5s ease;
+    background: rgba(255, 255, 255, 0.2);
 }
 
-#submit {
-    position: absolute;
-    right: 15%;
+.text_button.show {
+    height: 35px;
+}
+
+.list_a {
+    color: white;
+    line-height: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: default;
+}
+.list_ul{
+    list-style: none;
 }
