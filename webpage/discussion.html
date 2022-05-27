@@ -1,62 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<link href="styles/view.css" rel="stylesheet">
-	<link href="styles/discussion.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <link href="styles/view.css" rel="stylesheet">
+    <link href="styles/discussion.css" rel="stylesheet">
 
-	<title>全球自然灾害评估系统 - 用户论坛</title>
+    <title>全球自然灾害评估系统 - 用户论坛</title>
 </head>
 <body>
 <div id="view_title">
-	<span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
-	<span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">用户论坛</span>
-	<div id="shining_bar"></div>
-	<div style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
-		GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
-	</div>
+    <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">用户论坛</span>
+    <div id="shining_bar"></div>
+    <div style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
 </div>
 <div class="flex">
-	<ul>
-		<li>灾害分布</li>
-		<li>风险分析</li>
-		<li>用户论坛</li>
-		<li>数据管理</li>
-		<div class="bar"></div>
-	</ul>
+    <ul>
+        <li>灾害分布</li>
+        <li>风险分析</li>
+        <li>用户论坛</li>
+        <li>数据管理</li>
+        <div class="bar"></div>
+    </ul>
 </div>
 
 
 <div id="contents">已发表内容</div>
-<div id="mytexts">
-	<label for="story">请友好发表你的观点:<br></label>
-	<textarea id="story" name="story" placeholder="友好发言~";>
-</textarea>
-	<div id="button_discussion">
-		<div id="clear">清空</div>        <div id="submit">发表</div>
-	</div>
+
+<h2>发表观点</h2>
+<div class="left">
+    <div id="user_img" style="background-color:#eeeeee"></div>
+</div>
+
+<textarea id="story" name="story" placeholder="友好发言~" ;></textarea>
+<div id="button_discussion">
+    <span id="emoji"></span>
+    <div id="clear">清空</div>
+    <div id="submit">发表</div>
 </div>
 
 
+
 <script>
-	const shining_bar = document.getElementById('shining_bar');
-	const flex = document.getElementsByClassName('flex')[0];
-	const bar = document.getElementsByClassName('bar')[0];
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
 
-	shining_bar.classList.add('show');
-	flex.classList.add('show');
-	bar.classList.add('show3');
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show3');
 
-	const li = document.getElementsByTagName('li');
-	li[0].onclick = function () {
-		window.location.href = 'http://127.0.0.1:8080/result';
-	}
-	li[1].onclick = function () {
-		window.location.href = 'http://127.0.0.1:8080/risk';
-	}
-	li[3].onclick = function () {
-		window.location.href = 'http://127.0.0.1:8080/data';
-	}
+    const li = document.getElementsByTagName('li');
+    li[0].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/result';
+    }
+    li[1].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/risk';
+    }
+    li[3].onclick = function () {
+        window.location.href = 'http://127.0.0.1:8080/data';
+    }
 </script>
 
 </body>
