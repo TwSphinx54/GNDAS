@@ -52,6 +52,7 @@ body {
     font-size: 25px;
     background-color: rgba(0, 0, 0, 0.7);
     box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 }
 
 
@@ -77,6 +78,7 @@ body {
     width: 20%;
     margin-right: 2%;
     box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 
     height: 0;
     line-height: 35px;
@@ -105,4 +107,6 @@ body {
 }
 .list_ul{
     list-style: none;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+    margin-right: 2%;
 }

@@ -19,6 +19,7 @@ body {
 }
 
 #control {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     height: 102%;
     width: 23%;
     left: 0;
@@ -32,6 +33,7 @@ body {
 }
 
 #view_title {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     height: 70px;
     width: 300px;
     top: 2%;
@@ -340,6 +342,7 @@ body {
 }
 
 .flex {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     width: 0;
     height: 30px;
     overflow: hidden;
@@ -459,6 +462,7 @@ body {
 }
 
 #info2 {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     position: fixed;
     z-index: 2;
     bottom: 27px;
@@ -473,6 +477,7 @@ body {
 }
 
 #info1 {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     position: fixed;
     z-index: 2;
     bottom: 0;
@@ -655,6 +660,7 @@ body {
 }
 
 #zoom {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     position: fixed;
     z-index: 5;
     box-sizing: border-box;
@@ -701,6 +707,7 @@ body {
 }
 
 #detail {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     position: fixed;
     z-index: 5;
     box-sizing: border-box;
@@ -854,4 +861,30 @@ body {
 #d_map {
     width: 697px;
     height: 600px;
+}
+
+.mapboxgl-popup-content {
+    width: 250px;
+}
+
+.pop {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+    background-color: rgba(29, 161, 242, 0.1);
+    box-shadow: 1px 0 2px 1px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    font-size: 15px;
+}
+
+.pop p {
+    font-size: 20px;
+}
+
+.detail_info {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+    padding: 15px;
+    font-size: 15px;
+}
+
+.detail_info p {
+    font-size: 20px;
 }

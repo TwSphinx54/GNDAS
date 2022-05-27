@@ -12,6 +12,7 @@ body {
     top: 50%;
     margin-left: -500px;
     margin-top: -25px;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 }
 
 .button_block.move {
@@ -72,6 +73,7 @@ body {
     z-index: 0;
     left: 50%;
     top: 50%;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 
     width: 0;
     height: 0;
@@ -192,4 +194,5 @@ body {
     left: 50%;
     margin-top: 230px;
     margin-left: -495px;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 }

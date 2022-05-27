@@ -73,6 +73,7 @@ body {
     left: 50%;
     margin-left: -425px;
     cursor: default;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 }
 
 .heat_type {

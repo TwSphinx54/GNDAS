@@ -56,42 +56,42 @@
 		</div>
 
 		<script>
-			// Cesium.Ion.defaultAccessToken =
-			// 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
+			Cesium.Ion.defaultAccessToken =
+				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
 
-			// var viewer = new Cesium.Viewer('cesiumContainer', {
-			// 	geocoder: false,
-			// 	homeButton: false,
-			// 	sceneModePicker: false,
-			// 	baseLayerPicker: false,
-			// 	navigationHelpButton: false,
-			// 	animation: false,
-			// 	timeline: false,
-			// 	fullscreenButton: false,
-			// 	infoBox: false,
-			// 	orderIndependentTranslucency: false,
-			// 	skyAtmosphere: false,
-			// 	contextOptions: {
-			// 		webgl: {
-			// 			alpha: true,
-			// 		}
-			// 	},
-			// });
+			var viewer = new Cesium.Viewer('cesiumContainer', {
+				geocoder: false,
+				homeButton: false,
+				sceneModePicker: false,
+				baseLayerPicker: false,
+				navigationHelpButton: false,
+				animation: false,
+				timeline: false,
+				fullscreenButton: false,
+				infoBox: false,
+				orderIndependentTranslucency: false,
+				skyAtmosphere: false,
+				contextOptions: {
+					webgl: {
+						alpha: true,
+					}
+				},
+			});
 
-			// viewer.resolutionScale = window.devicePixelRatio;
-			// viewer.cesiumWidget.creditContainer.style.display = "none";
-			// viewer.scene.skyBox.show = false;
-			// viewer.scene.backgroundColor = new Cesium.Color(0.0, 0.0, 0.0, 0.0);
-			// viewer.scene.sun.show = false;
-			// viewer.scene.moon.show = false;
-			// viewer.scene.postProcessStages.fxaa.enabled = true;
+			viewer.resolutionScale = window.devicePixelRatio;
+			viewer.cesiumWidget.creditContainer.style.display = "none";
+			viewer.scene.skyBox.show = false;
+			viewer.scene.backgroundColor = new Cesium.Color(0.0, 0.0, 0.0, 0.0);
+			viewer.scene.sun.show = false;
+			viewer.scene.moon.show = false;
+			viewer.scene.postProcessStages.fxaa.enabled = true;
 
-			// viewer.camera.flyTo({
-			// 	destination: Cesium.Cartesian3.fromDegrees(114.3052, 30.5928, 10000000),
-			// 	duration: 1.0
-			// })
+			viewer.camera.flyTo({
+				destination: Cesium.Cartesian3.fromDegrees(114.3052, 30.5928, 10000000),
+				duration: 1.0
+			})
 
-			// let i = Date.now();
+			let i = Date.now();
 
 			function rotate() {
 				let a = .1;
@@ -101,7 +101,7 @@
 				viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -a * n);
 			}
 
-			// viewer.clock.onTick.addEventListener(rotate);
+			viewer.clock.onTick.addEventListener(rotate);
 			// setTimeout(function () {
 			//     viewer.clock.onTick.removeEventListener(rotate);
 			// }, 5000);
@@ -203,16 +203,7 @@
 						}
 					}
 				}
-				window.onkeydown = function(event) {
-					if (event.keyCode == 13) {
-						button_s.onclick()
-					}
-				}
-				input_s[1].onkeydown = function(event) {
-					if (event.keyCode == 13) {
-						button_s.onclick()
-					}
-				}
+
 				button_reg.onclick = function() {
 					var it1 = input_s[0].validity;
 					var it2 = input_s[1].validity;

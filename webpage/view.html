@@ -13,14 +13,6 @@
     <!--    <link rel="stylesheet"-->
     <!--          href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css">-->
 
-    <div id="zoom">恢复视角</div>
-    <div id="detail">详细信息</div>
-    <div id="modal"></div>
-    <div id="detail_map">
-        <div id="d_map"></div>
-    </div>
-    <div id="detail_info"></div>
-    <div id="close"></div>
     <title>全球自然灾害评估系统 - 灾害分布</title>
 </head>
 <body>
@@ -34,6 +26,14 @@
         GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
     </div>
 </div>
+<div id="zoom">恢复视角</div>
+<div id="detail">详细信息</div>
+<div id="modal"></div>
+<div id="detail_map">
+    <div id="d_map"></div>
+</div>
+<div id="detail_info"></div>
+<div id="close"></div>
 <div id="control">
     <div style="display: block; height: 100px;"></div>
     <div class="func">灾害种类</div>
@@ -89,7 +89,7 @@
     <div class="info_item">当前收录</div>
     <div id="item_c2">28,653</div>
     <div class="info_item">最近灾害</div>
-    <div id="item_c3">汤加 [112, 23] 火山</div>
+    <div id="item_c3">汤加 [21, 175] 火山</div>
 </div>
 
 
@@ -97,9 +97,7 @@
     let vol_o = {{ vol | tojson }}
     let eqk_o = {{ eqk | tojson }}
     let tnm_o = {{ tnm | tojson }}
-    // let vol_o = {{ vol | tojson }}
-    // let eqk_o = {{ eqk | tojson }}
-    // let tnm_o = {{ tnm | tojson }}
+
     mapboxgl.accessToken =
         'pk.eyJ1Ijoic3Nzc3BoaW54IiwiYSI6ImNrbnZnbDR1NzAzNzMyb3Bwbng3amtnMzQifQ.E1nAH_fti0KvB2heCd-cEg';
     let map = new mapboxgl.Map({
@@ -268,17 +266,16 @@
                 closeButton: false
             })
                 .setLngLat(coordinates)
-                .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
+                .setHTML('<div class="pop"><p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
                     volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
-                    lastKnownEruption)
+                    lastKnownEruption + '</div>')
                 .addTo(map);
 
-            detail_info.innerHTML = '<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country +
+            detail_info.innerHTML = '<div class="detail_info"><p><b>' + volcano + '</b></p><hr>' + '国家： ' + country +
                 '<br>类型： ' + volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes +
                 '<br>最近喷发： ' + lastKnownEruption + '<br>开始爆发时间： ' + erupt_start + '<br>结束爆发时间： ' +
-                erupt_end +
-                '<br>期间爆发次数： ' + erupt_times + '<br>高峰： ' + summit + '<br>年份： ' + year +
-                '<br><a href=' + i_url + '>详情页面</a>'
+                erupt_end + '<br>期间爆发次数： ' + erupt_times + '<br>高峰： ' + summit + '<br>年份： ' + year +
+                '<br><a href=' + i_url + '>详情页面</a></div>'
 
             zoom.classList.add('show');
             detail.classList.add('show');
@@ -307,13 +304,12 @@
                 closeButton: false
             })
                 .setLngLat(coordinates)
-                .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
-                    '<br>震源深度： ' + depth)
+                .setHTML('<div class="pop"><p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
+                    '<br>震源深度： ' + depth + '</div>')
                 .addTo(map);
 
-            detail_info.innerHTML = '<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' +
-                magnitude +
-                '<br>震源深度： ' + depth + '<br>'
+            detail_info.innerHTML = '<div class="detail_info"><p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' +
+                magnitude + '<br>震源深度： ' + depth + '<br></div>'
 
 
             zoom.classList.add('show');
@@ -350,17 +346,14 @@
                 closeButton: false
             })
                 .setLngLat(coordinates)
-                .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
-                    region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+                .setHTML('<div class="pop"><p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
+                    region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '</div>')
                 .addTo(map);
 
-            detail_info.innerHTML = '<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country +
-                '<br>地区： ' + region +
-                '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '<br>造成伤亡： ' +
-                deathsTotalDescription +
-                '<br>造成损失： ' + damageTotalDescription + '<br>确信度： ' + eventValidity + '<br>评价： ' +
-                comments +
-                '<br><a href=' + i_url + '>详情页面</a>'
+            detail_info.innerHTML = '<div class="detail_info"><p><b>' + locationName + '</b></p><hr>' + '国家： ' + country +
+                '<br>地区： ' + region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause +
+                '<br>年份： ' + year + '<br>造成伤亡： ' + deathsTotalDescription + '<br>造成损失： ' + damageTotalDescription +
+                '<br>确信度： ' + eventValidity + '<br>评价： ' + comments + '<br><a href=' + i_url + '>详情页面</a></div>'
 
 
             zoom.classList.add('show');
@@ -386,9 +379,9 @@
             let lastKnownEruption = property.Last_known_eruption;
 
             popup.setLngLat(coordinates)
-                .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
+                .setHTML('<div class="pop"><p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
                     volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
-                    lastKnownEruption)
+                    lastKnownEruption + '</div>')
                 .addTo(map);
         });
 
@@ -403,8 +396,8 @@
             let locationA = property.location_a;
 
             popup.setLngLat(coordinates)
-                .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
-                    '<br>震源深度： ' + depth)
+                .setHTML('<div class="pop"><p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
+                    '<br>震源深度： ' + depth + '</div>')
                 .addTo(map);
         });
 
@@ -421,8 +414,8 @@
             let locationName = property.Location_Name;
 
             popup.setLngLat(coordinates)
-                .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
-                    region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+                .setHTML('<div class="pop"><p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
+                    region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '</div>')
                 .addTo(map);
         });
 
@@ -727,17 +720,14 @@
                     closeButton: false
                 })
                     .setLngLat(coordinates)
-                    .setHTML('<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
-                        region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year)
+                    .setHTML('<div class="pop"><p><b>' + locationName + '</b></p><hr>' + '国家： ' + country + '<br>地区： ' +
+                        region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '</div>')
                     .addTo(map);
 
-                detail_info.innerHTML = '<p><b>' + locationName + '</b></p><hr>' + '国家： ' + country +
-                    '<br>地区： ' + region +
-                    '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year + '<br>造成伤亡： ' +
-                    deathsTotalDescription +
-                    '<br>造成损失： ' + damageTotalDescription + '<br>确信度： ' + eventValidity + '<br>评价： ' +
-                    comments +
-                    '<br>详情页面<iframe src=' + i_url + ' width=100% height=30% frameborder=none></iframe>'
+                detail_info.innerHTML = '<div class="detail_info"><p><b>' + locationName + '</b></p><hr>' + '国家： ' + country +
+                    '<br>地区： ' + region + '<br>海啸强度： ' + tsIntensity + '<br>成因： ' + cause + '<br>年份： ' + year +
+                    '<br>造成伤亡： ' + deathsTotalDescription + '<br>造成损失： ' + damageTotalDescription +
+                    '<br>确信度： ' + eventValidity + '<br>评价： ' + comments + '<br><a href=' + i_url + '>详情页面</a></div>'
 
 
                 zoom.classList.add('show');
@@ -766,13 +756,12 @@
                     closeButton: false
                 })
                     .setLngLat(coordinates)
-                    .setHTML('<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
-                        '<br>震源深度： ' + depth)
+                    .setHTML('<div class="pop"><p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' + magnitude +
+                        '<br>震源深度： ' + depth + '</div>')
                     .addTo(map);
 
-                detail_info.innerHTML = '<p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' +
-                    magnitude +
-                    '<br>震源深度： ' + depth + '<br>'
+                detail_info.innerHTML = '<div class="detail_info"><p><b>' + date + '</b></p><hr>' + '地点： ' + locationA + '<br>震级： ' +
+                    magnitude + '<br>震源深度： ' + depth + '<br></div>'
 
 
                 zoom.classList.add('show');
@@ -810,17 +799,16 @@
                     closeButton: false
                 })
                     .setLngLat(coordinates)
-                    .setHTML('<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
+                    .setHTML('<div class="pop"><p><b>' + volcano + '</b></p><hr>' + '国家： ' + country + '<br>类型： ' +
                         volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes + '<br>最近喷发： ' +
-                        lastKnownEruption)
+                        lastKnownEruption + '</div>')
                     .addTo(map);
 
-                detail_info.innerHTML = '<p><b>' + volcano + '</b></p><hr>' + '国家： ' + country +
+                detail_info.innerHTML = '<div class="detail_info"><p><b>' + volcano + '</b></p><hr>' + '国家： ' + country +
                     '<br>类型： ' + volcanotype + '<br>海拔： ' + elevation + '<br>群系： ' + volcanoes +
-                    '<br>最近喷发： ' + lastKnownEruption + '<br>开始爆发时间： ' + erupt_start + '<br>结束爆发时间： ' +
-                    erupt_end +
-                    '<br>期间爆发次数： ' + erupt_times + '<br>高峰： ' + summit + '<br>年份： ' + year +
-                    '<br>详情页面<iframe src=' + i_url + ' width=100% height=30% frameborder=none></iframe>'
+                    '<br>最近喷发： ' + lastKnownEruption + '<br>开始爆发时间： ' + erupt_start +
+                    '<br>结束爆发时间： ' + erupt_end + '<br>期间爆发次数： ' + erupt_times + '<br>高峰： ' + summit +
+                    '<br>年份： ' + year + '<br><a href=' + i_url + '>详情页面</a></div>'
 
                 zoom.classList.add('show');
                 detail.classList.add('show');
