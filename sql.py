@@ -4,7 +4,7 @@ import psycopg2
 # 获得连接
 def connect_database():
     try:
-        conn = psycopg2.connect(dbname="postgis_1_sample", user="postgres", password="20010930", host="localhost", port="5432")
+        conn = psycopg2.connect(dbname="postgres", user="postgres", password="15532", host="localhost", port="5432")
     except psycopg2.Error as e:
         print('Unable to connect!\n{0}'.format(e))
     else:
