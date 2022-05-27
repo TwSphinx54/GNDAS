@@ -1,4 +1,3 @@
-
 // 按时间统计
 function TsunamiYear(data, ChartID) {
     Year = []
@@ -38,27 +37,27 @@ function TsunamiYear(data, ChartID) {
             }
         },
         title: {
-            text: '各 年 份 海 啸 喷 发 的 次 数',
-            //top:"3%",
-            left:"center",
-            textStyle:{
+            text: '各 年 份 海 啸 发 生 的 次 数',
+            top:"3%",
+            left: "center",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:15
+                fontSize: 15
             },
         },
         grid: {
-            left:"6%",
-            bottom: "15%",
-            right:"10px",
-            top:"10%",
+            left: "10%",
+            bottom: "10%",
+            right: "5%",
+            top: "15%",
             containLabel: true
 
         },
@@ -89,7 +88,7 @@ function TsunamiYear(data, ChartID) {
             nameLocation: 'center',
             nameGap: 25,
             type: 'value',
-            splitLine: {　　　　 show: false　　 },
+            splitLine: {show: false},
             /*改变y轴颜色*/
             axisLine: {
                 show: true,
@@ -189,23 +188,24 @@ function SunGraph(data, ChartID) {
         title: {
             text: '海 啸 所 处 海 域、国 家、海 洋',
             left: 'center',
-            top: "13%",
-            textStyle:{
+            top: "3%",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:18
-            },},
+                fontSize: 15
+            },
+        },
         series: [
             {
                 type: 'sunburst',
-                center: ['50%', '60%'],
+                center: ['50%', '55%'],
                 data: gragh_data,
                 sort: function (a, b) {
                     if (a.depth === 1) {
@@ -229,7 +229,7 @@ function SunGraph(data, ChartID) {
                         r0: 0,
                         r: 40,
                         label: {
-                            show:false,
+                            show: false,
                             rotate: 0
                         }
                     },
@@ -290,10 +290,9 @@ function CountsIntensity(data, ChartID) {
             TsunamiCounts[2]++
         } else if (Mag >= 2 && Mag < 4) {
             TsunamiCounts[4]++
-        } else if (Mag >= 4 ) {
+        } else if (Mag >= 4) {
             TsunamiCounts[3]++
-        }
-        else {
+        } else {
             TsunamiCounts[0]++
         }
     }
@@ -306,29 +305,30 @@ function CountsIntensity(data, ChartID) {
 
     option = {
         title: {
-            text: ' 海 啸 强 度 ',
+            text: '海 啸 强 度',
             left: 'center',
-            top: "5%",
-            textStyle:{
+            top: "3%",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:20
-            },},
+                fontSize: 15
+            },
+        },
         tooltip: {
             trigger: 'item'
         },
         legend: {
             orient: 'horizontal',
-            bottom:"10%",
-            textStyle:{
-                fontSize: 12,//字体大小
+            bottom: "5%",
+            textStyle: {
+                fontSize: 8,//字体大小
                 color: '#ffffff'//字体颜色
             },
         },
@@ -336,14 +336,14 @@ function CountsIntensity(data, ChartID) {
             {
                 name: 'Access From',
                 type: 'pie',
-                radius: '50%',
-                center: ["50%", '45%'],
-                startAngle:110, //起始角度
+                radius: '55%',
+                center: ["50%", '50%'],
+                startAngle: 110, //起始角度
                 itemStyle: {        // 修改字体颜色
                     normal: {
                         label: {
                             textStyle: {
-                                color:'#ffffff',
+                                color: '#ffffff',
                                 fontSize: 12,
                             }
                         },
@@ -370,24 +370,24 @@ function CountsIntensity(data, ChartID) {
 }
 
 // 绘制伤害统计图
-function TotalDescription(data,ChartID) {
-    Descriptions=["Limited","Moderate","Severe","Extreme","Unknown"]
-    Categories=["Damages","Houses","Deaths"]
+function TotalDescription(data, ChartID) {
+    Descriptions = ["Limited", "Moderate", "Severe", "Extreme", "Unknown"]
+    Categories = ["Damages", "Houses", "Deaths"]
 
-    Damage = CountsNum(data, "DAMAGE_TOTAL_DESCRIPTION").Counts
-    Damages=[Damage[3],Damage[4],Damage[1],Damage[0],Damage[2]]
+    Damage = CountsNum(data, "Damage_total_description").Counts
+    Damages = [Damage[3], Damage[4], Damage[1], Damage[0], Damage[2]]
 
-    House = CountsNum(data, "HOUSES_TOTAL_DESCRIPTION").Counts
-    Houses=[House[2],House[3],House[1],House[4],House[0]]
+    House = CountsNum(data, "HOUSES_total_description ").Counts
+    Houses = [House[2], House[3], House[1], House[4], House[0]]
 
-    Death = CountsNum(data, "DEATHS_TOTAL_DESCRIPTION").Counts
-    Deaths=[Death[3],Death[4],Death[0],Death[2],Death[1]]
+    Death = CountsNum(data, "DEATHS_total_description").Counts
+    Deaths = [Death[3], Death[4], Death[0], Death[2], Death[1]]
 
-    Limited=[Damage[3],House[2],Death[3]]
-    Moderate=[Damage[4],House[3],Death[4]]
-    Severe=[Damage[1],House[1],Death[0]]
-    Extreme=[Damage[0],House[4],Death[2]]
-    Unknown=[Damage[2],House[0],Death[1]]
+    Limited = [Damage[3], House[2], Death[3]]
+    Moderate = [Damage[4], House[3], Death[4]]
+    Severe = [Damage[1], House[1], Death[0]]
+    Extreme = [Damage[0], House[4], Death[2]]
+    Unknown = [Damage[2], House[0], Death[1]]
 
 
     var chartDom = document.getElementById(ChartID);
@@ -398,19 +398,19 @@ function TotalDescription(data,ChartID) {
     option = {
         title: {
             text: '海 啸 造 成 的 损 失 及 严 重 程 度',
-            top:"0%",
-            left:"center",
-            textStyle:{
+            top: "3%",
+            left: "center",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:15
+                fontSize: 15
             },
         },
         tooltip: {
@@ -421,17 +421,17 @@ function TotalDescription(data,ChartID) {
             }
         },
         legend: {
-            bottom:"2%",
-            textStyle:{
-                fontSize: 8,//字体大小
+            bottom: "3%",
+            textStyle: {
+                fontSize: 10,//字体大小
                 color: '#ffffff'//字体颜色
             },
         },
         grid: {
-            left: '0%',
-            right: '4%',
-            bottom: '15%',
-            top:"9%",
+            left: '5%',
+            right: '5%',
+            bottom: '20%',
+            top: "15%",
             containLabel: true
         },
         xAxis: {
@@ -451,7 +451,7 @@ function TotalDescription(data,ChartID) {
         },
         yAxis: {
             type: 'category',
-            data:Categories,
+            data: Categories,
             axisLine: {
                 lineStyle: {
                     color: '#ffffff',
@@ -465,15 +465,6 @@ function TotalDescription(data,ChartID) {
                 }
             }
         },
-
-
-
-
-
-
-
-
-
 
 
         series: [
@@ -499,7 +490,7 @@ function TotalDescription(data,ChartID) {
                 emphasis: {
                     focus: 'series'
                 },
-                data:Moderate
+                data: Moderate
             },
             {
                 name: 'Severe',
@@ -544,27 +535,27 @@ function TotalDescription(data,ChartID) {
 }
 
 
-function Tsunami_Charts() {
-    $(function () {
-        filename='data/tsunami2.geojson'
-        Risk_Func(filename,"Eruptions Total")    // 热力图
-        Data_Temp=GetGeodata(filename)  // 获取数据
-
-        // 筛选年份
-        Data_Tsunami = []
-        for (let i = 0; i < Data_Temp.length; i++) {
-            if (Data_Temp[i]["Year"] > 1990) {
-                Data_Tsunami.push(Data_Temp[i])
-            }
-        }
-
-        // 绘图
-        TotalDescription(Data_Tsunami, "MyCharts3")
-        TsunamiYear(Data_Tsunami, "MyCharts2")
-        CountsIntensity(Data_Tsunami, "MyCharts1")
-        SunGraph(Data_Tsunami, "MyCharts4")
-    })
-}
-
+// function Tsunami_Charts() {
+//     $(function () {
+//         filename = 'data/tsunami2.geojson'
+//         Risk_Func(filename, "Eruptions Total")    // 热力图
+//         Data_Temp = GetGeodata(filename)  // 获取数据
+//
+//         // 筛选年份
+//         Data_Tsunami = []
+//         for (let i = 0; i < Data_Temp.length; i++) {
+//             if (Data_Temp[i]["Year"] > 1990) {
+//                 Data_Tsunami.push(Data_Temp[i])
+//             }
+//         }
+//
+//         // 绘图
+//         TotalDescription(Data_Tsunami, "MyCharts3")
+//         TsunamiYear(Data_Tsunami, "MyCharts2")
+//         CountsIntensity(Data_Tsunami, "MyCharts1")
+//         SunGraph(Data_Tsunami, "MyCharts4")
+//     })
+// }
+//
 
 

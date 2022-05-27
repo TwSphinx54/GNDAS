@@ -1,4 +1,3 @@
-
 // 按年份统计地震次数
 function CountsYear(data, ChartID) {
 // 按年统计地震发生次数
@@ -40,27 +39,27 @@ function CountsYear(data, ChartID) {
             }
         },
         title: {
-            text: '各  年  份  发  生  地  震  的  次  数',
-            top:"5px",
-            left:"center",
-            textStyle:{
+            text: '各 年 份 发 生 地 震 的 次 数',
+            top: "3%",
+            left: "center",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:16
+                fontSize: 15
             },
         },
         grid: {
-            left:"10px",
-            bottom: "20px",
-            right:"4px",
-            top:"50px",
+            left: "8%",
+            bottom: "8%",
+            right: "5%",
+            top: "15%",
             containLabel: true
         },
         xAxis: {
@@ -88,7 +87,7 @@ function CountsYear(data, ChartID) {
             nameLocation: 'center',
             nameGap: 35,
             type: 'value',
-            splitLine: {　　　　 show: false　　 },
+            splitLine: {show: false},
             /*改变y轴颜色*/
             axisLine: {
                 show: true,
@@ -150,28 +149,29 @@ function CountsMag(data, ChartID) {
 
     option = {
         title: {
-            text: '地  震  强  度',
+            text: '地 震 强 度',
             left: 'center',
-            top: "6%",
-            textStyle:{
+            top: "3%",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:18
-            },},
+                fontSize: 15
+            },
+        },
         tooltip: {
             trigger: 'item'
         },
         legend: {
             orient: 'horizontal',
-            bottom:"40px",
-            textStyle:{
+            bottom: "5%",
+            textStyle: {
                 fontSize: 10,//字体大小
                 color: '#ffffff'//字体颜色
             },
@@ -180,14 +180,14 @@ function CountsMag(data, ChartID) {
             {
                 name: 'Access From',
                 type: 'pie',
-                radius: '50%',
-                center: ["50%", '45%'],
-                startAngle:80, //起始角度
+                radius: '55%',
+                center: ["50%", '50%'],
+                startAngle: 80, //起始角度
                 itemStyle: {        // 修改字体颜色
                     normal: {
                         label: {
                             textStyle: {
-                                color:'#ffffff',
+                                color: '#ffffff',
                                 fontSize: 10,
                             }
                         },
@@ -241,26 +241,28 @@ function CountsDepth(data, ChartID) {
         title: {
             text: '震 源 深 度',
             left: 'center',
-            textStyle:{
+            top: '3%',
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:18
-            },},
+                fontSize: 15
+            },
+        },
 
         tooltip: {
             trigger: 'item'
         },
         legend: {
             orient: 'horizontal',
-            bottom:"22%",
-            textStyle:{
+            bottom: "5%",
+            textStyle: {
                 fontSize: 12,//字体大小
                 color: '#ffffff',//字体颜色
 
@@ -270,14 +272,14 @@ function CountsDepth(data, ChartID) {
             {
                 name: 'Access From',
                 type: 'pie',
-                radius: '50%',
-                startAngle:80, //起始角度
-                center: ["50%", '40%'],
+                radius: '55%',
+                startAngle: 80, //起始角度
+                center: ["50%", '50%'],
                 itemStyle: {        // 修改字体颜色
                     normal: {
                         label: {
                             textStyle: {
-                                color:'#ffffff',
+                                color: '#ffffff',
                                 fontSize: 12,
 
                             }
@@ -305,11 +307,10 @@ function CountsDepth(data, ChartID) {
 }
 
 // 地震等级和震源深度散点图
-function MagDepth(data, ChartID){
-    let dot_data=[]
-    for(let i=0;i<data.length;i++)
-    {
-        let temp=[data[i]["Magnitude"],data[i]["Depth"]]
+function MagDepth(data, ChartID) {
+    let dot_data = []
+    for (let i = 0; i < data.length; i++) {
+        let temp = [data[i]["Magnitude"], data[i]["Depth"]]
         dot_data.push(temp)
     }
     var chartDom = document.getElementById(ChartID);
@@ -320,19 +321,19 @@ function MagDepth(data, ChartID){
     option = {
         title: {
             text: '地 震 强 度 和 震 源 深 度 ',
-            top:"3%",
-            left: '25%',
-             textStyle:{
+            top: "3%",
+            left: 'center',
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:15
+                fontSize: 15
             },
         },
         legend: {
@@ -344,15 +345,15 @@ function MagDepth(data, ChartID){
             formatter: '(Magnitude,Depth): ({c})'
         },
         grid: {
-            left:"8%",
+            left: "10%",
             bottom: "10%",
-            top:"15%",
-            right:"0",
+            top: "15%",
+            right: "5%",
             containLabel: true
         },
         xAxis: {
             name: 'Magnitude',
-            nameLocation:"center",
+            nameLocation: "center",
             nameGap: 30,
             type: 'category',
             axisLine: {
@@ -389,28 +390,27 @@ function MagDepth(data, ChartID){
         series: [
             {
                 symbolSize: 5,
-                data:dot_data,
+                data: dot_data,
                 type: 'scatter',
-                color:"#b6da9c"
+                color: "#b6da9c"
             }
         ]
     };
-    option && myChart.setOption(option);}
-
-
-
-function Earthquake_Charts() {
-
-    $(function () {
-        filename='data/earthquake_new.geojson'
-        Risk_Func(filename,"Magnitude")    // 热力图
-        Data_Earthquake=GetGeodata(filename)  // 获取数据
-
-        // 绘图
-        CountsYear(Data_Earthquake, "MyCharts1")
-        CountsMag(Data_Earthquake, "MyCharts2")
-        CountsDepth(Data_Earthquake, "MyCharts3")
-        MagDepth(Data_Earthquake, "MyCharts4")
-
-    })
+    option && myChart.setOption(option);
 }
+
+
+// function Earthquake_Charts() {
+//     $(function () {
+//         filename = 'data/earthquake_new.geojson'
+//         Risk_Func(filename, "Magnitude")    // 热力图
+//         Data_Earthquake = GetGeodata(filename)  // 获取数据
+//
+//         // 绘图
+//         CountsYear(Data_Earthquake, "MyCharts1")
+//         CountsMag(Data_Earthquake, "MyCharts2")
+//         CountsDepth(Data_Earthquake, "MyCharts3")
+//         MagDepth(Data_Earthquake, "MyCharts4")
+//
+//     })
+// }

@@ -2,3 +2,103 @@ html,
 body {
     background-image: linear-gradient(125deg, #003855, #04597e, #0a7daa, #13a3d8)
 }
+
+#heatmap {
+    position: absolute;
+    top: 0;
+    bottom: 10%;
+    width: 830px;
+    left: 50%;
+    margin-left: -415px;
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
+}
+
+#MyCharts1 {
+    position: absolute;
+    width: 20%;
+    height: 40%;
+    top: 12%;
+    left: 1%;
+
+    /*border-left: 2px solid #1da1f2;*/
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+}
+
+#MyCharts2 {
+    position: absolute;
+    width: 20%;
+    height: 40%;
+    top: 55%;
+    left: 1%;
+
+    /*border-left: 2px solid #1da1f2;*/
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+}
+
+#MyCharts3 {
+    position: absolute;
+    width: 20%;
+    height: 40%;
+    top: 4.5%;
+    right: 1%;
+
+    /*border-left: 2px solid #1da1f2;*/
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+}
+
+#MyCharts4 {
+    position: absolute;
+    width: 20%;
+    height: 47.3%;
+    top: 47.5%;
+    right: 1%;
+
+    /*border-left: 2px solid #1da1f2;*/
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+}
+
+.button_switch {
+    position: fixed;
+    height: 32px;
+    width: 850px;
+    bottom: 3.5%;
+    left: 50%;
+    margin-left: -425px;
+    cursor: default;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+}
+
+.heat_type {
+    color: white;
+    float: left;
+    border-bottom: 2px solid #1da1f2;
+    height: 27px;
+    line-height: 27px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 3px 3px rgba(29, 161, 242, 0.3);
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 31.3%;
+
+    animation: ease;
+    transition: all 0.5s ease;
+}
+
+.heat_type:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.heat_type.clicked {
+    background: rgba(29, 161, 242, 0.3);
+}

@@ -1,5 +1,3 @@
-
-
 //按火山类型统计
 function VolcanoType(data, ChartID) {
     var chartDom = document.getElementById(ChartID);
@@ -10,19 +8,20 @@ function VolcanoType(data, ChartID) {
         title: {
             text: ' 火 山 类 型 ',
             left: 'center',
-            top: "4%",
-            textStyle:{
+            top: "3%",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:18
-            },},
+                fontSize: 15
+            },
+        },
         tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -30,9 +29,9 @@ function VolcanoType(data, ChartID) {
         legend: {
             type: 'scroll',
             orient: 'horizontal',
-            bottom: "10%",
-            data: CountsNum(data, "VolcanoType").Props,
-            textStyle:{
+            bottom: "5%",
+            data: CountsNum(data, "Volcanotype").Props,
+            textStyle: {
                 fontSize: 10,//字体大小
                 color: '#ffffff'//字体颜色
             },
@@ -44,13 +43,13 @@ function VolcanoType(data, ChartID) {
                 radius: '55%',
                 center: ['40%', '48%'],
 
-                startAngle:350, //起始角度
-                data: CountsNum(data, "VolcanoType").seriesData,
+                startAngle: 350, //起始角度
+                data: CountsNum(data, "Volcanotype").seriesData,
                 itemStyle: {        // 修改字体颜色
                     normal: {
                         label: {
                             textStyle: {
-                                color:'#ffffff',
+                                color: '#ffffff',
                                 fontSize: 10,
                             }
                         },
@@ -96,26 +95,26 @@ function VolcanoYear(data, ChartID) {
         },
         title: {
             text: '各 年 份 喷 发 的 火 山 数 量',
-            top:"0%",
-            left:"center",
-            textStyle:{
+            top: "3%",
+            left: "center",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:15
+                fontSize: 15
             },
         },
         grid: {
-            left:"9%",
-            bottom: "18%",
-            right:"2px",
-            top:"12%",
+            left: "10%",
+            bottom: "10%",
+            right: "5%",
+            top: "15%",
             containLabel: true
         },
         xAxis: {
@@ -145,7 +144,7 @@ function VolcanoYear(data, ChartID) {
             nameLocation: 'center',
             nameGap: 35,
             type: 'value',
-            splitLine: {　　　　 show: false　　 },
+            splitLine: {show: false},
             /*改变y轴颜色*/
             axisLine: {
                 show: true,
@@ -187,18 +186,18 @@ function Summit_Elevation(data, ChartID) {
         title: {
             text: '火 山 峰 顶 高 度 及 其 海 拔',
             left: 'center',
-            //top: "1px",
-            textStyle:{
+            top: "3%",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:15
+                fontSize: 15
             },
         },
         legend: {
@@ -206,10 +205,10 @@ function Summit_Elevation(data, ChartID) {
             left: 'left'
         },
         grid: {
-            left:"1%",
-            bottom: "70px",
-            top:"12%",
-            right:"0px",
+            left: "5%",
+            bottom: "10%",
+            top: "15%",
+            right: "5%",
             containLabel: true
         },
 
@@ -220,7 +219,7 @@ function Summit_Elevation(data, ChartID) {
         xAxis: {
             name: 'Summit',
             type: 'category',
-            nameLocation:"center",
+            nameLocation: "center",
             nameGap: 30,
             type: 'category',
             axisLine: {
@@ -259,7 +258,7 @@ function Summit_Elevation(data, ChartID) {
                 symbolSize: 5,
                 data: dot_data,
                 type: 'scatter',
-                color:"#b6da9c"
+                color: "#b6da9c"
             }
         ]
     };
@@ -268,7 +267,7 @@ function Summit_Elevation(data, ChartID) {
 
 //旭日图
 function SunGraph_V(data, ChartID) {
-    let Volcano_Region = CountsNum(data, "Volcanoes Active").Props
+    let Volcano_Region = CountsNum(data, "Vocanoes").Props
     Country = CountsNum(data, "Country").Props
     Counts_Name = CountsNum(data, "Volcano").Counts
     Volcano_Name = CountsNum(data, "Volcano").Props
@@ -283,7 +282,7 @@ function SunGraph_V(data, ChartID) {
         TempCountry = Country[i]
         for (let j = 0; j < data.length; j++) {
             if (TempCountry == data[j]["Country"]) {
-                IndexRegion = Volcano_Region.indexOf(data[j]["Volcanoes Active"])    // 当前记录所属的区域索引
+                IndexRegion = Volcano_Region.indexOf(data[j]["Vocanoes"])    // 当前记录所属的区域索引
                 gragh_data[IndexRegion].children.push({name: TempCountry, children: []});
                 break
             }
@@ -296,7 +295,7 @@ function SunGraph_V(data, ChartID) {
 
             if (TempVolcano == data[j]["Volcano"]) {
 
-                IndexRegion = Volcano_Region.indexOf(data[j]["Volcanoes Active"])    // 当前记录所属的区域索引
+                IndexRegion = Volcano_Region.indexOf(data[j]["Vocanoes"])    // 当前记录所属的区域索引
                 NameCountry = data[j]["Country"]         //记录当前所属的国家索引
                 for (let k = 0; k < gragh_data[IndexRegion].children.length; k++) {
                     if (NameCountry == gragh_data[IndexRegion].children[k].name)     // 定位待插入的国家
@@ -336,27 +335,27 @@ function SunGraph_V(data, ChartID) {
     option = {
         //backgroundColor: "",
         color: colors,
-        title:{
+        title: {
             text: '火 山 所 在 区 域、国 家 及 其 名 字',
             left: 'center',
-            top: "6%",
-            textStyle:{
+            top: "3%",
+            textStyle: {
                 //文字颜色
-                color:'#ffffff',
+                color: '#ffffff',
                 //字体风格,'normal','italic','oblique'
-                fontStyle:'normal',
+                fontStyle: 'normal',
                 //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 //字体系列
-                fontFamily:'sans-serif',
+                fontFamily: 'sans-serif',
                 //字体大小
-                fontSize:15
+                fontSize: 15
             },
         },
         series: [
             {
                 type: 'sunburst',
-                center: ['50%', '58%'],
+                center: ['50%', '55%'],
                 data: gragh_data,
                 sort: function (a, b) {
                     if (a.depth === 1) {
@@ -381,7 +380,7 @@ function SunGraph_V(data, ChartID) {
                         r: 40,
                         label: {
                             rotate: 0,
-                            show:false,
+                            show: false,
                         }
                     },
                     {
@@ -429,20 +428,20 @@ function SunGraph_V(data, ChartID) {
 
     option && myChart.setOption(option);
 }
-
-function Volcano_Charts() {
-    $(function () {
-        filename='data/volcano_eruption.geojson'
-        Risk_Func(filename,"Eruptions Total")    // 热力图
-        Data_Volcano=GetGeodata(filename)  // 获取数据
-
-        // 绘图
-        VolcanoType(Data_Volcano, "MyCharts1")
-        VolcanoYear(Data_Volcano, "MyCharts2")
-        Summit_Elevation(Data_Volcano, "MyCharts3")
-        SunGraph_V(Data_Volcano, "MyCharts4")
-
-
-
-    })
-}
+//
+// function Volcano_Charts() {
+//     $(function () {
+//         filename = 'data/volcano_eruption.geojson'
+//         Risk_Func(filename, "Eruptions Total")    // 热力图
+//         Data_Volcano = GetGeodata(filename)  // 获取数据
+//         console.log(Data_Volcano)
+//
+//         // 绘图
+//         VolcanoType(Data_Volcano, "MyCharts1")
+//         VolcanoYear(Data_Volcano, "MyCharts2")
+//         Summit_Elevation(Data_Volcano, "MyCharts3")
+//         SunGraph_V(Data_Volcano, "MyCharts4")
+//
+//
+//     })
+// }

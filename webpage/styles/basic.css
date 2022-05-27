@@ -68,7 +68,7 @@ html {
     line-height: 110px;
     /*font-weight: bold;*/
     font-size: 100px;
-    font-family: "Microsoft YaHei";
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 
     cursor: default;
     animation: ease;
@@ -91,7 +91,7 @@ html {
     line-height: 110px;
     /*font-weight: bold;*/
     font-size: 100px;
-    font-family: "Microsoft YaHei";
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 
     cursor: default;
     animation: ease;
@@ -124,7 +124,7 @@ html {
     line-height: 30px;
     /*font-weight: bold;*/
     font-size: 30px;
-    font-family: Ubuntu;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
 
     cursor: default;
     animation: ease;
@@ -148,7 +148,7 @@ html {
     left: 17.8%;
     text-align: center;
     line-height: 50px;
-    font-family: "Microsoft YaHei";
+    font-family: Ubuntu, "Microsoft YaHei", serif;
     font-weight: bold;
     font-size: 25px;
     color: #EBECF0;
