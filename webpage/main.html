@@ -43,7 +43,7 @@
 
 				<label class="label_s">
 					<input class="input_s" type="text" name="email" placeholder="邮&nbsp;&nbsp;箱"
-						pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"  required="" />
+						pattern="^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$" required="" />
 					<div class="color_stripe"></div>
 				</label>
 				<label class="label_s">
@@ -93,13 +93,13 @@
 
 			// let i = Date.now();
 
-    function rotate() {
-        let a = .1;
-        let t = Date.now();
-        let n = (t - i) / 1e4;
-        i = t;
-        viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -a * n);
-    }
+			function rotate() {
+				let a = .1;
+				let t = Date.now();
+				let n = (t - i) / 1e4;
+				i = t;
+				viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -a * n);
+			}
 
 			// viewer.clock.onTick.addEventListener(rotate);
 			// setTimeout(function () {

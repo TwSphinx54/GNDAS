@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, url_for, render_template, jsonify
 from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched, \
-    registered, volcano_eruption_storage, earthquake_storage, tsunami_storage
+    registered, volcano_eruption_storage, earthquake_storage, tsunami_storage,vague_match
 import json
 
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
@@ -53,7 +53,7 @@ def main_process():
 @app.route('/risk', methods=['GET', 'POST'])
 def risk():
     if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
-        return render_template('risk.html', vol_c=vol_c, eqk_c=eqk_c, tnm_c=tnm_c, vol=vol, eqk=eqk,
+        return render_template('risk.html', pms=pms, usr=usr, vol_c=vol_c, eqk_c=eqk_c, tnm_c=tnm_c, vol=vol, eqk=eqk,
                                tnm=tnm)  # 相当于将risk.html和/risk路由相互绑定
 
 
