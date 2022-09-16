@@ -2,10 +2,10 @@ from flask import Flask, request, redirect, url_for, render_template, jsonify
 from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched, \
     registered, volcano_eruption_storage, earthquake_storage, tsunami_storage, vague_match, record_statement, \
     match_all_statement
-import json
 
+DB_PATH = './data.db'
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
-conn, cursor = connect_database()
+conn, cursor = connect_database(DB_PATH)
 vol = volcano_eruption_all_matched(conn, cursor)
 eqk = earthquake_all_matched(conn, cursor)
 tnm = tsunami_all_matched(conn, cursor)

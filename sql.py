@@ -1,12 +1,16 @@
-import psycopg2
+# -*- coding: utf-8 -*-
 import datetime
+import sqlite3
+import json
 
-
+#
 # 获得连接
-def connect_database():
+
+
+def connect_database(path_db):
     try:
-        conn = psycopg2.connect(dbname="postgres", user="postgres", password="15532", host="localhost", port="5432")
-    except psycopg2.Error as e:
+        conn = sqlite3.connect(path_db,check_same_thread=False)
+    except sqlite3.Error as e:
         print('Unable to connect!\n{0}'.format(e))
     else:
         print('Connected!')
@@ -23,8 +27,8 @@ def free_database(conn, cursor):
 
 
 def login_in(conn, cursor, usr, password):
-    sql = """select * from admin_up where login_usr='%s' and password='%s';""" % (usr, password)
-    params = (1,)
+    sql = "select * from admin_up where login_usr=(?) and password=(?)"
+    params = (usr, password)
     # 执行语句
     cursor.execute(sql, params)
     # 抓取
@@ -42,10 +46,8 @@ def login_in(conn, cursor, usr, password):
 
 
 def registered(conn, cursor, usr, password):
-    sql = """insert into admin_up (login_usr,password,administrator)
-    values('%s','%s',FALSE )
-    ;""" % (usr, password)
-    params = (1,)
+    sql = "insert into admin_up (login_usr,password,administrator) values((?),(?),FALSE )"
+    params = (usr, password)
     # 执行语句
     cursor.execute(sql, params)
     # 事物提交
@@ -53,74 +55,63 @@ def registered(conn, cursor, usr, password):
 
 
 def full_geojson(rows):
-    n_rows = [k[0] for k in rows]
     full_geojson = {
         'type': 'FeatureCollection',
-        'features': n_rows
-
+        'features': rows
     }
     return full_geojson
 
+def single_geojson(rows):
+    #n_rows = [k[0] for k in rows]
+    single_geo=[]
+    for k in rows:
+        single_g = {
+            'type':'Feature',
+            'geometry': {
+                "type": "Point",
+                "coordinates": [k['longitude'], k['latitude']]
+            },
+            'properties': k
+        }
+        single_geo.append(single_g)
+    return single_geo
 
 def earthquake_all_matched(conn, cursor):
-    sql = """SELECT json_build_object(
-        'type',       'Feature',
-        'geometry',   ST_AsGeoJSON(geom)::json,
-        'properties', json_build_object(
-            'id', gid,
-            'Date', earthquake.Date,
-            'Year', earthquake.Year,
-            'Magnitude', earthquake.Magnitude,
-            'Depth', earthquake.Depth,
-            'location_a', earthquake.location_n))FROM earthquake;"""
-    params = (1,)
+    sql = "SELECT json_object('id', id,'Date', earthquake.Date,'latitude',earthquake.latitude, 'longitude',earthquake.longitude,'Year', earthquake.Year, 'Magnitude', earthquake.Magnitude, 'Depth', earthquake.Depth, 'location_a', earthquake.location_n) FROM earthquake"
     # 执行语句
-    cursor.execute(sql, params)
+    cursor.execute(sql)
     # 抓取
     rows = cursor.fetchall()
-    full_geo = full_geojson(rows)
+    rows1 = [json.loads(k[0]) for k in rows]
+    single_geo=single_geojson(rows1)
+    full_geo = full_geojson(single_geo)
+
     # 事物提交
     conn.commit()
     return full_geo
 
 
 def tsunami_all_matched(conn, cursor):
-    sql = """SELECT json_build_object(
-    'type',       'Feature',
-    'geometry',   ST_AsGeoJSON(geom)::json,
-    'properties', json_build_object(
-        'id', gid,
-		'Year', tsunami.year,
-		'Location_Name', tsunami.location_n,
-		'Country',tsunami.country,
-		'Region',tsunami.region,
-		'Cause',tsunami.cause,
-		'Event_Validity',tsunami.event_vali,
-		'EQ_Magnitude',tsunami.eq_magnitu,
-		'EQ_Depth',tsunami.eq_depth,
-		'TS_Intensity',tsunami.ts_intensi,
-		'Damage_total_description',tsunami.damage_tot,
-		'HOUSES_total_description ',tsunami.houses_tot,
-		'DEATHS_total_description',tsunami.deaths_tot,
-		'URL',tsunami.url,
-        'Comments',tsunami.comments	))FROM tsunami;"""
-    params = (1,)
+    sql = "SELECT json_object('id',tsunami.id,'latitude',tsunami.latitude, 'longitude',tsunami.longitude,'Year', tsunami.year,'Location_Name', tsunami.location_n,'Country',tsunami.country,'Region',tsunami.region,'Cause',tsunami.cause,'Event_Validity',tsunami.event_vali,'EQ_Magnitude',tsunami.eq_magnitu,'EQ_Depth',tsunami.eq_depth,'TS_Intensity',tsunami.ts_intensi,'Damage_total_description',tsunami.damage_tot,'HOUSES_total_description ',tsunami.houses_tot,'DEATHS_total_description',tsunami.deaths_tot,'URL',tsunami.url,'Comments',tsunami.comments)FROM tsunami"
+
     # 执行语句
-    cursor.execute(sql, params)
+    cursor.execute(sql)
     # 抓取
     rows = cursor.fetchall()
-    full_geo = full_geojson(rows)
+    rows1 = [json.loads(k[0]) for k in rows]
+    single_geo = single_geojson(rows1)
+    full_geo = full_geojson(single_geo)
+
     # 事物提交
     conn.commit()
     return full_geo
 
 
 def volcano_eruption_all_matched(conn, cursor):
-    sql = """SELECT json_build_object(
-    'type',       'Feature',
-    'geometry',   ST_AsGeoJSON(geom)::json,
-    'properties', json_build_object(
-        'id', gid,
+    sql = """SELECT json_object(
+        'id',volcano_eruption.id,
+        'latitude',volcano_eruption.latitude, 
+        'longitude',volcano_eruption.longitude,
 		'Year', volcano_eruption.year,
 		'Volcano', volcano_eruption.volcano,
 		'Volcano_id',volcano_eruption.volcano_id,
@@ -133,21 +124,22 @@ def volcano_eruption_all_matched(conn, cursor):
 		'Last_known_eruption',volcano_eruption.lastknowne,
 		'Summit',volcano_eruption.summit,
 		'Elevation',volcano_eruption.elevation,
-		'URL',volcano_eruption.url		))FROM volcano_eruption;"""
-    params = (1,)
+		'URL',volcano_eruption.url)FROM volcano_eruption"""
+
     # 执行语句
-    cursor.execute(sql, params)
+    cursor.execute(sql)
     # 抓取
     rows = cursor.fetchall()
-    full_geo = full_geojson(rows)
+    rows1 = [json.loads(k[0]) for k in rows]
+    single_geo = single_geojson(rows1)
+    full_geo = full_geojson(single_geo)
     # 事物提交
     conn.commit()
     return full_geo
 
 
 def vague_match(conn, cursor, chars):
-    chars_ = '%' + chars + '%'
-    sql_ts = """SELECT gid,location_n,year FROM tsunami WHERE tsunami.location_n ILIKE '%s';""" % chars_
+    sql_ts = "SELECT id,location_n,year FROM tsunami WHERE tsunami.location_n  like '%"+chars+"%'"
     # 执行语句
     cursor.execute(sql_ts)
     # 抓取
@@ -159,7 +151,7 @@ def vague_match(conn, cursor, chars):
         vague[n] = {'gid': row[0], 'location': row[1], 'year': row[2], 'type': 1}
         n += 1
 
-    sql_eq = """SELECT gid,location_n,year FROM earthquake WHERE earthquake.location_n ILIKE '%s';""" % chars_
+    sql_eq = "SELECT id,location_n,year FROM earthquake WHERE earthquake.location_n  like '%"+chars+"%'"
     # 执行语句。
     cursor.execute(sql_eq)
     # 抓取
@@ -168,7 +160,7 @@ def vague_match(conn, cursor, chars):
         vague[n] = {'gid': row[0], 'location': row[1], 'year': row[2], 'type': 2}
         n += 1
 
-    sql_vo = """SELECT gid,volcano,year FROM volcano_eruption WHERE volcano_eruption.volcano ILIKE '%s';""" % chars_
+    sql_vo = "SELECT id,volcano,year FROM volcano_eruption WHERE volcano_eruption.volcano  like '%"+chars+"%'"
     # 执行语句
     cursor.execute(sql_vo)
     # 抓取
@@ -182,15 +174,23 @@ def vague_match(conn, cursor, chars):
     return vague
 
 
-def earthquake_storage(conn, cursor, date, year, magnitude, latitude, longitude, depth, location_n):
-    params = (1,)
-    geom = "SELECT (ST_GeomFromText('POINT({} {})'))".format(longitude, latitude)
-    cursor.execute(geom, params)
-    rows = cursor.fetchall()
-    sql = """insert into earthquake (date,year,magnitude,latitude,longitude,depth,location_n,geom) 
-values('%s','%s','%s','%s','%s','%s','%s','%s')
-    ;""" % (date, year, magnitude, latitude, longitude, depth, location_n, rows[0][0])
 
+
+
+def last_id(conn, cursor, type):
+    sql_last = "select id from "+type+" order by id desc limit 0,1"
+    cursor.execute(sql_last)
+    rows_ts = cursor.fetchall()
+    # 事物提交
+    conn.commit()
+    return rows_ts[0][0]
+
+
+def earthquake_storage(conn, cursor, date, year, magnitude, latitude, longitude, deoth, location_n):
+    last_num = last_id(conn, cursor, 'earthquake')
+    sql = "insert into earthquake (id,date,year,magnitude,latitude,longitude,depth,location_n) values((?),(?),(?),(?),(?),(?),(?),(?))"
+    params = (last_num+1, date, year, magnitude,
+              latitude, longitude, deoth, location_n)
     # 执行语句
     cursor.execute(sql, params)
     # 事物提交
@@ -201,15 +201,11 @@ def tsunami_storage(conn, cursor, year, latitude, longitude, location_n, country
                     url, comments, damage_tot='UnKnown', houses_tot='UnKnown', deaths_tot='UnKnown',
                     eq_magnitu='UnKnown', eq_depth='UnKnown', month='UnKnown', day='UnKnown', hour='UnKnown',
                     minute='UnKnown'):
-    params = (1,)
-    geom = "SELECT (ST_GeomFromText('POINT({} {})'))".format(longitude, latitude)
-    cursor.execute(geom, params)
-    rows = cursor.fetchall()
-    sql = """insert into tsunami (year,month,day,hour,minute,latitude,longitude,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments,geom) 
-values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') 
-    ;""" % (
-        year, month, day, hour, minute, latitude, longitude, location_n, country, region, cause, event_vali, eq_magnitu,
-        eq_depth, ts_intensi, damage_tot, houses_tot, deaths_tot, url, comments, rows[0][0])
+    last_num = last_id(conn, cursor, 'tsunami')
+    sql = "insert into tsunami (id,year,month,day,hour,minute,latitude,longitude,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments,geom) values((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?)) "
+    params = (
+        last_num+1, year, month, day, hour, minute, latitude, longitude, location_n, country, region, cause, event_vali, eq_magnitu,
+        eq_depth, ts_intensi, damage_tot, houses_tot, deaths_tot, url, comments)
     # 21
     # 执行语句
     cursor.execute(sql, params)
@@ -220,16 +216,12 @@ values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s
 def volcano_eruption_storage(conn, cursor, year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2,
                              volcanoes, volcanotyp, lastknowne, latitude, longitude, summit, elevation, url,
                              field17='[null]'):
-    params = (1,)
-    geom = "SELECT (ST_GeomFromText('POINT({} {})'))".format(longitude, latitude)
-    cursor.execute(geom, params)
-    rows = cursor.fetchall()
-    sql = """insert into tsunami (year,volcano,volcano_id,country,eruptions,eruption_1,eruption_2,volcanoes,volcanotyp,lastknowne,latitude,longitude,summit,elevation,url,field17,geom)
-values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') 
-    ;""" % (
-        year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2, volcanoes, volcanotyp, lastknowne,
+    last_num = last_id(conn, cursor, 'volcano_eruption')
+    sql = "insert into volcano_eruption (id,year,volcano,volcano_id,country,eruptions,eruption_1,eruption_2,volcanoes,volcanotyp,lastknowne,latitude,longitude,summit,elevation,url,field17,geom) values((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?)) "
+    params = (
+        last_num+1, year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2, volcanoes, volcanotyp, lastknowne,
         latitude,
-        longitude, summit, elevation, url, field17, geom)
+        longitude, summit, elevation, url, field17)
     # 17
     # 执行语句
     cursor.execute(sql, params)
@@ -238,17 +230,14 @@ values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s
 
 
 def record_statement(conn, cursor, usr, statement):
-    params = (1,)
-    geom = "" "SELECT id FROM public.usr_discuss ORDER BY id ASC """
-    cursor.execute(geom, params)
+    geom = "SELECT id FROM usr_discuss ORDER BY id ASC "
+    cursor.execute(geom)
     rows = cursor.fetchall()
-    num_id = rows[-1][0] + 1
+    num_id = rows[-1][0]+1
     curr_time = datetime.datetime.now()
     data = curr_time.date()
-    sql = """insert into usr_discuss (id,usr,date,statement)
-    values('%s','%s','%s','%s' )
-    ;""" % (num_id, usr, curr_time, statement)
-    params = (1,)
+    sql = "insert into usr_discuss (id,usr,date,statement) values((?),(?),(?),(?) )"
+    params = (num_id, usr, curr_time, statement)
     # 执行语句
     cursor.execute(sql, params)
     # 事物提交
@@ -256,16 +245,23 @@ def record_statement(conn, cursor, usr, statement):
 
 
 def match_all_statement(conn, cursor):
-    sql = """SELECT usr,date,statement FROM public.usr_discuss ORDER BY usr_discuss.date ASC;"""
-    params = (1,)
+
+    sql = "SELECT usr,date,statement FROM usr_discuss ORDER BY usr_discuss.date desc;"
     # 执行语句
-    cursor.execute(sql, params)
+    cursor.execute(sql)
     state_rows = cursor.fetchall()
     statement = {}
     n = 0
-    for row in state_rows[::-1]:
+    for row in state_rows:
         statement[n] = {'usr': row[0], 'date': row[1], 'statement': row[2]}
-        n = n + 1
+        n = n+1
     # 事物提交
     conn.commit()
     return statement
+
+ #返回三个表的所有数据
+
+# path_pd = './data.db'
+# conn, cursor = connect_database(path_pd)
+# print(vague_match(conn, cursor,'阿'))
+# free_database(conn, cursor)
