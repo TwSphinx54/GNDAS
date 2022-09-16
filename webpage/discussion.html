@@ -39,6 +39,8 @@
 
 
 <script>
+    let o_url = 'http://127.0.0.1:8080';
+
     const shining_bar = document.getElementById('shining_bar');
     const flex = document.getElementsByClassName('flex')[0];
     const bar = document.getElementsByClassName('bar')[0];
@@ -49,16 +51,16 @@
 
     const li = document.getElementsByClassName('list');
     li[0].onclick = function () {
-        window.location.href = 'http://127.0.0.1:8080/result'
+        window.location.href = o_url + '/result'
     }
     li[1].onclick = function () {
-        window.location.href = 'http://127.0.0.1:8080/risk'
+        window.location.href = o_url + '/risk'
     }
     li[2].onclick = function () {
-        window.location.href = 'http://127.0.0.1:8080/discussion'
+        window.location.href = o_url + '/discussion'
     }
     li[3].onclick = function () {
-        let url = 'http://127.0.0.1:8080/data?pms=' + '{{ pms }}' //GET请求发送方法
+        let url = o_url + '/data?pms=' + '{{ pms }}' //GET请求发送方法
         let xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.send()
@@ -86,7 +88,7 @@
     }
     text_button[1].onclick = function () {
         let text = story.value;
-        let url = 'http://127.0.0.1:8080/discussion'
+        let url = o_url + '/discussion'
         let xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
         let formData = new FormData();
@@ -103,7 +105,7 @@
     }
 
     function get_log() {
-        let url = 'http://127.0.0.1:8080/discussion'
+        let url = o_url + '/discussion'
         let xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
         let formData = new FormData();
