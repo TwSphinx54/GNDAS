@@ -94,6 +94,8 @@
 
 
 <script>
+    let o_url = 'http://127.0.0.1:8080';
+
     let vol_o = {{ vol | tojson }}
     let eqk_o = {{ eqk | tojson }}
     let tnm_o = {{ tnm | tojson }}
@@ -664,16 +666,16 @@
     const li = document.getElementsByClassName('list');
     window.onload = function () {
         li[0].onclick = function () {
-            window.location.href = 'http://127.0.0.1:8080/result'
+            window.location.href = o_url + '/result'
         }
         li[1].onclick = function () {
-            window.location.href = 'http://127.0.0.1:8080/risk'
+            window.location.href = o_url + '/risk'
         }
         li[2].onclick = function () {
-            window.location.href = 'http://127.0.0.1:8080/discussion'
+            window.location.href = o_url + '/discussion'
         }
         li[3].onclick = function () {
-            let url = 'http://127.0.0.1:8080/data?pms=' + '{{ pms }}' //GET请求发送书
+            let url = o_url + '/data?pms=' + '{{ pms }}' //GET请求发送书
             let xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
             xhr.send()
@@ -825,7 +827,7 @@
     }
     search.onkeydown = function (event) {
         if (event.keyCode == 13) {
-            let url = 'http://127.0.0.1:8080/result'
+            let url = o_url + '/result'
             let xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
             var formData = new FormData();
