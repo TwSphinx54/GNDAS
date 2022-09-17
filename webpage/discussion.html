@@ -52,25 +52,40 @@
 
     const li = document.getElementsByClassName('list');
     li[0].onclick = function () {
-        window.location.href = o_url + '/result'
+        let url_ = o_url + '/result?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
+        let xhr_ = new XMLHttpRequest();
+        xhr_.open('GET', url_, true);
+        xhr_.send();
+        xhr_.onreadystatechange = function () {
+            if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+                window.location.href = xhr_.responseURL;
+            }
+        }
     }
     li[1].onclick = function () {
-        window.location.href = o_url + '/risk'
+        let url_ = o_url + '/risk?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
+        let xhr_ = new XMLHttpRequest();
+        xhr_.open('GET', url_, true);
+        xhr_.send();
+        xhr_.onreadystatechange = function () {
+            if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+                window.location.href = xhr_.responseURL;
+            }
+        }
     }
     li[2].onclick = function () {
-        window.location.href = o_url + '/discussion'
     }
     li[3].onclick = function () {
-        let url = o_url + '/data?pms=' + '{{ pms }}' //GET请求发送方法
+        let url = o_url + '/data?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}';
         let xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
-        xhr.send()
+        xhr.send();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                 if (xhr.response === 'error') {
                     window.alert("您不具备访问该模块的权限！")
                 } else {
-                    window.location.href = xhr.responseURL
+                    window.location.href = xhr.responseURL;
                 }
             }
         }

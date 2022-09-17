@@ -57,7 +57,7 @@
 		</div>
 
 		<script>
-			let url = 'http://127.0.0.1:8080'
+			let o_url = 'http://127.0.0.1:8080'
 
 			Cesium.Ion.defaultAccessToken =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
@@ -180,7 +180,7 @@
 				button_s.onclick = function() {
 					var it1 = input_s[0].validity;
 					var it2 = input_s[1].validity;
-					if (it1.valueMissing === true | it2.valueMissing === true) {
+					if (it1.valueMissing === true || it2.valueMissing === true) {
 						window.alert("邮箱/用户名不能为空")
 					} else if (it1.patternMismatch === true) {
 						window.alert("邮箱格式不正确！")
@@ -188,7 +188,7 @@
 						input_s[1].value = ""
 					} else {
 						let xhr = new XMLHttpRequest();
-						xhr.open('POST', url, true);
+						xhr.open('POST', o_url, true);
 						let formData = new FormData();
 						formData.append('email', input_s[0].value)
 						formData.append('password', input_s[1].value)
@@ -199,7 +199,16 @@
 								if (xhr.response === 'error') {
 									window.alert("邮箱或密码错误！")
 								} else {
-									window.location.href = xhr.responseURL
+									let log_info = JSON.parse(xhr.response);
+									let url_ = o_url + '/result?pms=' + log_info['pms'] + '&usr=' + log_info['usr']; //GET请求发送书
+									let xhr_ = new XMLHttpRequest();
+									xhr_.open('GET', url_, true);
+									xhr_.send();
+									xhr_.onreadystatechange = function () {
+										if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+											window.location.href = xhr_.responseURL;
+										}
+									}
 								}
 							}
 						}
@@ -209,7 +218,7 @@
 				button_reg.onclick = function() {
 					var it1 = input_s[0].validity;
 					var it2 = input_s[1].validity;
-					if (it1.valueMissing === true | it2.valueMissing === true) {
+					if (it1.valueMissing === true || it2.valueMissing === true) {
 						window.alert("邮箱/用户名不能为空")
 					} else if (it1.patternMismatch === true) {
 						window.alert("邮箱格式不正确！")
@@ -217,16 +226,25 @@
 						input_s[1].value = ""
 					} else {
 						let xhr = new XMLHttpRequest();
-						xhr.open('POST', url, true);
+						xhr.open('POST', o_url, true);
 						let formData = new FormData();
 						formData.append('email', input_s[0].value)
 						formData.append('password', input_s[1].value)
 						formData.append('status', 2)
 						xhr.send(formData)
-						xhr.onreadystatechange = function() {
+						xhr.onreadystatechange = function () {
 							if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
 								window.alert("注册成功！")
-								window.location.href = xhr.responseURL
+								let log_info = JSON.parse(xhr.response);
+								let url_ = o_url + '/result?pms=' + log_info['pms'] + '&usr=' + log_info['usr']; //GET请求发送书
+								let xhr_ = new XMLHttpRequest();
+								xhr_.open('GET', url_, true);
+								xhr_.send();
+								xhr_.onreadystatechange = function () {
+									if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+										window.location.href = xhr_.responseURL;
+									}
+								}
 							}
 						}
 					}
