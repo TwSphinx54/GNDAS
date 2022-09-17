@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link href="styles/view.css" rel="stylesheet">
+    <link href="styles/fonts.css" rel="stylesheet">
 
     <!-- Mapbox API -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
@@ -690,10 +691,10 @@
             }
         }
         Location = function (ObjIndex) {
-            var type = ObjIndex % 10; //1海啸 2地震 3火山
+            var type = ObjIndex % 10; //1海  啸 2地震 3火山
             var gid = (ObjIndex - type) / 10;
             if (type === 1) {
-                let feature = tnm_o.features[gid - 1];
+                let feature = tnm_o.features[gid];
                 let property = feature.properties;
                 let coordinates = feature.geometry.coordinates.slice();
                 let cause = property.Cause;
@@ -736,7 +737,7 @@
                 detail.classList.add('show');
             }
             if (type === 2) {
-                let feature = eqk_o.features[gid - 1];
+                let feature = eqk_o.features[gid];
                 let property = feature.properties;
                 let coordinates = feature.geometry.coordinates.slice();
                 let date = property.Date;
@@ -770,7 +771,7 @@
                 detail.classList.add('show');
             }
             if (type === 3) {
-                let feature = vol_o.features[gid - 1];
+                let feature = vol_o.features[gid];
                 let property = feature.properties;
                 let coordinates = feature.geometry.coordinates.slice();
                 let country = property.Country;

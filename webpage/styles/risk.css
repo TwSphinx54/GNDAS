@@ -7,9 +7,9 @@ body {
     position: absolute;
     top: 0;
     bottom: 10%;
-    width: 830px;
+    width: 54%;
     left: 50%;
-    margin-left: -415px;
+    margin-left: -27%;
     box-shadow: 3px 0 5px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -104,14 +104,19 @@ body {
 }
 
 
-
 /*底部滑块*/
 .rangeslider {
     z-index: 999;
     position: absolute;
-    top:87%;
-    left:58%;
-    width: 20%;
+    bottom: 10%;
+    right: 23%;
+    width: 30%;
+    height: 40px;
+
+    display: flex;
+
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .ne-range_thumb,
@@ -120,7 +125,7 @@ input.ne-range[type=range]::-webkit-slider-thumb {
     height: 2em;
     border-radius: 50%;
     border: 0 /**1px solid #45bd5c*/;
-    background-color: #0088ff;
+    background-color: #1da1f2;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.21);
     -webkit-transition: border-color 0.15s, background-color 0.15s;
     transition: border-color 0.15s, background-color 0.15s;
@@ -131,14 +136,14 @@ input.ne-range[type=range]::-webkit-slider-thumb {
 
 .ne-range_thumb:active,
 input.ne-range {
-    height: 8px;
+    height: 10px;
     border-radius: 8px;
-    margin: .8em 0;
+    margin: 1em 0 .5em .5em;
     padding: 0;
     cursor: pointer;
     border: 0;
     /**background-color: #45bd5c;*/
-    background: -webkit-linear-gradient(#0088ff, #0088ff) no-repeat #736d6d;
+    background: -webkit-linear-gradient(#1da1f2, #0088ff) no-repeat #736d6d;
     background-size: 0% 100%;
 }
 
@@ -146,7 +151,7 @@ input.ne-range {
     display: block;
     width: 0%;
     height: 100%;
-    background-color: #0088ff;
+    background-color: #1da1f2;
 }
 
 .ne-range_tips {
@@ -211,4 +216,25 @@ input.ne-range[type=range]::-webkit-slider-thumb {
 
 .ne-range_thumb.ondrag > .ne-range_tips {
     visibility: visible;
+}
+
+#amount {
+    margin: 5px;
+    width: 100px;
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.3);
+    border: none;
+    outline: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+    font-weight: bold;
+    text-align: center;
+    pointer-events: none;
+    box-shadow: 1px 0 2px 1px rgba(0, 0, 0, 0.3);
+}
+
+#amount::-webkit-outer-spin-button,
+#amount::-webkit-inner-spin-button{
+	-webkit-appearance: none !important;
+	margin: 0;
 }
