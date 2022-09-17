@@ -56,6 +56,8 @@
 		</div>
 
 		<script>
+			let url = 'http://127.0.0.1:8080'
+
 			Cesium.Ion.defaultAccessToken =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhOWQzYjc1My01ZDQwLTQyNDktOTYzYy0zNzdlY2E0MTdhZmUiLCJpZCI6ODUxMTIsImlhdCI6MTY0Njc5MzAwOH0.aPGCoFgt__gnDXysja0CvhmsXgLDtU2Eoi7J_Ri9mk4';
 
@@ -184,7 +186,6 @@
 						input_s[0].value = ""
 						input_s[1].value = ""
 					} else {
-						let url = 'http://127.0.0.1:8080'
 						let xhr = new XMLHttpRequest();
 						xhr.open('POST', url, true);
 						let formData = new FormData();
@@ -214,7 +215,6 @@
 						input_s[0].value = ""
 						input_s[1].value = ""
 					} else {
-						let url = 'http://127.0.0.1:8080'
 						let xhr = new XMLHttpRequest();
 						xhr.open('POST', url, true);
 						let formData = new FormData();
