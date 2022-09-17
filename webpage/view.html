@@ -100,6 +100,7 @@
     let vol_o = {{ vol | tojson }}
     let eqk_o = {{ eqk | tojson }}
     let tnm_o = {{ tnm | tojson }}
+    let len_o = '{{ len }}'
 
     mapboxgl.accessToken =
         'pk.eyJ1Ijoic3Nzc3BoaW54IiwiYSI6ImNrbnZnbDR1NzAzNzMyb3Bwbng3amtnMzQifQ.E1nAH_fti0KvB2heCd-cEg';
@@ -531,6 +532,7 @@
     const search_result = document.getElementById('search_result');
     const content1 = document.getElementsByClassName('content1')[0];
 
+    item_c2.innerHTML = len_o;
     content1.classList.add('show');
 
     for (let i = 0; i < func.length; i++) {

@@ -1,8 +1,7 @@
-from flask import Flask, request, redirect, url_for, render_template, jsonify
+from flask import Flask, request, render_template
 from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched, \
     registered, volcano_eruption_storage, earthquake_storage, tsunami_storage, vague_match, record_statement, \
     match_all_statement
-import json
 
 DB_PATH = './data.db'
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
@@ -11,7 +10,6 @@ vol, vo_len = volcano_eruption_all_matched(conn, cursor)
 eqk, eq_len = earthquake_all_matched(conn, cursor)
 tnm, tn_len = tsunami_all_matched(conn, cursor)
 vol_c = [k['properties'] for k in vol['features']]
-
 eqk_c = [k['properties'] for k in eqk['features']]
 tnm_c = [k['properties'] for k in tnm['features']]
 usr_d = '游客'
@@ -47,9 +45,11 @@ def main_process():
         pms = request.args.get('pms')
         usr = request.args.get('usr')
         if (pms == '管理员') | (pms == '普通用户'):
-            return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm)
+            return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm,
+                                   len=vo_len + eq_len + tn_len)
         else:
-            return render_template('view.html', pms=pms_d, usr=usr_d, vol=vol, eqk=eqk, tnm=tnm)
+            return render_template('view.html', pms=pms_d, usr=usr_d, vol=vol, eqk=eqk, tnm=tnm,
+                                   len=vo_len + eq_len + tn_len)
     elif request.method == 'POST':
         value = request.form['value']
         result = vague_match(conn, cursor, value)
