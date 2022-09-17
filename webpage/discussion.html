@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link href="styles/view.css" rel="stylesheet">
     <link href="styles/discussion.css" rel="stylesheet">
+    <link href="styles/fonts.css" rel="stylesheet">
 
     <title>全球自然灾害评估系统 - 用户论坛</title>
 </head>
@@ -51,25 +52,40 @@
 
     const li = document.getElementsByClassName('list');
     li[0].onclick = function () {
-        window.location.href = o_url + '/result'
+        let url_ = o_url + '/result?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
+        let xhr_ = new XMLHttpRequest();
+        xhr_.open('GET', url_, true);
+        xhr_.send();
+        xhr_.onreadystatechange = function () {
+            if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+                window.location.href = xhr_.responseURL;
+            }
+        }
     }
     li[1].onclick = function () {
-        window.location.href = o_url + '/risk'
+        let url_ = o_url + '/risk?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
+        let xhr_ = new XMLHttpRequest();
+        xhr_.open('GET', url_, true);
+        xhr_.send();
+        xhr_.onreadystatechange = function () {
+            if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+                window.location.href = xhr_.responseURL;
+            }
+        }
     }
     li[2].onclick = function () {
-        window.location.href = o_url + '/discussion'
     }
     li[3].onclick = function () {
-        let url = o_url + '/data?pms=' + '{{ pms }}' //GET请求发送方法
+        let url = o_url + '/data?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}';
         let xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
-        xhr.send()
+        xhr.send();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                 if (xhr.response === 'error') {
                     window.alert("您不具备访问该模块的权限！")
                 } else {
-                    window.location.href = xhr.responseURL
+                    window.location.href = xhr.responseURL;
                 }
             }
         }
@@ -87,7 +103,7 @@
         story.value = "";
     }
     text_button[1].onclick = function () {
-        let text = story.value;
+        let text = encodeHtml(story.value);
         let url = o_url + '/discussion'
         let xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
@@ -102,6 +118,23 @@
                 get_log()
             }
         }
+    }
+
+    function encodeHtml(html) {
+        return html && html.replace ?
+            (
+                html.replace(/&/g, "&amp;")
+                    .replace(/ /g, "&nbsp;")
+                    .replace(/\b&nbsp;+/g, " ")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\\/g, "&#92;")
+                    .replace(/\'/g, "&#39;")
+                    .replace(/\"/g, "&quot;")
+                    .replace(/\n/g, "<br/>")
+                    .replace(/\r/g, "")
+            )
+            : html;
     }
 
     function get_log() {

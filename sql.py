@@ -3,13 +3,14 @@ import datetime
 import sqlite3
 import json
 
+
 #
 # 获得连接
 
 
 def connect_database(path_db):
     try:
-        conn = sqlite3.connect(path_db,check_same_thread=False)
+        conn = sqlite3.connect(path_db, check_same_thread=False)
     except sqlite3.Error as e:
         print('Unable to connect!\n{0}'.format(e))
     else:
@@ -61,12 +62,13 @@ def full_geojson(rows):
     }
     return full_geojson
 
+
 def single_geojson(rows):
-    #n_rows = [k[0] for k in rows]
-    single_geo=[]
+    # n_rows = [k[0] for k in rows]
+    single_geo = []
     for k in rows:
         single_g = {
-            'type':'Feature',
+            'type': 'Feature',
             'geometry': {
                 "type": "Point",
                 "coordinates": [k['longitude'], k['latitude']]
@@ -76,19 +78,21 @@ def single_geojson(rows):
         single_geo.append(single_g)
     return single_geo
 
+
 def earthquake_all_matched(conn, cursor):
     sql = "SELECT json_object('id', id,'Date', earthquake.Date,'latitude',earthquake.latitude, 'longitude',earthquake.longitude,'Year', earthquake.Year, 'Magnitude', earthquake.Magnitude, 'Depth', earthquake.Depth, 'location_a', earthquake.location_n) FROM earthquake"
     # 执行语句
     cursor.execute(sql)
     # 抓取
     rows = cursor.fetchall()
+    eq_len = len(rows)
     rows1 = [json.loads(k[0]) for k in rows]
-    single_geo=single_geojson(rows1)
+    single_geo = single_geojson(rows1)
     full_geo = full_geojson(single_geo)
 
     # 事物提交
     conn.commit()
-    return full_geo
+    return full_geo, eq_len
 
 
 def tsunami_all_matched(conn, cursor):
@@ -98,13 +102,14 @@ def tsunami_all_matched(conn, cursor):
     cursor.execute(sql)
     # 抓取
     rows = cursor.fetchall()
+    ts_len = len(rows)
     rows1 = [json.loads(k[0]) for k in rows]
     single_geo = single_geojson(rows1)
     full_geo = full_geojson(single_geo)
 
     # 事物提交
     conn.commit()
-    return full_geo
+    return full_geo, ts_len
 
 
 def volcano_eruption_all_matched(conn, cursor):
@@ -130,16 +135,17 @@ def volcano_eruption_all_matched(conn, cursor):
     cursor.execute(sql)
     # 抓取
     rows = cursor.fetchall()
+    vo_len = len(rows)
     rows1 = [json.loads(k[0]) for k in rows]
     single_geo = single_geojson(rows1)
     full_geo = full_geojson(single_geo)
     # 事物提交
     conn.commit()
-    return full_geo
+    return full_geo, vo_len
 
 
 def vague_match(conn, cursor, chars):
-    sql_ts = "SELECT id,location_n,year FROM tsunami WHERE tsunami.location_n  like '%"+chars+"%'"
+    sql_ts = "SELECT id,location_n,year FROM tsunami WHERE tsunami.location_n  like '%" + chars + "%'"
     # 执行语句
     cursor.execute(sql_ts)
     # 抓取
@@ -151,7 +157,7 @@ def vague_match(conn, cursor, chars):
         vague[n] = {'gid': row[0], 'location': row[1], 'year': row[2], 'type': 1}
         n += 1
 
-    sql_eq = "SELECT id,location_n,year FROM earthquake WHERE earthquake.location_n  like '%"+chars+"%'"
+    sql_eq = "SELECT id,location_n,year FROM earthquake WHERE earthquake.location_n  like '%" + chars + "%'"
     # 执行语句。
     cursor.execute(sql_eq)
     # 抓取
@@ -160,7 +166,7 @@ def vague_match(conn, cursor, chars):
         vague[n] = {'gid': row[0], 'location': row[1], 'year': row[2], 'type': 2}
         n += 1
 
-    sql_vo = "SELECT id,volcano,year FROM volcano_eruption WHERE volcano_eruption.volcano  like '%"+chars+"%'"
+    sql_vo = "SELECT id,volcano,year FROM volcano_eruption WHERE volcano_eruption.volcano  like '%" + chars + "%'"
     # 执行语句
     cursor.execute(sql_vo)
     # 抓取
@@ -174,11 +180,8 @@ def vague_match(conn, cursor, chars):
     return vague
 
 
-
-
-
 def last_id(conn, cursor, type):
-    sql_last = "select id from "+type+" order by id desc limit 0,1"
+    sql_last = "select id from " + type + " order by id desc limit 0,1"
     cursor.execute(sql_last)
     rows_ts = cursor.fetchall()
     # 事物提交
@@ -189,7 +192,7 @@ def last_id(conn, cursor, type):
 def earthquake_storage(conn, cursor, date, year, magnitude, latitude, longitude, deoth, location_n):
     last_num = last_id(conn, cursor, 'earthquake')
     sql = "insert into earthquake (id,date,year,magnitude,latitude,longitude,depth,location_n) values((?),(?),(?),(?),(?),(?),(?),(?))"
-    params = (last_num+1, date, year, magnitude,
+    params = (last_num + 1, date, year, magnitude,
               latitude, longitude, deoth, location_n)
     # 执行语句
     cursor.execute(sql, params)
@@ -202,9 +205,10 @@ def tsunami_storage(conn, cursor, year, latitude, longitude, location_n, country
                     eq_magnitu='UnKnown', eq_depth='UnKnown', month='UnKnown', day='UnKnown', hour='UnKnown',
                     minute='UnKnown'):
     last_num = last_id(conn, cursor, 'tsunami')
-    sql = "insert into tsunami (id,year,month,day,hour,minute,latitude,longitude,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments,geom) values((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?)) "
+    sql = "insert into tsunami (id,year,month,day,hour,minute,latitude,longitude,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments) values((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?)) "
     params = (
-        last_num+1, year, month, day, hour, minute, latitude, longitude, location_n, country, region, cause, event_vali, eq_magnitu,
+        last_num + 1, year, month, day, hour, minute, latitude, longitude, location_n, country, region, cause,
+        event_vali, eq_magnitu,
         eq_depth, ts_intensi, damage_tot, houses_tot, deaths_tot, url, comments)
     # 21
     # 执行语句
@@ -217,11 +221,12 @@ def volcano_eruption_storage(conn, cursor, year, volcano, volcano_id, country, e
                              volcanoes, volcanotyp, lastknowne, latitude, longitude, summit, elevation, url,
                              field17='[null]'):
     last_num = last_id(conn, cursor, 'volcano_eruption')
-    sql = "insert into volcano_eruption (id,year,volcano,volcano_id,country,eruptions,eruption_1,eruption_2,volcanoes,volcanotyp,lastknowne,latitude,longitude,summit,elevation,url,field17,geom) values((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?)) "
+    sql = "insert into volcano_eruption (id,year,volcano,volcano_id,country,eruptions,eruption_1,eruption_2,volcanoes,volcanotyp,lastknowne,latitude,longitude,summit,elevation,url) values((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?)) "
     params = (
-        last_num+1, year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2, volcanoes, volcanotyp, lastknowne,
+        last_num + 1, year, volcano, volcano_id, country, eruptions, eruption_1, eruption_2, volcanoes, volcanotyp,
+        lastknowne,
         latitude,
-        longitude, summit, elevation, url, field17)
+        longitude, summit, elevation, url)
     # 17
     # 执行语句
     cursor.execute(sql, params)
@@ -233,7 +238,7 @@ def record_statement(conn, cursor, usr, statement):
     geom = "SELECT id FROM usr_discuss ORDER BY id ASC "
     cursor.execute(geom)
     rows = cursor.fetchall()
-    num_id = rows[-1][0]+1
+    num_id = rows[-1][0] + 1
     curr_time = datetime.datetime.now()
     data = curr_time.date()
     sql = "insert into usr_discuss (id,usr,date,statement) values((?),(?),(?),(?) )"
@@ -245,7 +250,6 @@ def record_statement(conn, cursor, usr, statement):
 
 
 def match_all_statement(conn, cursor):
-
     sql = "SELECT usr,date,statement FROM usr_discuss ORDER BY usr_discuss.date desc;"
     # 执行语句
     cursor.execute(sql)
@@ -254,14 +258,11 @@ def match_all_statement(conn, cursor):
     n = 0
     for row in state_rows:
         statement[n] = {'usr': row[0], 'date': row[1], 'statement': row[2]}
-        n = n+1
+        n = n + 1
     # 事物提交
     conn.commit()
     return statement
 
- #返回三个表的所有数据
+# 返回最新，type ,经纬度，Location
 
-# path_pd = './data.db'
-# conn, cursor = connect_database(path_pd)
-# print(vague_match(conn, cursor,'阿'))
-# free_database(conn, cursor)
+
