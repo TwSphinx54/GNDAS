@@ -103,7 +103,7 @@
         story.value = "";
     }
     text_button[1].onclick = function () {
-        let text = story.value;
+        let text = encodeHtml(story.value);
         let url = o_url + '/discussion'
         let xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
@@ -118,6 +118,23 @@
                 get_log()
             }
         }
+    }
+
+    function encodeHtml(html) {
+        return html && html.replace ?
+            (
+                html.replace(/&/g, "&amp;")
+                    .replace(/ /g, "&nbsp;")
+                    .replace(/\b&nbsp;+/g, " ")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\\/g, "&#92;")
+                    .replace(/\'/g, "&#39;")
+                    .replace(/\"/g, "&quot;")
+                    .replace(/\n/g, "<br/>")
+                    .replace(/\r/g, "")
+            )
+            : html;
     }
 
     function get_log() {
