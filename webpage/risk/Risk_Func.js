@@ -91,9 +91,9 @@ function Risk_Func(geo_data, Pro) {
                         ['linear'],
                         ['zoom'],
                         0,
-                        2,
+                        parseInt(slide_value.value) / 2,
                         9,
-                        20
+                        parseInt(slide_value.value)
                     ],
                     // Transition from heatmap to circle layer by zoom level
                     'heatmap-opacity': [

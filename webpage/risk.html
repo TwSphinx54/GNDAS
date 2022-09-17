@@ -56,6 +56,12 @@
 			<div class="heat_type">海&nbsp;&nbsp;啸</div>
 		</div>
 
+		<!--滑块-->
+		<div class="rangeslider" >
+			<input id="amount" name="amount" class="ne-input" placeholder="只允许输入数字" pattern="\d*" type="number" style="display: None">
+			<input type="range" id="slider" name="slider" class="ne-range" value="0" />
+		</div>
+
 		<script>
 			let vol_o = {{ vol | tojson }}
 			let eqk_o = {{ eqk | tojson }}
@@ -178,6 +184,53 @@
 					}
 				}
 			}
+
+			// 滑块
+			$.fn.RangeSlider = function (cfg) {
+				this.sliderCfg = {
+					min: cfg && !isNaN(parseFloat(cfg.min)) ? Number(cfg.min) : null,
+					max: cfg && !isNaN(parseFloat(cfg.max)) ? Number(cfg.max) : null,
+					step: cfg && Number(cfg.step) ? cfg.step : 1,
+					callback: cfg && cfg.callback ? cfg.callback : null
+				};
+
+				var $input = $(this);
+				var min = this.sliderCfg.min;
+				var max = this.sliderCfg.max;
+				var step = this.sliderCfg.step;
+				var callback = this.sliderCfg.callback;
+
+				$input.attr('min', min)
+						.attr('max', max)
+						.attr('step', step);
+
+				$input.bind("input", function (e) {
+					$input.attr('value', this.value);
+					$input.css('background-size', this.value * 100.0 / max + '% 100%');
+
+					if ($.isFunction(callback)) {
+						callback(this);
+					}
+				});
+			};
+			var change = function ($input) {
+				/*拖动滑块的事件，内容可自行定义*/
+				$("#amount").val($input.value);
+				let temp_ = flag.indexOf(true);
+				switch (temp_){
+					case 0:
+							Risk_Func(vol_o, "Eruption_2")
+							break;
+						case 1:
+							Risk_Func(eqk_o, "Magnitude")
+							break;
+						case 2:
+							Risk_Func(tnm_o, "Eruptions Total")
+							break;
+				}
+			}
+			$('#slider').RangeSlider({min: 4, max: 20, step: 1, callback: change});
+			let slide_value = document.getElementById("slider");
 		</script>
 	</body>
 </html>
