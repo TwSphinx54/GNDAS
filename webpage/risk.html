@@ -57,7 +57,7 @@
 
 <!--滑块-->
 <div class="rangeslider">
-    <input id="amount" name="amount" class="ne-input" placeholder="4" pattern="\d*" type="number">
+    <input id="amount" name="amount" class="ne-input" placeholder="0" pattern="\d*" type="number">
     <input type="range" id="slider" name="slider" class="ne-range" value="0"/>
 </div>
 
@@ -69,6 +69,26 @@
     let eqk_co = {{ eqk_c | tojson }}
     let tnm_co = {{ tnm_c | tojson }}
 
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2l2aXRhc3YiLCJhIjoiY2s3YXBvdDU1MTZpdDNlcDVhb3FrbjdtaiJ9.kLk_w4wIjIQ6dunGULViqw';
+    const heatmap = new mapboxgl.Map({
+        container: 'heatmap',
+        style: 'mapbox://styles/mapbox/navigation-preview-night-v2',
+        center: [110, 39],
+        zoom: 2
+    });
+
+    function Initial_Charts() {
+        $(function () {
+            Initialize(vol_o, "Eruption_2") // 热力图
+            Data_Volcano = vol_co // 获取数据
+
+            // 绘图
+            VolcanoType(Data_Volcano, "MyCharts1")
+            VolcanoYear(Data_Volcano, "MyCharts2")
+            Summit_Elevation(Data_Volcano, "MyCharts3")
+            SunGraph_V(Data_Volcano, "MyCharts4")
+        })
+    }
     function Volcano_Charts() {
         $(function () {
             Risk_Func(vol_o, "Eruption_2") // 热力图
@@ -173,7 +193,7 @@
 
     let flag = [true, false, false, false]
     heat_type[0].classList.add('clicked');
-    Volcano_Charts();
+    Initial_Charts();
     for (let i = 0; i < heat_type.length; i++) {
         // heat_type[i].classList.add('show');
         heat_type[i].onclick = function () {
@@ -242,7 +262,7 @@
                 break;
         }
     }
-    $('#slider').RangeSlider({min: 4, max: 20, step: 1, callback: change});
+    $('#slider').RangeSlider({min: 0, max: 100, step: 1, callback: change});
     let slide_value = document.getElementById("slider");
 </script>
 </body>
