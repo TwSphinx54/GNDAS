@@ -436,7 +436,7 @@ body {
     z-index: 2;
     bottom: 0;
     right: 0;
-    width: 40%;
+    width: 45%;
     height: 0;
     backdrop-filter: blur(3px);
     border-bottom: 30px solid rgba(0, 0, 0, 0.5);
@@ -481,7 +481,7 @@ body {
     z-index: 2;
     bottom: 0;
     right: 0;
-    width: 40%;
+    width: 45%;
     height: 27px;
     text-align: right;
 
@@ -613,7 +613,7 @@ body {
 
 #item_c3.show {
     line-height: 25px;
-    width: 130px;
+    width: 30%;
     margin-left: 5px;
 }
 
@@ -679,7 +679,7 @@ body {
     height: 2px;
     right: -12%;
     color: white;
-    padding-left: 50%;
+    padding-left: 30px;
     border-left: 50px solid #1da1f2;
     background-color: rgba(255, 255, 255, 0.3);
 
@@ -692,7 +692,7 @@ body {
     height: 30px;
     right: -6%;
     color: white;
-    padding-left: 30px;
+    padding-left: 5%;
     border-left: 50px solid #1da1f2;
     background-color: rgba(255, 255, 255, 0.3);
 }
@@ -726,7 +726,7 @@ body {
     height: 2px;
     right: -12%;
     color: white;
-    padding-left: 50%;
+    padding-left: 30px;
     border-left: 50px solid #1da1f2;
     background-color: rgba(255, 255, 255, 0.3);
 
@@ -739,7 +739,7 @@ body {
     height: 30px;
     right: -5%;
     color: white;
-    padding-left: 30px;
+    padding-left: 5%;
     border-left: 50px solid #1da1f2;
     background-color: rgba(255, 255, 255, 0.3);
 }
