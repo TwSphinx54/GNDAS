@@ -99,6 +99,7 @@
     let vol_o = {{ vol | tojson }}
     let eqk_o = {{ eqk | tojson }}
     let tnm_o = {{ tnm | tojson }}
+    let ne_o = {{ ne | tojson }}
     let len_o = '{{ len }}'
 
     mapboxgl.accessToken =
@@ -532,6 +533,7 @@
     const content1 = document.getElementsByClassName('content1')[0];
 
     item_c2.innerHTML = len_o;
+    item_c3.innerHTML = ne_o['location_n'] + ' [' + ne_o['latitude'] + ',' + ne_o['longitude'] + '] ' + ne_o['type'];
     content1.classList.add('show');
 
     for (let i = 0; i < func.length; i++) {

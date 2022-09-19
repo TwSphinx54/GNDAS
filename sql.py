@@ -263,6 +263,63 @@ def match_all_statement(conn, cursor):
     conn.commit()
     return statement
 
+
 # 返回最新，type ,经纬度，Location
+def return_newnest(conn, cursor):
+    sql_eq = "select id,date,latitude,longitude,location_n from earthquake order by date DESC limit 0,1"
+    sql_ve = "select id,eruptions,country,latitude,longitude from volcano_eruption order by eruptions DESC  limit 0,1"
+    sql_ts = "select id,year,month,day,latitude,longitude,location_n from tsunami order by year DESC,month DESC,day DESC  limit 0,1"
+    cursor.execute(sql_eq)
+    rows_eq = cursor.fetchall()
 
-
+    cursor.execute(sql_ve)
+    rows_ve = cursor.fetchall()
+    rows_tmp = rows_ve[0][1].split()
+    rows_ve1 = ''
+    for i in rows_tmp:
+        i = i + '-'
+        rows_ve1 += i
+    rows_ve1 = rows_ve1[:-1]
+    cursor.execute(sql_ts)
+    rows_ts = cursor.fetchall()
+    rows_tmp = ''
+    for i in range(1, 4):
+        i = str(int(float(rows_ts[0][i]))) + '-'
+        rows_tmp += i
+    rows_ts1 = rows_tmp[:-1]
+    if rows_ts1 > rows_ve1:
+        tmp_new = rows_ts1
+        type_id = 1
+    else:
+        tmp_new = rows_ve1
+        type_id = 2
+        if tmp_new < rows_eq[0][1]:
+            tmp_new = rows_eq[0][1]
+            type_id = 3
+    if type_id == 1:
+        dic_ts = {
+            'type': '海啸',
+            'latitude': '%.3f' % rows_ts[0][4],
+            'longitude': '%.3f' % rows_ts[0][5],
+            'location_n': rows_ts[0][6]
+        }
+        conn.commit()
+        return dic_ts
+    elif type_id == 2:
+        dic_ve = {
+            'type': '火山',
+            'latitude': '%.3f' % rows_ve[0][3],
+            'longitude': '%.3f' % rows_ve[0][4],
+            'location_n': rows_ve[0][2]
+        }
+        conn.commit()
+        return dic_ve
+    elif type_id == 3:
+        dic_eq = {
+            'type': '地震',
+            'latitude': '%.3f' % rows_eq[0][2],
+            'longitude': '%.3f' % rows_eq[0][3],
+            'location_n': rows_eq[0][4]
+        }
+        conn.commit()
+        return dic_eq
