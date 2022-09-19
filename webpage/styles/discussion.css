@@ -83,7 +83,7 @@ body {
     height: 0;
     line-height: 35px;
 
-    cursor: default;
+    cursor: pointer;
     animation: ease-out;
     transition: background 0.5s ease-out, height 0.5s ease-out;
 }

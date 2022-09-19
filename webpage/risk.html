@@ -1,254 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<link href="styles/view.css" rel="stylesheet">
-		<link href="styles/risk.css" rel="stylesheet">
-		<link href="styles/fonts.css" rel="stylesheet">
-		<title>全球自然灾害评估系统 - 风险评估</title>
+<head>
+    <meta charset="UTF-8">
+    <link href="styles/view.css" rel="stylesheet">
+    <link href="styles/risk.css" rel="stylesheet">
+    <link href="styles/fonts.css" rel="stylesheet">
+    <title>全球自然灾害评估系统 - 风险评估</title>
 
-		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
-		<script src="https://cdn.staticfile.org/echarts/5.3.2/echarts.min.js"></script>
-		<script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
-		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/echarts/5.3.2/echarts.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
 
-		<script type="text/javascript" src="risk/Risk_Func.js"></script>
-		<script type="text/javascript" src="risk/Risk_Earthquake.js"></script>
-		<script type="text/javascript" src="risk/Risk_Volcano.js"></script>
-		<script type="text/javascript" src="risk/Risk_Tsunami.js"></script>
-
-
-	</head>
-	<body>
-		<div id="view_title">
-			<span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
-			<span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">风险评估</span>
-			<div id="shining_bar"></div>
-			<div
-				style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px;display: block; margin-top:2%;">
-				GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
-			</div>
-		</div>
-		<div class="flex">
-			<ul>
-				<li class="list">灾害分布</li>
-				<li class="list">风险评估</li>
-				<li class="list">用户论坛</li>
-				<li class="list">数据管理</li>
-				<div class="bar"></div>
-			</ul>
-		</div>
+    <script type="text/javascript" src="risk/Risk_Func.js"></script>
+    <script type="text/javascript" src="risk/Risk_Earthquake.js"></script>
+    <script type="text/javascript" src="risk/Risk_Volcano.js"></script>
+    <script type="text/javascript" src="risk/Risk_Tsunami.js"></script>
 
 
-
-		<div id='heatmap'></div>
-
-		<div id="MyCharts1"></div>
-		<div id="MyCharts2"></div>
-		<div id="MyCharts3"></div>
-		<div id="MyCharts4"></div>
-
-
-		<div class="button_switch">
-			<div class="heat_type">火&nbsp;&nbsp;山</div>
-			<div class="heat_type">地&nbsp;&nbsp;震</div>
-			<div class="heat_type">海&nbsp;&nbsp;啸</div>
-		</div>
-
-		<!--滑块-->
-		<div class="rangeslider" >
-			<input id="amount" name="amount" class="ne-input" placeholder="4" pattern="\d*" type="number">
-			<input type="range" id="slider" name="slider" class="ne-range" value="0" />
-		</div>
-
-		<script>
-			let vol_o = {{ vol | tojson }}
-			let eqk_o = {{ eqk | tojson }}
-			let tnm_o = {{ tnm | tojson }}
-			let vol_co = {{ vol_c | tojson }}
-			let eqk_co = {{ eqk_c | tojson }}
-			let tnm_co = {{ tnm_c | tojson }}
-
-			console.log(tnm_o)
-			console.log(tnm_co)
-
-			function Volcano_Charts() {
-				$(function() {
-					Risk_Func(vol_o, "Eruption_2") // 热力图
-					Data_Volcano = vol_co // 获取数据
-
-					// 绘图
-					VolcanoType(Data_Volcano, "MyCharts1")
-					VolcanoYear(Data_Volcano, "MyCharts2")
-					Summit_Elevation(Data_Volcano, "MyCharts3")
-					SunGraph_V(Data_Volcano, "MyCharts4")
-				})
-			}
-
-			function Earthquake_Charts() {
-				$(function() {
-					Risk_Func(eqk_o, "Magnitude") // 热力图
-					Data_Earthquake = eqk_co // 获取数据
-					// 绘图
-					CountsYear(Data_Earthquake, "MyCharts1")
-					CountsMag(Data_Earthquake, "MyCharts2")
-					CountsDepth(Data_Earthquake, "MyCharts3")
-					MagDepth(Data_Earthquake, "MyCharts4")
-				})
-			}
-
-			function Tsunami_Charts() {
-				$(function() {
-					Risk_Func(tnm_o, "Eruptions Total") // 热力图
-					Data_Temp = tnm_co // 获取数据
-
-					// 筛选年份
-					Data_Tsunami = []
-					for (let i = 0; i < Data_Temp.length; i++) {
-						if (Data_Temp[i]["Year"] > 1990) {
-							Data_Tsunami.push(Data_Temp[i])
-						}
-					}
-
-					// 绘图
-					TotalDescription(Data_Tsunami, "MyCharts3")
-					TsunamiYear(Data_Tsunami, "MyCharts2")
-					CountsIntensity(Data_Tsunami, "MyCharts1")
-					SunGraph(Data_Tsunami, "MyCharts4")
-				})
-			}
-		</script>
+</head>
+<body>
+<div id="view_title">
+    <span style="font-family: 'Ubuntu';color: white;font-size: 40px;font-weight: bold;">GNDAS</span>
+    <span style="font-family: 'Microsoft YaHei';color: white;font-size: 30px;font-weight: bold;">灾害分布</span>
+    <div id="shining_bar"></div>
+    <div style="font-family: 'Ubuntu';color: #1da1f2;font-size: 11px;letter-spacing: 1px; margin-top:2%;">
+        GLOBAL NATURAL DISASTER ASSESSMENT SYSTEM
+    </div>
+</div>
+<div class="flex">
+    <ul>
+        <li class="list">灾害分布</li>
+        <li class="list">风险评估</li>
+        <li class="list">用户论坛</li>
+        <li class="list">数据管理</li>
+        <div class="bar"></div>
+    </ul>
+</div>
 
 
-		<script>
-			let o_url = 'http://127.0.0.1:8080';
+<div id='heatmap'></div>
 
-			const shining_bar = document.getElementById('shining_bar');
-			const flex = document.getElementsByClassName('flex')[0];
-			const bar = document.getElementsByClassName('bar')[0];
+<div id="MyCharts1"></div>
+<div id="MyCharts2"></div>
+<div id="MyCharts3"></div>
+<div id="MyCharts4"></div>
 
-			shining_bar.classList.add('show');
-			flex.classList.add('show');
-			bar.classList.add('show2');
 
-			const li = document.getElementsByClassName('list');
-			li[0].onclick = function() {
-				let url_ = o_url + '/result?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
-				let xhr_ = new XMLHttpRequest();
-				xhr_.open('GET', url_, true);
-				xhr_.send();
-				xhr_.onreadystatechange = function () {
-					if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
-						window.location.href = xhr_.responseURL;
-					}
-				}
-			}
-			li[1].onclick = function() {
-			}
-			li[2].onclick = function() {
-				let url_ = o_url + '/discussion?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
-				let xhr_ = new XMLHttpRequest();
-				xhr_.open('GET', url_, true);
-				xhr_.send();
-				xhr_.onreadystatechange = function () {
-					if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
-						window.location.href = xhr_.responseURL;
-					}
-				}
-			}
-			li[3].onclick = function () {
-				let url = o_url + '/data?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}';
-				let xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.send();
-				xhr.onreadystatechange = function () {
-					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-						if (xhr.response === 'error') {
-							window.alert("您不具备访问该模块的权限！")
-						} else {
-							window.location.href = xhr.responseURL;
-						}
-					}
-				}
-			}
+<div class="button_switch">
+    <div class="heat_type">火&nbsp;&nbsp;山</div>
+    <div class="heat_type">地&nbsp;&nbsp;震</div>
+    <div class="heat_type">海&nbsp;&nbsp;啸</div>
+</div>
 
-			const heat_type = document.getElementsByClassName('heat_type');
+<!--滑块-->
+<div class="rangeslider">
+    <input id="amount" name="amount" class="ne-input" placeholder="0" pattern="\d*" type="number">
+    <input type="range" id="slider" name="slider" class="ne-range" value="0"/>
+</div>
 
-			let flag = [true, false, false, false]
-			heat_type[0].classList.add('clicked');
-			Volcano_Charts();
-			for (let i = 0; i < heat_type.length; i++) {
-				// heat_type[i].classList.add('show');
-				heat_type[i].onclick = function() {
-					switch (i) {
-						case 0:
-							Volcano_Charts();
-							break;
-						case 1:
-							Earthquake_Charts();
-							break;
-						case 2:
-							Tsunami_Charts();
-							break;
-					}
-					if (flag[i] === false) {
-						let c_id = flag.indexOf(true);
-						heat_type[c_id].classList.remove('clicked');
-						flag[c_id] = false;
-						heat_type[i].classList.add('clicked');
-						flag[i] = true;
-					}
-				}
-			}
+<script>
+    let vol_o = {{ vol | tojson }}
+    let eqk_o = {{ eqk | tojson }}
+    let tnm_o = {{ tnm | tojson }}
+    let vol_co = {{ vol_c | tojson }}
+    let eqk_co = {{ eqk_c | tojson }}
+    let tnm_co = {{ tnm_c | tojson }}
 
-			// 滑块
-			$.fn.RangeSlider = function (cfg) {
-				this.sliderCfg = {
-					min: cfg && !isNaN(parseFloat(cfg.min)) ? Number(cfg.min) : null,
-					max: cfg && !isNaN(parseFloat(cfg.max)) ? Number(cfg.max) : null,
-					step: cfg && Number(cfg.step) ? cfg.step : 1,
-					callback: cfg && cfg.callback ? cfg.callback : null
-				};
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2l2aXRhc3YiLCJhIjoiY2s3YXBvdDU1MTZpdDNlcDVhb3FrbjdtaiJ9.kLk_w4wIjIQ6dunGULViqw';
+    const heatmap = new mapboxgl.Map({
+        container: 'heatmap',
+        style: 'mapbox://styles/mapbox/navigation-preview-night-v2',
+        center: [110, 39],
+        zoom: 2
+    });
 
-				var $input = $(this);
-				var min = this.sliderCfg.min;
-				var max = this.sliderCfg.max;
-				var step = this.sliderCfg.step;
-				var callback = this.sliderCfg.callback;
+    function Initial_Charts() {
+        $(function () {
+            Initialize(vol_o, "Eruption_2") // 热力图
+            Data_Volcano = vol_co // 获取数据
 
-				$input.attr('min', min)
-						.attr('max', max)
-						.attr('step', step);
+            // 绘图
+            VolcanoType(Data_Volcano, "MyCharts1")
+            VolcanoYear(Data_Volcano, "MyCharts2")
+            Summit_Elevation(Data_Volcano, "MyCharts3")
+            SunGraph_V(Data_Volcano, "MyCharts4")
+        })
+    }
+    function Volcano_Charts() {
+        $(function () {
+            Risk_Func(vol_o, "Eruption_2") // 热力图
+            Data_Volcano = vol_co // 获取数据
 
-				$input.bind("input", function (e) {
-					$input.attr('value', this.value);
-					$input.css('background-size', this.value * 100.0 / max + '% 100%');
+            // 绘图
+            VolcanoType(Data_Volcano, "MyCharts1")
+            VolcanoYear(Data_Volcano, "MyCharts2")
+            Summit_Elevation(Data_Volcano, "MyCharts3")
+            SunGraph_V(Data_Volcano, "MyCharts4")
+        })
+    }
 
-					if ($.isFunction(callback)) {
-						callback(this);
-					}
-				});
-			};
-			var change = function ($input) {
-				/*拖动滑块的事件，内容可自行定义*/
-				$("#amount").val($input.value);
-				let temp_ = flag.indexOf(true);
-				switch (temp_){
-					case 0:
-							Risk_Func(vol_o, "Eruption_2")
-							break;
-						case 1:
-							Risk_Func(eqk_o, "Magnitude")
-							break;
-						case 2:
-							Risk_Func(tnm_o, "Eruptions Total")
-							break;
-				}
-			}
-			$('#slider').RangeSlider({min: 4, max: 20, step: 1, callback: change});
-			let slide_value = document.getElementById("slider");
-		</script>
-	</body>
+    function Earthquake_Charts() {
+        $(function () {
+            Risk_Func(eqk_o, "Magnitude") // 热力图
+            Data_Earthquake = eqk_co // 获取数据
+            // 绘图
+            CountsYear(Data_Earthquake, "MyCharts1")
+            CountsMag(Data_Earthquake, "MyCharts2")
+            CountsDepth(Data_Earthquake, "MyCharts3")
+            MagDepth(Data_Earthquake, "MyCharts4")
+        })
+    }
+
+    function Tsunami_Charts() {
+        $(function () {
+            Risk_Func(tnm_o, "Eruptions Total") // 热力图
+            Data_Temp = tnm_co // 获取数据
+
+            // 筛选年份
+            Data_Tsunami = []
+            for (let i = 0; i < Data_Temp.length; i++) {
+                if (Data_Temp[i]["Year"] > 1990) {
+                    Data_Tsunami.push(Data_Temp[i])
+                }
+            }
+
+            // 绘图
+            TotalDescription(Data_Tsunami, "MyCharts3")
+            TsunamiYear(Data_Tsunami, "MyCharts2")
+            CountsIntensity(Data_Tsunami, "MyCharts1")
+            SunGraph(Data_Tsunami, "MyCharts4")
+        })
+    }
+</script>
+
+
+<script>
+    let o_url = 'http://127.0.0.1:8080';
+
+    const shining_bar = document.getElementById('shining_bar');
+    const flex = document.getElementsByClassName('flex')[0];
+    const bar = document.getElementsByClassName('bar')[0];
+
+    shining_bar.classList.add('show');
+    flex.classList.add('show');
+    bar.classList.add('show2');
+
+    const li = document.getElementsByClassName('list');
+    li[0].onclick = function () {
+        let url_ = o_url + '/result?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
+        let xhr_ = new XMLHttpRequest();
+        xhr_.open('GET', url_, true);
+        xhr_.send();
+        xhr_.onreadystatechange = function () {
+            if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+                window.location.href = xhr_.responseURL;
+            }
+        }
+    }
+    li[1].onclick = function () {
+    }
+    li[2].onclick = function () {
+        let url_ = o_url + '/discussion?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}'; //GET请求发送书
+        let xhr_ = new XMLHttpRequest();
+        xhr_.open('GET', url_, true);
+        xhr_.send();
+        xhr_.onreadystatechange = function () {
+            if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+                window.location.href = xhr_.responseURL;
+            }
+        }
+    }
+    li[3].onclick = function () {
+        let url = o_url + '/data?pms=' + '{{ pms }}' + '&usr=' + '{{ usr }}';
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                if (xhr.response === 'error') {
+                    window.alert("您不具备访问该模块的权限！")
+                } else {
+                    window.location.href = xhr.responseURL;
+                }
+            }
+        }
+    }
+
+    const heat_type = document.getElementsByClassName('heat_type');
+
+    let flag = [true, false, false, false]
+    heat_type[0].classList.add('clicked');
+    Initial_Charts();
+    for (let i = 0; i < heat_type.length; i++) {
+        // heat_type[i].classList.add('show');
+        heat_type[i].onclick = function () {
+            switch (i) {
+                case 0:
+                    Volcano_Charts();
+                    break;
+                case 1:
+                    Earthquake_Charts();
+                    break;
+                case 2:
+                    Tsunami_Charts();
+                    break;
+            }
+            if (flag[i] === false) {
+                let c_id = flag.indexOf(true);
+                heat_type[c_id].classList.remove('clicked');
+                flag[c_id] = false;
+                heat_type[i].classList.add('clicked');
+                flag[i] = true;
+            }
+        }
+    }
+
+    // 滑块
+    $.fn.RangeSlider = function (cfg) {
+        this.sliderCfg = {
+            min: cfg && !isNaN(parseFloat(cfg.min)) ? Number(cfg.min) : null,
+            max: cfg && !isNaN(parseFloat(cfg.max)) ? Number(cfg.max) : null,
+            step: cfg && Number(cfg.step) ? cfg.step : 1,
+            callback: cfg && cfg.callback ? cfg.callback : null
+        };
+
+        var $input = $(this);
+        var min = this.sliderCfg.min;
+        var max = this.sliderCfg.max;
+        var step = this.sliderCfg.step;
+        var callback = this.sliderCfg.callback;
+
+        $input.attr('min', min)
+            .attr('max', max)
+            .attr('step', step);
+
+        $input.bind("input", function (e) {
+            $input.attr('value', this.value);
+            $input.css('background-size', this.value * 100.0 / max + '% 100%');
+
+            if ($.isFunction(callback)) {
+                callback(this);
+            }
+        });
+    };
+    var change = function ($input) {
+        /*拖动滑块的事件，内容可自行定义*/
+        $("#amount").val($input.value);
+        let temp_ = flag.indexOf(true);
+        switch (temp_) {
+            case 0:
+                Risk_Func(vol_o, "Eruption_2")
+                break;
+            case 1:
+                Risk_Func(eqk_o, "Magnitude")
+                break;
+            case 2:
+                Risk_Func(tnm_o, "Eruptions Total")
+                break;
+        }
+    }
+    $('#slider').RangeSlider({min: 0, max: 100, step: 1, callback: change});
+    let slide_value = document.getElementById("slider");
+</script>
+</body>
 </html>

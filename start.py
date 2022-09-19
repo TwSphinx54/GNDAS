@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched, \
     registered, volcano_eruption_storage, earthquake_storage, tsunami_storage, vague_match, record_statement, \
-    match_all_statement
+    match_all_statement, return_newnest
 
 DB_PATH = './data.db'
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
@@ -9,6 +9,7 @@ conn, cursor = connect_database(DB_PATH)
 vol, vo_len = volcano_eruption_all_matched(conn, cursor)
 eqk, eq_len = earthquake_all_matched(conn, cursor)
 tnm, tn_len = tsunami_all_matched(conn, cursor)
+newest = return_newnest(conn, cursor)
 vol_c = [k['properties'] for k in vol['features']]
 eqk_c = [k['properties'] for k in eqk['features']]
 tnm_c = [k['properties'] for k in tnm['features']]
@@ -46,10 +47,10 @@ def main_process():
         usr = request.args.get('usr')
         if (pms == '管理员') | (pms == '普通用户'):
             return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm,
-                                   len=vo_len + eq_len + tn_len)
+                                   len=vo_len + eq_len + tn_len, ne=newest)
         else:
             return render_template('view.html', pms=pms_d, usr=usr_d, vol=vol, eqk=eqk, tnm=tnm,
-                                   len=vo_len + eq_len + tn_len)
+                                   len=vo_len + eq_len + tn_len, ne=newest)
     elif request.method == 'POST':
         value = request.form['value']
         result = vague_match(conn, cursor, value)
