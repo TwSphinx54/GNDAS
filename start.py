@@ -60,7 +60,7 @@ def main_process():
                                    len=vo_len + eq_len + tn_len,time=d_time,name=d_name,ne=newest)
         else:
             return render_template('view.html', pms=pms_d, usr=usr_d, vol=vol, eqk=eqk, tnm=tnm,
-                                   len=vo_len + eq_len + tn_len,time=d_time,name=d_name,ne=newest))
+                                   len=vo_len + eq_len + tn_len,time=d_time,name=d_name,ne=newest)
     elif request.method == 'POST':
         value = request.form['value']
         result = vague_match(conn, cursor, value)
