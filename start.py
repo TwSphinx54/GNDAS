@@ -37,9 +37,12 @@ def login():
             else:
                 return 'error'  # redirect以get方法访问
         if status == "2":  # 此时正在进行注册操作
-            registered(conn, cursor, email, password)  # 注册用户
+            res = registered(conn, cursor, email, password)  # 注册用户
             pms = '普通用户'
-            return {'pms': pms, 'usr': usr}
+            if res == 'Done':
+                return {'pms': pms, 'usr': usr}
+            else:
+                return 'Existed'
 
 
 @app.route('/result', methods=['GET', 'POST'])

@@ -178,8 +178,8 @@
 
     window.onload = function () {
         button_s.onclick = function () {
-            var it1 = input_s[0].validity;
-            var it2 = input_s[1].validity;
+            let it1 = input_s[0].validity;
+            let it2 = input_s[1].validity;
             if (it1.valueMissing === true || it2.valueMissing === true) {
                 window.alert("邮箱/用户名不能为空")
             } else if (it1.patternMismatch === true) {
@@ -216,8 +216,8 @@
         }
 
         button_reg.onclick = function () {
-            var it1 = input_s[0].validity;
-            var it2 = input_s[1].validity;
+            let it1 = input_s[0].validity;
+            let it2 = input_s[1].validity;
             if (it1.valueMissing === true || it2.valueMissing === true) {
                 window.alert("邮箱/用户名不能为空")
             } else if (it1.patternMismatch === true) {
@@ -234,15 +234,19 @@
                 xhr.send(formData)
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                        window.alert("注册成功！")
-                        let log_info = JSON.parse(xhr.response);
-                        let url_ = o_url + '/result?pms=' + log_info['pms'] + '&usr=' + log_info['usr']; //GET请求发送书
-                        let xhr_ = new XMLHttpRequest();
-                        xhr_.open('GET', url_, true);
-                        xhr_.send();
-                        xhr_.onreadystatechange = function () {
-                            if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
-                                window.location.href = xhr_.responseURL;
+                        if (xhr.response === 'Existed') {
+                            window.alert("用户已存在！")
+                        } else {
+                            window.alert("注册成功！")
+                            let log_info = JSON.parse(xhr.response);
+                            let url_ = o_url + '/result?pms=' + log_info['pms'] + '&usr=' + log_info['usr']; //GET请求发送书
+                            let xhr_ = new XMLHttpRequest();
+                            xhr_.open('GET', url_, true);
+                            xhr_.send();
+                            xhr_.onreadystatechange = function () {
+                                if (xhr_.readyState === XMLHttpRequest.DONE && xhr_.status === 200) {
+                                    window.location.href = xhr_.responseURL;
+                                }
                             }
                         }
                     }

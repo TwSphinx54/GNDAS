@@ -169,7 +169,7 @@ body {
     text-indent: -600px;
     line-height: 35px;
 
-    cursor: default;
+    cursor: pointer;
     animation: ease-out;
     transition: background 0.5s ease-out, border-bottom 0.1s, width 0.5s ease-out 0.8s, margin-right 0.5s ease-out 0.8s, height 0.5s ease-out 1.3s, text-indent 0.5s ease-out 1.6s;
 }

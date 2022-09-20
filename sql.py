@@ -48,20 +48,29 @@ def login_in(conn, cursor, usr, password):
 
 
 def registered(conn, cursor, usr, password):
-    sql = "insert into admin_up (login_usr,password,administrator) values((?),(?),FALSE )"
-    params = (usr, password)
+    sql_rg = "insert into admin_up (login_usr,password,administrator) values((?),(?),FALSE )"
+    params_rg = (usr, password)
+    sql = "select * from admin_up where login_usr=(?)"
+    params = (usr,)
     # 执行语句
     cursor.execute(sql, params)
-    # 事物提交
-    conn.commit()
+    rows = cursor.fetchall()
+    if rows is not None:
+        conn.commit()
+        return 'Existed'
+    else:
+        cursor.execute(sql_rg, params_rg)
+        # 事物提交
+        conn.commit()
+        return 'Done'
 
 
 def full_geojson(rows):
-    full_geojson = {
+    geojson = {
         'type': 'FeatureCollection',
         'features': rows
     }
-    return full_geojson
+    return geojson
 
 
 def single_geojson(rows):
@@ -81,7 +90,9 @@ def single_geojson(rows):
 
 
 def earthquake_all_matched(conn, cursor):
-    sql = "SELECT json_object('id', id,'Date', earthquake.Date,'latitude',earthquake.latitude, 'longitude',earthquake.longitude,'Year', earthquake.Year, 'Magnitude', earthquake.Magnitude, 'Depth', earthquake.Depth, 'location_a', earthquake.location_n) FROM earthquake"
+    sql = "SELECT json_object('id', id,'Date', earthquake.Date,'latitude',earthquake.latitude, 'longitude'," \
+          "earthquake.longitude,'Year', earthquake.Year, 'Magnitude', earthquake.Magnitude, 'Depth', " \
+          "earthquake.Depth, 'location_a', earthquake.location_n) FROM earthquake "
     # 执行语句
     cursor.execute(sql)
     # 抓取
@@ -325,6 +336,7 @@ def return_newnest(conn, cursor):
         conn.commit()
         return dic_eq
 
+
 def all_list_matched(conn, cursor):
     sql_eq = "SELECT id,date,latitude, longitude,Year, Magnitude, Depth, location_n FROM earthquake"
     sql_ts = "SELECT id,latitude,longitude,year,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments FROM tsunami"
@@ -360,12 +372,15 @@ def all_list_matched(conn, cursor):
     rows_eq = DataFrame(rows_eq)
     rows_ts = DataFrame(rows_ts)
     rows_ve = DataFrame(rows_ve)
-    rows_eq.columns = ["id", "date","latitude", "longitude", "Year", "Magnitude", "Depth", "location"]
+    rows_eq.columns = ["id", "date", "latitude", "longitude", "Year", "Magnitude", "Depth", "location"]
     rows_ts.columns = ["id", "latitude", "longitude", "year", "location", "country", "region", "cause", "event_vali",
                        "eq_magnitu", "eq_depth", "ts_intensi", "damage_tot", "houses_tot", "deaths_tot", "url",
                        "comments"]
-    rows_ve.columns = ["id","latitude", "longitude","year","volcano","volcano_id","country","eruptions","eruption_1","eruption_2","volcanoes","volcanotyp","lastknowne","summit","elevation","url"]
-    return rows_eq,rows_ts,rows_ve
+    rows_ve.columns = ["id", "latitude", "longitude", "year", "volcano", "volcano_id", "country", "eruptions",
+                       "eruption_1", "eruption_2", "volcanoes", "volcanotyp", "lastknowne", "summit", "elevation",
+                       "url"]
+    return rows_eq, rows_ts, rows_ve
+
 
 # 输入用户名返回权限
 def verify_permit(conn, cursor, usr):
