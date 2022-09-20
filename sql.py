@@ -2,6 +2,7 @@
 import datetime
 import sqlite3
 import json
+from pandas.core.frame import DataFrame
 
 
 #
@@ -323,3 +324,78 @@ def return_newnest(conn, cursor):
         }
         conn.commit()
         return dic_eq
+
+
+# 输入用户名返回权限
+def verify_permit(conn, cursor, usr):
+    sql = "SELECT * FROM admin_up WHERE admin_up.login_usr  like '" + usr + "%'"
+    # 执行语句
+    cursor.execute(sql)
+    # 抓取
+    rows = cursor.fetchall()
+    admin = False
+    if rows != []:
+        exist = True
+        if rows[0][2]:
+            admin = True
+    else:
+        exist = False
+    # 事物提交
+    conn.commit()
+    if usr == '游客':
+        exist = True
+        admin = False
+    return [exist, admin]
+
+
+# 下载数据
+def down_data(conn, cursor, type_id):
+    sql_eq = "SELECT id,date,latitude, longitude,Year, Magnitude, Depth, location_n FROM earthquake"
+    sql_ts = "SELECT id,latitude,longitude,year,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments FROM tsunami"
+    sql_ve = """SELECT id,
+                latitude, 
+                longitude,
+        		year,
+        		volcano,
+        		volcano_id,
+        		country,
+        		eruptions,
+        	    eruption_1,
+        		eruption_2,
+        		volcanoes,
+        		volcanotyp,
+        		lastknowne,
+        		summit,
+        		elevation,
+        		url FROM volcano_eruption"""
+    # 执行语句
+    if type_id == "1":
+        cursor.execute(sql_eq)
+        # 抓取
+        rows_eq = cursor.fetchall()
+        conn.commit()
+        rows_eq = DataFrame(rows_eq)
+        rows_eq.columns = ["id", "date", "latitude", "longitude", "Year", "Magnitude", "Depth", " location_n"]
+        rows_eq.to_csv('./earthquake.csv', index=False)
+    elif type_id == "2":
+        cursor.execute(sql_ts)
+        # 抓取
+        rows_ts = cursor.fetchall()
+        conn.commit()
+        rows_ts = DataFrame(rows_ts)
+        rows_ts.columns = ["id", "latitude", "longitude", "year", "location_n", "country", "region", "cause",
+                           "event_vali",
+                           "eq_magnitu", "eq_depth", "ts_intensi", "damage_tot", "houses_tot", "deaths_tot", "url",
+                           "comments"]
+        rows_ts.to_csv('.unami.csv', index=False)
+    elif type_id == "3":
+        cursor.execute(sql_ve)
+        # 抓取
+        rows_ve = cursor.fetchall()
+        # 事物提交
+        conn.commit()
+        rows_ve = DataFrame(rows_ve)
+        rows_ve.columns = ["id", "latitude", "longitude", "year", "volcano", "volcano_id", "country", "eruptions",
+                           "eruption_1", "eruption_2", "volcanoes", "volcanotyp", "lastknowne", "summit", "elevation",
+                           "url"]
+        rows_ve.to_csv('.olcano_eruption.csv', index=False)
