@@ -325,6 +325,47 @@ def return_newnest(conn, cursor):
         conn.commit()
         return dic_eq
 
+def all_list_matched(conn, cursor):
+    sql_eq = "SELECT id,date,latitude, longitude,Year, Magnitude, Depth, location_n FROM earthquake"
+    sql_ts = "SELECT id,latitude,longitude,year,location_n,country,region,cause,event_vali,eq_magnitu,eq_depth,ts_intensi,damage_tot,houses_tot,deaths_tot,url,comments FROM tsunami"
+    sql_ve = """SELECT id,
+            latitude, 
+            longitude,
+    		year,
+    		volcano,
+    		volcano_id,
+    		country,
+    		eruptions,
+    	    eruption_1,
+    		eruption_2,
+    		volcanoes,
+    		volcanotyp,
+    		lastknowne,
+    		summit,
+    		elevation,
+    		url FROM volcano_eruption"""
+    # 执行语句
+
+    cursor.execute(sql_eq)
+    # 抓取
+    rows_eq = cursor.fetchall()
+    cursor.execute(sql_ts)
+    # 抓取
+    rows_ts = cursor.fetchall()
+    cursor.execute(sql_ve)
+    # 抓取
+    rows_ve = cursor.fetchall()
+    # 事物提交
+    conn.commit()
+    rows_eq = DataFrame(rows_eq)
+    rows_ts = DataFrame(rows_ts)
+    rows_ve = DataFrame(rows_ve)
+    rows_eq.columns = ["id", "date","latitude", "longitude", "Year", "Magnitude", "Depth", "location"]
+    rows_ts.columns = ["id", "latitude", "longitude", "year", "location", "country", "region", "cause", "event_vali",
+                       "eq_magnitu", "eq_depth", "ts_intensi", "damage_tot", "houses_tot", "deaths_tot", "url",
+                       "comments"]
+    rows_ve.columns = ["id","latitude", "longitude","year","volcano","volcano_id","country","eruptions","eruption_1","eruption_2","volcanoes","volcanotyp","lastknowne","summit","elevation","url"]
+    return rows_eq,rows_ts,rows_ve
 
 # 输入用户名返回权限
 def verify_permit(conn, cursor, usr):

@@ -118,6 +118,26 @@
             }
         }
     }
+	
+	window.onkeydown = function(event) {
+		if (event.keyCode == 13) {
+			let text = encodeHtml(story.value);
+			let url = o_url + '/discussion'
+			let xhr = new XMLHttpRequest();
+			xhr.open('POST', url, true);
+			let formData = new FormData();
+			formData.append('status', 'send');
+			formData.append('usr_name', usr);
+			formData.append('statement', text);
+			xhr.send(formData)
+			xhr.onreadystatechange = function () {
+			    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+			        story.value = "";
+			        get_log()
+			    }
+			}
+		}
+		}
 
     function encodeHtml(html) {
         return html && html.replace ?
