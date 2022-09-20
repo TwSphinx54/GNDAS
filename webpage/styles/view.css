@@ -42,6 +42,7 @@ body {
     text-align: center;
     z-index: 2;
     cursor: default;
+    text-decoration: none;
 }
 
 #shining_bar {
