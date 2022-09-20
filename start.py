@@ -57,10 +57,10 @@ def main_process():
                 return render_template('egg.html')
         if (pms == '管理员') | (pms == '普通用户'):
             return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm,
-                                   len=vo_len + eq_len + tn_len,time=d_time,name=d_name,ne=newest)
+                                   len=vo_len + eq_len + tn_len, time=d_time, name=d_name, ne=newest)
         else:
             return render_template('view.html', pms=pms_d, usr=usr_d, vol=vol, eqk=eqk, tnm=tnm,
-                                   len=vo_len + eq_len + tn_len,time=d_time,name=d_name,ne=newest)
+                                   len=vo_len + eq_len + tn_len, time=d_time, name=d_name, ne=newest)
     elif request.method == 'POST':
         value = request.form['value']
         result = vague_match(conn, cursor, value)

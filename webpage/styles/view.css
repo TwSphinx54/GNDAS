@@ -465,9 +465,9 @@ body {
     font-family: Ubuntu, "Microsoft YaHei", serif;
     position: fixed;
     z-index: 2;
-    top: 0px;
+    top: 3px;
     right: 0;
-    width: 25%;
+    width: 35%;
     height: 30px;
     text-align: right;
 
@@ -639,7 +639,7 @@ body {
     height: 25px;
     font-weight: bold;
     box-sizing: border-box;
-    border-bottom: 2px solid #1da1f2;
+    border-bottom: 2px solid #f21d1d;
     overflow: hidden;
 
     line-height: 75px;
@@ -653,7 +653,7 @@ body {
 
 #item_c4.show {
     line-height: 25px;
-    width: 180px;
+    width: 200px;
     margin-left: 5px;
 }
 

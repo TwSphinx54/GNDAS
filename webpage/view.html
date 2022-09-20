@@ -106,9 +106,9 @@
     let tnm_o = {{ tnm | tojson }}
     let ne_o = {{ ne | tojson }}
     let len_o = '{{ len }}'
-	let dis_time = '{{ time }}'
-	let dis_name = '{{ name }}'
-	
+    let dis_time = '{{ time }}'
+    let dis_name = '{{ name }}'
+
 
     mapboxgl.accessToken =
         'pk.eyJ1Ijoic3Nzc3BoaW54IiwiYSI6ImNrbnZnbDR1NzAzNzMyb3Bwbng3amtnMzQifQ.E1nAH_fti0KvB2heCd-cEg';
@@ -528,7 +528,7 @@
     const item_c1 = document.getElementById('item_c1');
     const item_c2 = document.getElementById('item_c2');
     const item_c3 = document.getElementById('item_c3');
-	const item_c4 = document.getElementById('item_c4');
+    const item_c4 = document.getElementById('item_c4');
     const user = document.getElementsByClassName('user_date')[0];
     const time = document.getElementsByClassName('user_date')[1];
     const zoom = document.getElementById('zoom');
@@ -544,7 +544,7 @@
     item_c2.innerHTML = len_o;
     item_c3.innerHTML = ne_o['location_n'] + ' [' + ne_o['latitude'] + ',' + ne_o['longitude'] + '] ' + ne_o['type'];
     content1.classList.add('show');
-	item_c4.innerHTML = dis_name.substring(0,5)+'\xa0'+'\xa0'+'\xa0'+'\xa0'+'\xa0'+dis_time;
+    item_c4.innerHTML = dis_name.substring(0, 5) + '&nbsp&nbsp' + dis_time;
 
     for (let i = 0; i < func.length; i++) {
         func[i].classList.add('show');
@@ -622,7 +622,7 @@
     item_c1.classList.add('show');
     item_c2.classList.add('show');
     item_c3.classList.add('show');
-	item_c4.classList.add('show');
+    item_c4.classList.add('show');
     time.classList.add('show2');
 
     function getDate() {
