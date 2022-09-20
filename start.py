@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched, \
     registered, volcano_eruption_storage, earthquake_storage, tsunami_storage, vague_match, record_statement, \
-    match_all_statement, return_newnest, verify_permit
+    match_all_statement, return_newnest, verify_permit, down_data
 
 DB_PATH = './data.db'
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
@@ -149,6 +149,11 @@ def data():
                 tsunami_storage(conn, cursor, tnm_data[7], tnm_data[6], tnm_data[5], tnm_data[0], tnm_data[1],
                                 tnm_data[2], tnm_data[3], tnm_data[8], tnm_data[4], tnm_data[10], tnm_data[9])
             return 'done!'
+        elif status == 'download':
+            dis_type = request.form['type']
+            print(dis_type)
+            dis_name = down_data(conn, cursor, dis_type)
+            return dis_name
 
 
 if __name__ == '__main__':

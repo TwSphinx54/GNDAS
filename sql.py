@@ -376,7 +376,8 @@ def down_data(conn, cursor, type_id):
         conn.commit()
         rows_eq = DataFrame(rows_eq)
         rows_eq.columns = ["id", "date", "latitude", "longitude", "Year", "Magnitude", "Depth", " location_n"]
-        rows_eq.to_csv('./earthquake.csv', index=False)
+        rows_eq.to_csv('./webpage/download/earthquake.csv', index=False)
+        return 'earthquake'
     elif type_id == "2":
         cursor.execute(sql_ts)
         # 抓取
@@ -387,8 +388,9 @@ def down_data(conn, cursor, type_id):
                            "event_vali",
                            "eq_magnitu", "eq_depth", "ts_intensi", "damage_tot", "houses_tot", "deaths_tot", "url",
                            "comments"]
-        rows_ts.to_csv('.unami.csv', index=False)
-    elif type_id == "3":
+        rows_ts.to_csv('./webpage/download/tsunami.csv', index=False)
+        return 'tsunami'
+    elif type_id == "0":
         cursor.execute(sql_ve)
         # 抓取
         rows_ve = cursor.fetchall()
@@ -398,4 +400,5 @@ def down_data(conn, cursor, type_id):
         rows_ve.columns = ["id", "latitude", "longitude", "year", "volcano", "volcano_id", "country", "eruptions",
                            "eruption_1", "eruption_2", "volcanoes", "volcanotyp", "lastknowne", "summit", "elevation",
                            "url"]
-        rows_ve.to_csv('.olcano_eruption.csv', index=False)
+        rows_ve.to_csv('./webpage/download/volcano_eruption.csv', index=False)
+        return 'volcano_eruption'
