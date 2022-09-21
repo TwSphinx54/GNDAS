@@ -1,7 +1,8 @@
 # 全球自然灾害评估系统 GNDAS
+
 <div align="center"><font size=5>Global Natural Disaster Assessment System</font></div>
 
-<img src="./imgs/icons8-卫星-100.png" align="center"/>
+<div align="center"><img src="./imgs/icons8-卫星-100.png"/></div>
 
 > <font size=3>[卫星](https://icons8.com/icon/xJRSLyEAA9bz/卫星) icon by [Icons8](https://icons8.com)</font>
 
