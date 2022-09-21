@@ -188,8 +188,9 @@ html {
     align-items: center;
 
     border-radius: 600px;
-    top: -51%;
-    left: -15%;
+    top: calc(20% - 580px);
+    left: auto;
+    right: calc(90% - 600px);
     box-shadow: rgb(21, 21, 24) 12px 12px 24px 0, rgb(36, 37, 41) -12px -12px 24px 0;
     -webkit-box-shadow: rgb(21, 21, 24) 12px 12px 24px 0, rgb(36, 37, 41) -12px -12px 24px 0;
 }
@@ -237,7 +238,7 @@ html {
     margin-left: -200px;
     top: 67%;
     left: 15.8%;
-    transform: translate(103px,13px);
+    transform: translate(103px, 13px);
     z-index: 0;
     color: #EBECF0;
     opacity: 0;
