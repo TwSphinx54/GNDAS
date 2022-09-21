@@ -1,7 +1,8 @@
 from flask import Flask, request, render_template
 from sql import connect_database, login_in, volcano_eruption_all_matched, tsunami_all_matched, earthquake_all_matched, \
     registered, volcano_eruption_storage, earthquake_storage, tsunami_storage, vague_match, record_statement, \
-    match_all_statement, return_newnest
+    match_all_statement, return_newnest, verify_permit, down_data
+from prediction import prediction
 
 DB_PATH = './data.db'
 app = Flask(__name__, template_folder="./webpage", static_folder='./webpage', static_url_path="")
@@ -13,8 +14,9 @@ newest = return_newnest(conn, cursor)
 vol_c = [k['properties'] for k in vol['features']]
 eqk_c = [k['properties'] for k in eqk['features']]
 tnm_c = [k['properties'] for k in tnm['features']]
+d_time, d_name = prediction()
 usr_d = '游客'
-pms_d = '无权限'
+pms_d = '普通用户'
 
 
 # Flask中的route()装饰器用于将URL绑定到函数 即将网页html文件发布到对应路由上
@@ -35,9 +37,12 @@ def login():
             else:
                 return 'error'  # redirect以get方法访问
         if status == "2":  # 此时正在进行注册操作
-            registered(conn, cursor, email, password)  # 注册用户
+            res = registered(conn, cursor, email, password)  # 注册用户
             pms = '普通用户'
-            return {'pms': pms, 'usr': usr}
+            if res == 'Done':
+                return {'pms': pms, 'usr': usr}
+            else:
+                return 'Existed'
 
 
 @app.route('/result', methods=['GET', 'POST'])
@@ -45,12 +50,20 @@ def main_process():
     if request.method == 'GET':
         pms = request.args.get('pms')
         usr = request.args.get('usr')
+        if usr is not None:
+            res = verify_permit(conn, cursor, usr)
+            if res[1]:
+                res[1] = '管理员'
+            else:
+                res[1] = '普通用户'
+            if (not res[0]) | (res[1] != pms):
+                return render_template('egg.html')
         if (pms == '管理员') | (pms == '普通用户'):
             return render_template('view.html', pms=pms, usr=usr, vol=vol, eqk=eqk, tnm=tnm,
-                                   len=vo_len + eq_len + tn_len, ne=newest)
+                                   len=vo_len + eq_len + tn_len, time=d_time, name=d_name, ne=newest)
         else:
             return render_template('view.html', pms=pms_d, usr=usr_d, vol=vol, eqk=eqk, tnm=tnm,
-                                   len=vo_len + eq_len + tn_len, ne=newest)
+                                   len=vo_len + eq_len + tn_len, time=d_time, name=d_name, ne=newest)
     elif request.method == 'POST':
         value = request.form['value']
         result = vague_match(conn, cursor, value)
@@ -62,6 +75,14 @@ def risk():
     if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
         pms = request.args.get('pms')
         usr = request.args.get('usr')
+        if usr is not None:
+            res = verify_permit(conn, cursor, usr)
+            if res[1]:
+                res[1] = '管理员'
+            else:
+                res[1] = '普通用户'
+            if (not res[0]) | (res[1] != pms):
+                return render_template('egg.html')
         if (pms == '管理员') | (pms == '普通用户'):
             return render_template('risk.html', pms=pms, usr=usr, vol_c=vol_c, eqk_c=eqk_c, tnm_c=tnm_c, vol=vol,
                                    eqk=eqk, tnm=tnm)  # 相当于将risk.html和/risk路由相互绑定
@@ -75,6 +96,14 @@ def discussion():
     if request.method == 'GET':  # 默认情况下，Flask访问路由响应GET请求
         pms = request.args.get('pms')
         usr = request.args.get('usr')
+        if usr is not None:
+            res = verify_permit(conn, cursor, usr)
+            if res[1]:
+                res[1] = '管理员'
+            else:
+                res[1] = '普通用户'
+            if (not res[0]) | (res[1] != pms):
+                return render_template('egg.html')
         if (pms == '管理员') | (pms == '普通用户'):
             return render_template('discussion.html', pms=pms, usr=usr)
         else:
@@ -94,6 +123,14 @@ def data():
     if request.method == 'GET':  # 默认情况下，Flask路由响应GET请求
         pms = request.args.get('pms')  # get请求获取数据方法
         usr = request.args.get('usr')
+        if usr is not None:
+            res = verify_permit(conn, cursor, usr)
+            if res[1]:
+                res[1] = '管理员'
+            else:
+                res[1] = '普通用户'
+            if (not res[0]) | (res[1] != pms):
+                return render_template('egg.html')
         if pms == '管理员':
             return render_template('data.html', pms=pms, usr=usr)
         else:
@@ -117,7 +154,12 @@ def data():
                 tsunami_storage(conn, cursor, tnm_data[7], tnm_data[6], tnm_data[5], tnm_data[0], tnm_data[1],
                                 tnm_data[2], tnm_data[3], tnm_data[8], tnm_data[4], tnm_data[10], tnm_data[9])
             return 'done!'
+        elif status == 'download':
+            dis_type = request.form['type']
+            print(dis_type)
+            dis_name = down_data(conn, cursor, dis_type)
+            return dis_name
 
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True)  # DEBUG模式下刷新网页即可更新
+    app.run(port=8080, debug=True)
