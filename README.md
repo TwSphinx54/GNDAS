@@ -1,13 +1,13 @@
 # 全球自然灾害评估系统 GNDAS
-<center><font size=5>Global Natural Disaster Assessment System</font></center>
+<div align="center"><font size=5>Global Natural Disaster Assessment System</font></div>
 
-<img src="./imgs/icons8-卫星-100.png" />
+<img src="./imgs/icons8-卫星-100.png" align="center"/>
 
 > <font size=3>[卫星](https://icons8.com/icon/xJRSLyEAA9bz/卫星) icon by [Icons8](https://icons8.com)</font>
 
-<center><img src="https://img.shields.io/github/issues/TwSphinx54/GNDAS?style=for-the-badge"><img src="https://img.shields.io/github/forks/TwSphinx54/GNDAS?style=for-the-badge"><img src="https://img.shields.io/github/stars/TwSphinx54/GNDAS?style=for-the-badge"><img src="https://img.shields.io/github/license/TwSphinx54/GNDAS?style=for-the-badge"></center>
+<div align="center"><img src="https://img.shields.io/github/issues/TwSphinx54/GNDAS?style=flat-square"><img src="https://img.shields.io/github/forks/TwSphinx54/GNDAS?style=flat-square"><img src="https://img.shields.io/github/stars/TwSphinx54/GNDAS?style=flat-square"><img src="https://img.shields.io/github/license/TwSphinx54/GNDAS?style=flat-square"></div>
 
-<center><img src="https://img.shields.io/badge/CesiumJS-1.93-yellow?style=for-the-badge"><img src="https://img.shields.io/badge/ECharts-5.3.2-yellowgreen?style=for-the-badge"><img src="https://img.shields.io/badge/MapboxGL-2.8.2-orange?style=for-the-badge"><img src="https://img.shields.io/badge/JQuery-3.5.1-red?style=for-the-badge"></center>
+<div align="center"><img src="https://img.shields.io/badge/CesiumJS-1.93-yellow?style=flat-square"><img src="https://img.shields.io/badge/ECharts-5.3.2-yellowgreen?style=flat-square"><img src="https://img.shields.io/badge/MapboxGL-2.8.2-orange?style=flat-square"><img src="https://img.shields.io/badge/JQuery-3.5.1-red?style=flat-square"></div>
 
 全球自然灾害评估系统（GNDASystem）是一款基于Web端的自然灾害地理信息分析评估应用，是独具人文关怀的一项地理信息系统Web实现。
 
@@ -111,5 +111,5 @@ conda remove -n <gndas_env> --all --y
 
 ## 项目成员
 
-[<img src="https://avatars.githubusercontent.com/u/47311384?v=4" width=100px>](https://github.com/TwSphinx54)[<img src="https://avatars.githubusercontent.com/u/83388449?v=4" width=100px>](https://github.com/MeloMeng)[<img src="https://avatars.githubusercontent.com/u/67420986?v=4" width=100px>](https://github.com/Sunshineeeeeee)[<img src="https://avatars.githubusercontent.com/u/74903786?v=4" width=100px>](https://github.com/xiaoyelulu)
+[<img src="https://avatars.githubusercontent.com/u/47311384?v=4" width=100px align="center">](https://github.com/TwSphinx54) [<img src="https://avatars.githubusercontent.com/u/83388449?v=4" width=100px align="center">](https://github.com/MeloMeng) [<img src="https://avatars.githubusercontent.com/u/67420986?v=4" width=100px align="center">](https://github.com/Sunshineeeeeee) [<img src="https://avatars.githubusercontent.com/u/74903786?v=4" width=100px align="center">](https://github.com/xiaoyelulu)
 
