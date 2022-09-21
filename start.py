@@ -162,4 +162,4 @@ def data():
 
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True)  # DEBUG模式下刷新网页即可更新
+    app.run(port=8080, debug=True)
