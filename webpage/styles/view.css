@@ -461,6 +461,21 @@ body {
     border-top: 0;
 }
 
+#info3 {
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+    position: fixed;
+    z-index: 2;
+    top: 3px;
+    right: 0;
+    width: 35%;
+    height: 30px;
+    text-align: right;
+
+    font-size: 15px;
+    color: white;
+    padding-right: 10px;
+}
+
 #info2 {
     font-family: Ubuntu, "Microsoft YaHei", serif;
     position: fixed;
@@ -617,6 +632,31 @@ body {
     width: 30%;
     margin-left: 5px;
 }
+
+#item_c4 {
+    text-align: center;
+    float: left;
+    height: 25px;
+    font-weight: bold;
+    box-sizing: border-box;
+    border-bottom: 2px solid #f21d1d;
+    overflow: hidden;
+
+    line-height: 75px;
+    width: 0;
+    margin-left: 67.5px;
+
+    cursor: default;
+    animation: ease-out;
+    transition: width 0.5s ease-out 0.5s, margin-left 0.5s ease-out 0.5s, line-height 0.5s ease-out 1s;
+}
+
+#item_c4.show {
+    line-height: 25px;
+    width: 200px;
+    margin-left: 5px;
+}
+
 
 .search {
     color: white;
