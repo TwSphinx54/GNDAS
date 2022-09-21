@@ -1,3 +1,5 @@
+
+
 // 加载geodata数据
 function GetGeodata(filename) {
     data = $.ajax({
@@ -16,8 +18,8 @@ function GetGeodata(filename) {
 }
 
 const sourceId = 'sourceId'
-    const layerId = 'layerId'
-    const layerId2 = 'layerId2'
+const layerId = 'layerId'
+const layerId2 = 'layerId2'
 function Initialize(geo_data, Pro)
 {
     heatmap.on('load', () => {
@@ -342,3 +344,133 @@ function CountsNum(Data, Prop)     // 要统计的数据和属性项
         Props: Props
     }
 }
+
+function Get_Cluster(pointdata) {
+    cc = turf.clustersKmeans(pointdata)
+    cluster_num = []
+    cluster_center = []
+    for (let i = 0; i < cc.features.length; i++)
+    {
+        let temp_id = cc['features'][i]['properties']["cluster"];
+        let temp_center = cc['features'][i]['properties']["centroid"];
+        if (cluster_num.indexOf(temp_id)==-1)
+        {
+            cluster_num.push(temp_id)
+            cluster_center.push(temp_center)
+        }
+    }
+    cluster_groups=[]
+    for(let i=0;i<cluster_num.length;i++)
+    {
+        temp_cluster=turf.getCluster(cc, { cluster: cluster_num[i] })
+        cluster_groups.push(temp_cluster)
+    }
+    return cluster_center
+}
+
+
+function showbuffer() {
+    const buffer_Id = "polygon"
+    const center_Id = "point"
+     for(let k=0;k<100;k++){
+
+        if (heatmap.getLayer(buffer_Id + k)) // 不存在 source => undefined
+        {
+            heatmap.removeLayer(buffer_Id + k)
+        }
+        if (heatmap.getSource(buffer_Id + k)) // 不存在 source => undefined
+        {
+            heatmap.removeSource(buffer_Id + k)
+        }
+        if (heatmap.getLayer(center_Id + k)) // 不存在 source => undefined
+        {
+            heatmap.removeLayer(center_Id + k)
+        }
+        if (heatmap.getSource(center_Id + k)) // 不存在 source => undefined
+        {
+            heatmap.removeSource(center_Id + k)
+        }}
+    let temp_buffer = flag.indexOf(true);
+    let cluster_center=Get_Cluster(vol_o);
+        switch (temp_buffer) {
+            case 0:
+                cluster_center = Get_Cluster(vol_o)
+                break;
+            case 1:
+                cluster_center = Get_Cluster(eqk_o)
+                break;
+            case 2:
+                cluster_center = Get_Cluster(tnm_o)
+                break;
+        }
+
+    for (let i = 0; i < cluster_center.length; i++) {
+        let temp_lng = cluster_center[i][0]
+        let temp_lat = cluster_center[i][1]
+        //创建点
+        var point = turf.point([parseFloat(temp_lng), parseFloat(temp_lat)]);
+
+        //创建缓冲区面
+        var buffered = turf.buffer(point, 500, {units: "miles"});/*parseFloat(radius), {steps:2,units: units});*/
+        //获取缓冲区面坐标数组
+        var coordinates = buffered.geometry.coordinates[0];
+        // 获取缓冲区四至
+        // 左下角坐标，min_lng，min_lat
+        var es = [180, 90]
+        // 右上角坐标，max_lng，max_lat
+        var wn = [0, 0]
+        for (var j = 0; j < coordinates.length; j++) {
+            if (coordinates[j][0] < es[0]) {
+                es[0] = coordinates[j][0];
+            }
+            if (coordinates[j][1] < es[1]) {
+                es[1] = coordinates[j][1];
+            }
+            if (coordinates[j][0] > wn[0]) {
+                wn[0] = coordinates[j][0];
+            }
+            if (coordinates[j][1] > wn[1]) {
+                wn[1] = coordinates[j][1]
+            }
+        }
+        //计算左下角到右上角的距离
+        //var distance = turf.distance(turf.point(es), turf.point(wn), {units: "miles"});
+         //添加资源和图层
+
+        heatmap.addSource(buffer_Id + i, {
+            'type': 'geojson',
+            'data': buffered
+        });
+        heatmap.addLayer({
+            'id': buffer_Id + i,
+            'type': 'fill',
+            'source': buffer_Id + i,
+            'layout': {},
+            'paint': {
+                'fill-color': '#088',
+                'fill-opacity': 0.8
+            }
+        });
+        heatmap.addSource(center_Id + i, {
+            'type': 'geojson',
+            'data': point
+        });
+        heatmap.addLayer({
+            'id': center_Id + i,
+            'type': 'circle',
+            'source': center_Id + i,
+            'paint': {
+                'circle-radius': 6,
+                'circle-color': '#B42222'
+            }
+        });
+        /*//飞行至四至范围内
+
+        heatmap.fitBounds([es,wn], {
+
+            padding: 20
+
+        });*/
+        console.log(i)
+    }
+};
