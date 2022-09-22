@@ -235,7 +235,26 @@ input.ne-range[type=range]::-webkit-slider-thumb {
 }
 
 #amount::-webkit-outer-spin-button,
-#amount::-webkit-inner-spin-button{
-	-webkit-appearance: none !important;
-	margin: 0;
+#amount::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+
+#buffer_btn {
+    z-index: 999;
+    bottom: 10%;
+    left: 23%;
+    position: fixed;
+    width: 10%;
+    height: 40px;
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border: none;
 }
