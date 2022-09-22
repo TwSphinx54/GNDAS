@@ -6,9 +6,9 @@
 
 > <font size=3>[卫星](https://icons8.com/icon/xJRSLyEAA9bz/卫星) icon by [Icons8](https://icons8.com)</font>
 
-<div align="center"><img src="https://img.shields.io/github/issues/TwSphinx54/GNDAS?style=flat-square"><img src="https://img.shields.io/github/forks/TwSphinx54/GNDAS?style=flat-square"><img src="https://img.shields.io/github/stars/TwSphinx54/GNDAS?style=flat-square"><img src="https://img.shields.io/github/license/TwSphinx54/GNDAS?style=flat-square"></div>
+<div align="center"><img src="https://img.shields.io/github/issues/TwSphinx54/GNDAS?style=flat-square"> <img src="https://img.shields.io/github/forks/TwSphinx54/GNDAS?style=flat-square"> <img src="https://img.shields.io/github/stars/TwSphinx54/GNDAS?style=flat-square"> <img src="https://img.shields.io/github/license/TwSphinx54/GNDAS?style=flat-square"></div>
 
-<div align="center"><img src="https://img.shields.io/badge/CesiumJS-1.93-yellow?style=flat-square"><img src="https://img.shields.io/badge/ECharts-5.3.2-yellowgreen?style=flat-square"><img src="https://img.shields.io/badge/MapboxGL-2.8.2-orange?style=flat-square"><img src="https://img.shields.io/badge/JQuery-3.5.1-red?style=flat-square"></div>
+<div align="center"><img src="https://img.shields.io/badge/CesiumJS-1.93-yellow?style=flat-square"> <img src="https://img.shields.io/badge/ECharts-5.3.2-yellowgreen?style=flat-square"> <img src="https://img.shields.io/badge/MapboxGL-2.8.2-orange?style=flat-square"> <img src="https://img.shields.io/badge/JQuery-3.5.1-red?style=flat-square"></div>
 
 全球自然灾害评估系统（GNDASystem）是一款基于Web端的自然灾害地理信息分析评估应用，是独具人文关怀的一项地理信息系统Web实现。
 
