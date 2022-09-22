@@ -66,7 +66,10 @@
 <!--缓冲区--><!--
 <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;半径：</label>
 <input name="radius" id="radius" class="txt" value="radius"/>-->
-<button id="buffer_btn" class="buffer_btn" onclick="showbuffer()">缓冲区</button>
+<!--<button id="buffer_btn" class="buffer_btn" onclick="showbuffer()">缓冲区</button>-->
+<div class="buffer">
+    <label>区域风险评估&nbsp;&nbsp;<input class="mui-switch mui-switch-animbg" type="checkbox" id="buffer_checkbox"></label>
+</div>
 
 <script>
     let vol_o = {{ vol | tojson }}
@@ -197,6 +200,7 @@
     }
 
     const heat_type = document.getElementsByClassName('heat_type');
+    const box=document.getElementById("buffer_checkbox");
 
     let flag = [true, false, false, false]
     heat_type[0].classList.add('clicked');
@@ -207,12 +211,21 @@
             switch (i) {
                 case 0:
                     Volcano_Charts();
+                    if(box.checked){
+                        showbuffer(vol_o,500)
+                    }
                     break;
                 case 1:
                     Earthquake_Charts();
+                    if(box.checked){
+                        showbuffer(eqk_o,100)
+                    }
                     break;
                 case 2:
                     Tsunami_Charts();
+                    if(box.checked){
+                        showbuffer(tnm_o,500)
+                    }
                     break;
             }
             if (flag[i] === false) {
@@ -271,6 +284,28 @@
     }
     $('#slider').RangeSlider({min: 0, max: 100, step: 1, callback: change});
     let slide_value = document.getElementById("slider");
+
+
+    //改变缓冲区状态
+    $("#buffer_checkbox").change(function () {
+        if(box.checked){
+        let temp_buffer = flag.indexOf(true);
+        switch (temp_buffer) {
+            case 0:
+                showbuffer(vol_o,500)
+                break;
+            case 1:
+                showbuffer(eqk_o,100)
+                break;
+            case 2:
+                showbuffer(tnm_o,500)
+                break;
+        }
+    }
+    else
+        {RemoveLayers();
+        }
+    })
 </script>
 </body>
 </html>

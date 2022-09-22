@@ -235,7 +235,89 @@ input.ne-range[type=range]::-webkit-slider-thumb {
 }
 
 #amount::-webkit-outer-spin-button,
-#amount::-webkit-inner-spin-button{
-	-webkit-appearance: none !important;
-	margin: 0;
+#amount::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+
+.buffer {
+    position: absolute;
+    bottom: 10%;
+    left: 23%;
+    width: 200px;
+    height: 40px;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: Ubuntu, "Microsoft YaHei", serif;
+    font-weight: bold;
+    font-size: 20px;
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.3);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+label {
+    display: block;
+    vertical-align: middle;
+}
+
+label, input, select {
+    vertical-align: middle;
+}
+
+.mui-switch {
+    width: 50px;
+    height: 30px;
+    position: relative;
+    background-color: rgba(253, 253, 253, 0.7);
+    border-radius: 20px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+
+    cursor: pointer;
+}
+
+.mui-switch:before {
+    content: '';
+    width: 29px;
+    height: 29px;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.mui-switch:checked {
+    border-color: #1da1f2;
+    /*box-shadow: #1da1f2 0 0 0 16px inset;*/
+    background-color: #1da1f2;
+}
+
+.mui-switch:checked:before {
+    left: 21px;
+}
+
+.mui-switch.mui-switch-animbg {
+    transition: background-color ease 0.4s;
+}
+
+.mui-switch.mui-switch-animbg:before {
+    transition: left 0.3s;
+}
+
+.mui-switch.mui-switch-animbg:checked {
+    /*box-shadow: #dfdfdf 0 0 0 0 inset;*/
+    background-color: #1da1f2;
+    transition: border-color 0.4s, background-color ease 0.4s;
+}
+
+.mui-switch.mui-switch-animbg:checked:before {
+    transition: left 0.3s;
 }

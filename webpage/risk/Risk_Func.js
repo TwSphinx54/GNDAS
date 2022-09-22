@@ -369,10 +369,11 @@ function Get_Cluster(pointdata) {
 }
 
 
-function showbuffer() {
-    const buffer_Id = "polygon"
-    const center_Id = "point"
-     for(let k=0;k<100;k++){
+const buffer_Id = "polygon"
+const center_Id = "point"
+
+function RemoveLayers() {
+    for (let k = 0; k < 100; k++) {
 
         if (heatmap.getLayer(buffer_Id + k)) // 不存在 source => undefined
         {
@@ -389,20 +390,25 @@ function showbuffer() {
         if (heatmap.getSource(center_Id + k)) // 不存在 source => undefined
         {
             heatmap.removeSource(center_Id + k)
-        }}
-    let temp_buffer = flag.indexOf(true);
-    let cluster_center=Get_Cluster(vol_o);
-        switch (temp_buffer) {
-            case 0:
-                cluster_center = Get_Cluster(vol_o)
-                break;
-            case 1:
-                cluster_center = Get_Cluster(eqk_o)
-                break;
-            case 2:
-                cluster_center = Get_Cluster(tnm_o)
-                break;
         }
+    }
+}
+
+
+function showbuffer(pointdata,rr) {
+
+    RemoveLayers();
+    cc = turf.clustersKmeans(pointdata)
+    cluster_num = []
+    cluster_center = []
+    for (let i = 0; i < cc.features.length; i++) {
+        let temp_id = cc['features'][i]['properties']["cluster"];
+        let temp_center = cc['features'][i]['properties']["centroid"];
+        if (cluster_num.indexOf(temp_id) == -1) {
+            cluster_num.push(temp_id)
+            cluster_center.push(temp_center)
+        }
+    }
 
     for (let i = 0; i < cluster_center.length; i++) {
         let temp_lng = cluster_center[i][0]
@@ -411,7 +417,7 @@ function showbuffer() {
         var point = turf.point([parseFloat(temp_lng), parseFloat(temp_lat)]);
 
         //创建缓冲区面
-        var buffered = turf.buffer(point, 500, {units: "miles"});/*parseFloat(radius), {steps:2,units: units});*/
+        var buffered = turf.buffer(point, radius=rr, {units: "miles"});/*parseFloat(radius), {steps:2,units: units});*/
         //获取缓冲区面坐标数组
         var coordinates = buffered.geometry.coordinates[0];
         // 获取缓冲区四至
@@ -435,7 +441,7 @@ function showbuffer() {
         }
         //计算左下角到右上角的距离
         //var distance = turf.distance(turf.point(es), turf.point(wn), {units: "miles"});
-         //添加资源和图层
+        //添加资源和图层
 
         heatmap.addSource(buffer_Id + i, {
             'type': 'geojson',
@@ -460,7 +466,7 @@ function showbuffer() {
             'type': 'circle',
             'source': center_Id + i,
             'paint': {
-                'circle-radius': 6,
+                'circle-radius': 4,
                 'circle-color': '#B42222'
             }
         });
