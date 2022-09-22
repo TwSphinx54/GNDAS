@@ -102,6 +102,10 @@ conda remove -n <gndas_env> --all --y
 
    <img src="./imgs/risk.png">
 
+   此外，系统还提供了基于聚类灾害中心的区域风险评估交互分析。
+
+   <img src="./imgs/buffer.png">
+
 5. 进入用户论坛模块，用户可以在这里交流评论，该模块可以防御XSS攻击。
 
    <img src="./imgs/discuss.png">
