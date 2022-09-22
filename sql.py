@@ -55,7 +55,7 @@ def registered(conn, cursor, usr, password):
     # 执行语句
     cursor.execute(sql, params)
     rows = cursor.fetchall()
-    if rows is not None:
+    if rows.__len__() != 0:
         conn.commit()
         return 'Existed'
     else:
