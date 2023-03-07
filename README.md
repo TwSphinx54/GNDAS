@@ -39,7 +39,7 @@
 4. 进入 `./GNDAS` ，部署网站并挂起到到后台运行（请注意开放服务器8080端口）
 
    ```bash
-   nohup gunicorn -w 4 -b 127.0.0.1:8080 start.app &
+   nohup gunicorn -w 4 -b 127.0.0.1:8080 start:app &
    ```
 
 ## 应用卸载
